@@ -1691,10 +1691,8 @@ function renderCtrlDoc(){
 
 function handleCtrlDoc(e){
   const f = e.target.files[0]; if(!f) return;
-  pendingUploadData = { code:'OLPASA-SIG-P-001', name:'Control de la Información Documentada', file:f };
-  currentDocKey  = 'OLPASA-SIG-P-001';
-  currentDocName = 'Control de la Información Documentada';
   if(!gAccessToken){
+    pendingUploadData = { code:'OLPASA-SIG-P-001', name:'Control de la Información Documentada', file:f, isCtrlDoc:true };
     if(!gTokenClient) initGoogleAuth();
     gTokenClient.requestAccessToken({prompt:''});
     showToast('🔄 Conectando con Google Drive...');
@@ -2063,14 +2061,14 @@ function initGoogleAuth(){
       setTimeout(()=>{ gAccessToken = null; }, 3500 * 1000);
       // Si había upload pendiente, continúa con contexto seguro
       if(pendingUploadData){
-        // Verificar si es el ctrl doc
-        if(pendingUploadData.code === 'OLPASA-SIG-P-001'){
-          setTimeout(()=> subirCtrlDoc(pendingUploadData.file), 200);
+        if(pendingUploadData.isCtrlDoc){
+          const file = pendingUploadData.file;
+          pendingUploadData = null;
+          setTimeout(()=> subirCtrlDoc(file), 200);
         } else {
           setTimeout(uploadToDrive, 200);
         }
       } else {
-        // Solo sincronizar desde Drive
         loadDriveMetadata();
       }
     }
