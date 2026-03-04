@@ -789,7 +789,7 @@ tr:hover td{background:#fafffe;}
 <!-- BPM -->
 <div class="page" id="page-bpm">
   <div class="ph"><h2>📋 BPM — Buenas Prácticas de Manufactura</h2><p>OLPASA-SIG-M-001 · Versión 02 · 2024 — Haz clic en 📤 para subir cada documento</p></div>
-  <div class="block"><div class="tbl-head"><h3>Documentos BPM</h3></div>
+  <div class="block"><div class="tbl-head"><h3>Documentos BPM</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('bpm')">+ Agregar documento</button></div>
     <div id="list-bpm"></div>
   </div>
 </div>
@@ -797,7 +797,7 @@ tr:hover td{background:#fafffe;}
 <!-- POES -->
 <div class="page" id="page-poes">
   <div class="ph"><h2>🧼 POES — Procedimientos Operativos de Saneamiento</h2><p>OLPASA-AQ-M-002 — Haz clic en 📤 para subir cada documento</p></div>
-  <div class="block"><div class="tbl-head"><h3>Procedimientos POES</h3></div>
+  <div class="block"><div class="tbl-head"><h3>Procedimientos POES</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('poes')">+ Agregar documento</button></div>
     <div id="list-poes"></div>
   </div>
 </div>
@@ -810,7 +810,7 @@ tr:hover td{background:#fafffe;}
     <div class="stat"><div class="stat-val">Semanal</div><div class="stat-label">Inspección cebaderos</div></div>
     <div class="stat"><div class="stat-val">Semestral</div><div class="stat-label">Empresa externa DIGESA</div></div>
   </div>
-  <div class="block"><div class="tbl-head"><h3>Documentos Control de Plagas</h3></div><div id="list-plagas"></div></div>
+  <div class="block"><div class="tbl-head"><h3>Documentos Control de Plagas</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('plagas')">+ Agregar documento</button></div><div id="list-plagas"></div></div>
   <div class="tbl-wrap">
     <div class="tbl-head"><h3>Registros</h3><button class="btn btn-green btn-sm">+ Registrar</button></div>
     <table><tr><th>Tipo</th><th>Fecha</th><th>Área</th><th>Hallazgo</th><th>Acción</th></tr>
@@ -827,7 +827,7 @@ tr:hover td{background:#fafffe;}
     <div class="stat"><div class="stat-val">Trimestral</div><div class="stat-label">Análisis caldero</div></div>
     <div class="stat"><div class="stat-val">Anual</div><div class="stat-label">Lab. acreditado externo</div></div>
   </div>
-  <div class="block"><div class="tbl-head"><h3>Documentos Agua</h3></div><div id="list-agua"></div></div>
+  <div class="block"><div class="tbl-head"><h3>Documentos Agua</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('agua')">+ Agregar documento</button></div><div id="list-agua"></div></div>
   <div class="tbl-wrap">
     <div class="tbl-head"><h3>Registros Diarios</h3><button class="btn btn-green btn-sm">+ Registrar</button></div>
     <table><tr><th>Fecha</th><th>Punto</th><th>Cloro residual</th><th>pH</th><th>Estado</th></tr>
@@ -839,7 +839,7 @@ tr:hover td{background:#fafffe;}
 <!-- CAPACITACION -->
 <div class="page" id="page-capacitacion">
   <div class="ph"><h2>🎓 Capacitaciones y Salud</h2><p>OLPASA-AQ-POES-003 · OLPASA-RH-P-002 · OLPASA-SSOMA-F-073</p></div>
-  <div class="block"><div class="tbl-head"><h3>Documentos Capacitación</h3></div><div id="list-cap"></div></div>
+  <div class="block"><div class="tbl-head"><h3>Documentos Capacitación</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('cap')">+ Agregar documento</button></div><div id="list-cap"></div></div>
   <div class="tbl-wrap">
     <div class="tbl-head"><h3>Programa de Capacitación</h3><button class="btn btn-green btn-sm">+ Registrar</button></div>
     <table><tr><th>Tema</th><th>Fecha</th><th>Asistentes</th><th>Evaluación</th><th>Estado</th></tr>
@@ -851,7 +851,7 @@ tr:hover td{background:#fafffe;}
 <!-- MANTENIMIENTO -->
 <div class="page" id="page-mantenimiento">
   <div class="ph"><h2>🔧 Mantenimiento Preventivo</h2><p>OLPASA-MT-P-001 · OLPASA-MT-L-001</p></div>
-  <div class="block"><div class="tbl-head"><h3>Documentos Mantenimiento</h3></div><div id="list-mant"></div></div>
+  <div class="block"><div class="tbl-head"><h3>Documentos Mantenimiento</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('mant')">+ Agregar documento</button></div><div id="list-mant"></div></div>
   <div class="tbl-wrap">
     <div class="tbl-head"><h3>Órdenes de Mantenimiento</h3><button class="btn btn-green btn-sm">+ Nueva Orden</button></div>
     <table><tr><th>Equipo</th><th>Tipo</th><th>Fecha</th><th>Responsable</th><th>Estado</th></tr>
@@ -863,13 +863,13 @@ tr:hover td{background:#fafffe;}
 <!-- ESPECIFICACIONES -->
 <div class="page" id="page-especificaciones">
   <div class="ph"><h2>📐 Especificaciones Técnicas</h2><p>OLPASA-AQ-E-001 · OLPASA-AQ-E-004</p></div>
-  <div class="block"><div class="tbl-head"><h3>Documentos Especificaciones</h3></div><div id="list-esp"></div></div>
+  <div class="block"><div class="tbl-head"><h3>Documentos Especificaciones</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('esp')">+ Agregar documento</button></div><div id="list-esp"></div></div>
 </div>
 
 <!-- CALIBRACIONES -->
 <div class="page" id="page-calibraciones">
   <div class="ph"><h2>⚖️ Calibraciones</h2><p>OLPASA-AQ-P-003 — Equipos de Seguimiento y Medición</p></div>
-  <div class="block"><div class="tbl-head"><h3>Documentos y Certificados de Calibración</h3></div><div id="list-cal"></div></div>
+  <div class="block"><div class="tbl-head"><h3>Documentos y Certificados de Calibración</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('cal')">+ Agregar documento</button></div><div id="list-cal"></div></div>
   <div class="tbl-wrap">
     <div class="tbl-head"><h3>Estado de Equipos</h3><button class="btn btn-green btn-sm" onclick="openModal('modal-cal')">+ Registrar Calibración</button></div>
     <table><tr><th>Equipo</th><th>Área</th><th>Última Calibración</th><th>Próxima</th><th>Estado</th></tr>
@@ -888,7 +888,7 @@ tr:hover td{background:#fafffe;}
     <div class="card"><div class="card-icon">⚗️</div><div class="card-title">Metales Pesados</div><div class="card-sub">Pb, As, Cu, Fe</div></div>
     <div class="card"><div class="card-icon">💧</div><div class="card-title">Agua</div><div class="card-sub">Diario + Anual ext.</div></div>
   </div>
-  <div class="block"><div class="tbl-head"><h3>Certificados y Resultados</h3></div><div id="list-lab"></div></div>
+  <div class="block"><div class="tbl-head"><h3>Certificados y Resultados</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('lab')">+ Agregar documento</button></div><div id="list-lab"></div></div>
   <div class="tbl-wrap">
     <div class="tbl-head"><h3>Registros de Análisis</h3><button class="btn btn-green btn-sm">+ Nuevo Análisis</button></div>
     <table><tr><th>Tipo</th><th>Producto/Muestra</th><th>Lote</th><th>Fecha</th><th>Resultado</th><th>Lab.</th></tr>
@@ -1371,6 +1371,38 @@ tr:hover td{background:#fafffe;}
 
 <!-- MODAL GENERAR DOCUMENTO -->
 <!-- MODAL GENERAR DOCUMENTO -->
+<!-- MODAL AGREGAR DOCUMENTO -->
+<div class="modal-bg" id="modal-add-doc">
+  <div class="meq" style="max-width:520px;width:95%;">
+    <h3>📄 Agregar Documento</h3>
+    <div class="mreg-sub">Define el código y nombre — luego subirás el archivo</div>
+
+    <div class="meq-section">Identificación</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Código OLPASA *</label>
+        <input type="text" id="adoc-codigo" class="form-input" placeholder="Ej. OLPASA-AQ-P-001">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Versión</label>
+        <input type="text" id="adoc-version" class="form-input" placeholder="Ej. 02" value="01">
+      </div>
+    </div>
+    <div class="form-row solo">
+      <div class="form-group">
+        <label class="form-label">Nombre del documento *</label>
+        <input type="text" id="adoc-nombre" class="form-input" placeholder="Ej. Procedimiento de Control de Plagas">
+      </div>
+    </div>
+
+    <input type="hidden" id="adoc-seccion">
+    <div class="meq-btns">
+      <button class="btn btn-gray" onclick="closeModal('modal-add-doc')">Cancelar</button>
+      <button class="btn btn-green" onclick="confirmarAddDoc()">+ Agregar a la lista</button>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL REVISIÓN DE DOCUMENTO -->
 <div class="modal-bg" id="modal-revision">
   <div class="modal" style="max-width:740px;width:95%;max-height:92vh;overflow-y:auto;">
@@ -1675,9 +1707,12 @@ let calRows = [];
 async function loadState(){
   try{ const r=LS.get('haccp-docs'); state=r?JSON.parse(r.value):{}; }
   catch(e){ state={}; }
+  // Cargar DOCS personalizados
+  try{ const r=LS.get('haccp-docs-list'); const saved=r?JSON.parse(r.value):null;
+    if(saved){ Object.keys(saved).forEach(k=>{ if(DOCS[k]) DOCS[k]=saved[k]; }); }
+  } catch(e){}
   try{ const r=LS.get('haccp-ctrl-doc'); ctrlDocData=r?JSON.parse(r.value):null; }
   catch(e){ ctrlDocData=null; }
-  // Init Google Auth en background
   setTimeout(()=>{ if(window.google) initGoogleAuth(); else {
     const t = setInterval(()=>{ if(window.google){ initGoogleAuth(); clearInterval(t); } }, 300);
   }}, 500);
@@ -1685,6 +1720,41 @@ async function loadState(){
   catch(e){ calRows=[]; }
   renderAll();
   renderCtrlDoc();
+}
+
+function saveDOCS(){
+  LS.set('haccp-docs-list', JSON.stringify({
+    bpm:DOCS.bpm, poes:DOCS.poes, plagas:DOCS.plagas, agua:DOCS.agua,
+    cap:DOCS.cap, mant:DOCS.mant, esp:DOCS.esp, cal:DOCS.cal, lab:DOCS.lab
+  }));
+}
+
+// ── AGREGAR DOCUMENTO A SECCIÓN ──
+function openAddDoc(seccion){
+  document.getElementById('adoc-codigo').value = '';
+  document.getElementById('adoc-nombre').value = '';
+  document.getElementById('adoc-version').value = '01';
+  document.getElementById('adoc-seccion').value = seccion;
+  openModal('modal-add-doc');
+  setTimeout(()=>document.getElementById('adoc-codigo').focus(), 200);
+}
+
+function confirmarAddDoc(){
+  const codigo  = document.getElementById('adoc-codigo').value.trim();
+  const nombre  = document.getElementById('adoc-nombre').value.trim();
+  const version = document.getElementById('adoc-version').value.trim() || '01';
+  const seccion = document.getElementById('adoc-seccion').value;
+  if(!codigo || !nombre){ alert('Completa el código y el nombre'); return; }
+  if(!DOCS[seccion]){ alert('Sección no válida'); return; }
+  // Verificar duplicado
+  if(DOCS[seccion].find(d=>d.code===codigo)){
+    alert('Ya existe un documento con ese código en esta sección'); return;
+  }
+  DOCS[seccion].push({ code: codigo, name: `${nombre} v${version}` });
+  saveDOCS();
+  renderAll();
+  closeModal('modal-add-doc');
+  showToast(`✅ ${codigo} agregado — ahora sube el archivo`);
 }
 
 async function saveState(){
