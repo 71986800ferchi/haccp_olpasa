@@ -4,65 +4,58 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HACCP OLPASA</title>
+<!-- Google Identity Services -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800&family=DM+Mono:wght@400;500&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
   --verde:#2e7d32;--verde2:#43a047;--verde3:#e8f5e9;
-  --dark:#1b5e20;--gris:#f0f4f0;--white:#fff;
+  --dark:#1b5e20;--gris:#f4f6f4;--white:#fff;
   --shadow:0 2px 8px rgba(0,0,0,0.10);
 }
-body{font-family:'DM Sans',sans-serif;background:var(--gris);color:#333;}
+body{font-family:'Segoe UI',sans-serif;background:var(--gris);color:#333;}
 
 /* HEADER */
 header{
-  background:linear-gradient(135deg,#0d3b11 0%,var(--dark) 40%,#2e7d32 75%,#43a047 100%);
-  color:#fff;padding:0 28px;display:flex;align-items:center;
-  justify-content:space-between;height:66px;
-  box-shadow:0 3px 16px rgba(27,94,32,0.45);position:sticky;top:0;z-index:200;
-  border-bottom:2px solid rgba(255,255,255,0.08);
+  background:linear-gradient(135deg,var(--dark),var(--verde2));
+  color:#fff;padding:0 24px;display:flex;align-items:center;
+  justify-content:space-between;height:62px;
+  box-shadow:var(--shadow);position:sticky;top:0;z-index:200;
 }
-.logo{display:flex;align-items:center;gap:14px;}
-.logo-icon{width:42px;height:42px;background:rgba(255,255,255,0.95);border-radius:10px;
-  display:flex;align-items:center;justify-content:center;font-size:22px;
-  box-shadow:0 2px 8px rgba(0,0,0,0.2);}
-.logo h1{font-size:15px;font-weight:800;letter-spacing:.5px;text-shadow:0 1px 3px rgba(0,0,0,0.2);}
-.logo p{font-size:10px;opacity:.75;margin-top:1px;font-weight:400;}
-.hbadge{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.2);border-radius:20px;
-  padding:4px 12px;font-size:10.5px;margin-left:8px;backdrop-filter:blur(8px);font-weight:500;}
+.logo{display:flex;align-items:center;gap:12px;}
+.logo-icon{width:38px;height:38px;background:#fff;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;font-size:20px;}
+.logo h1{font-size:15px;font-weight:700;letter-spacing:1px;}
+.logo p{font-size:10px;opacity:.8;}
+.hbadge{background:rgba(255,255,255,0.18);border-radius:20px;
+  padding:3px 12px;font-size:11px;margin-left:8px;}
 
 /* LAYOUT */
-.layout{display:flex;min-height:calc(100vh - 66px);}
+.layout{display:flex;min-height:calc(100vh - 62px);}
 
 /* SIDEBAR */
 aside{
-  width:235px;background:var(--white);flex-shrink:0;
-  box-shadow:2px 0 12px rgba(0,0,0,0.07);
-  position:sticky;top:66px;height:calc(100vh - 66px);overflow-y:auto;
-  padding:14px 0;
-  scrollbar-width:thin;scrollbar-color:#c8e6c9 transparent;
+  width:230px;background:var(--white);flex-shrink:0;
+  box-shadow:2px 0 8px rgba(0,0,0,0.06);
+  position:sticky;top:62px;height:calc(100vh - 62px);overflow-y:auto;
+  padding:12px 0;
 }
-aside::-webkit-scrollbar{width:4px;}
-aside::-webkit-scrollbar-thumb{background:#c8e6c9;border-radius:4px;}
-.nav-label{font-size:9.5px;font-weight:700;color:#bbb;
-  text-transform:uppercase;letter-spacing:1.2px;padding:12px 18px 5px;
-  display:flex;align-items:center;gap:5px;}
-.nav-label::after{content:'';flex:1;height:1px;background:#f0f0f0;margin-left:4px;}
+.nav-label{font-size:10px;font-weight:700;color:#aaa;
+  text-transform:uppercase;letter-spacing:1px;padding:10px 18px 4px;}
 .nav-item{
   display:flex;align-items:center;gap:10px;padding:9px 18px;
   cursor:pointer;border-left:3px solid transparent;
-  transition:all .16s;font-size:12.5px;color:#5a6672;
+  transition:all .18s;font-size:13px;color:#555;
 }
-.nav-item:hover{background:var(--verde3);color:var(--verde);padding-left:22px;}
-.nav-item.active{background:#e8f5e9;color:var(--verde);
+.nav-item:hover{background:var(--verde3);color:var(--verde);}
+.nav-item.active{background:var(--verde3);color:var(--verde);
   border-left-color:var(--verde);font-weight:600;}
-.nav-icon{font-size:14px;width:20px;text-align:center;}
+.nav-icon{font-size:15px;width:20px;text-align:center;}
 
 /* MAIN */
-main{flex:1;padding:24px;overflow-y:auto;min-width:0;}
+main{flex:1;padding:22px;overflow-y:auto;}
 .page{display:none;}
-.page.active{display:block;animation:fadeIn .2s ease;}
-@keyframes fadeIn{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+.page.active{display:block;}
 
 /* PAGE HEADER */
 .ph{margin-bottom:20px;}
@@ -160,100 +153,35 @@ tr:hover td{background:#fafffe;}
 
 /* IA CHAT */
 .ia-btn{
-  position:relative;
-  width:56px;height:56px;border-radius:50%;
+  position:fixed;bottom:24px;right:24px;
+  width:52px;height:52px;border-radius:50%;
   background:linear-gradient(135deg,var(--dark),var(--verde2));
-  color:#fff;border:none;cursor:pointer;font-size:24px;
-  box-shadow:0 4px 20px rgba(27,94,32,0.4);
+  color:#fff;border:none;cursor:pointer;font-size:22px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.25);z-index:300;
   display:flex;align-items:center;justify-content:center;
   transition:transform .2s;
 }
-.ia-btn:hover{transform:scale(1.1);}
-.ia-notif{position:absolute;top:-3px;right:-3px;width:16px;height:16px;
-  background:#f44336;border-radius:50%;font-size:9px;font-weight:700;
-  display:flex;align-items:center;justify-content:center;border:2px solid #fff;}
+.ia-btn:hover{transform:scale(1.08);}
 .ia-panel{
-  position:fixed;bottom:92px;right:24px;
-  width:380px;max-height:560px;
-  background:#fff;border-radius:16px;
-  box-shadow:0 8px 40px rgba(0,0,0,0.2);
-  z-index:399;display:none;flex-direction:column;overflow:hidden;
-  transition:all .3s cubic-bezier(.4,0,.2,1);
+  position:fixed;bottom:86px;right:24px;width:320px;
+  background:#fff;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.18);
+  z-index:300;display:none;flex-direction:column;overflow:hidden;
+  max-height:420px;
 }
 .ia-panel.open{display:flex;}
-
-/* MODO DRAWER — panel lateral full altura */
-.ia-panel.drawer{
-  top:0;right:0;bottom:0;
-  width:440px;max-height:100vh;
-  border-radius:16px 0 0 16px;
-}
-
-/* MODO FULLSCREEN */
-.ia-panel.fullscreen{
-  top:0;left:0;right:0;bottom:0;
-  width:100vw;max-height:100vh;
-  border-radius:0;
-}
-.ia-panel.fullscreen .ia-msgs{font-size:14px;}
-.ia-panel.fullscreen .ia-msg{max-width:70%;}
-.ia-panel.fullscreen .ia-quick-btns{justify-content:center;}
-.ia-panel.fullscreen .ia-qbtn{flex:0 0 auto;min-width:160px;}
-
-/* OVERLAY fullscreen */
-.ia-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:398;}
-.ia-overlay.show{display:block;}
-
-.ia-header{background:linear-gradient(135deg,#0d3b11,#2e7d32);
-  color:#fff;padding:14px 16px;font-size:13px;font-weight:700;
-  display:flex;justify-content:space-between;align-items:center;flex-shrink:0;}
-.ia-header-info{display:flex;flex-direction:column;gap:2px;}
-.ia-header-title{font-size:13px;font-weight:700;}
-.ia-header-sub{font-size:10px;opacity:.7;font-weight:400;}
-.ia-header-btns{display:flex;align-items:center;gap:10px;}
-.ia-header-btns span{cursor:pointer;opacity:.75;font-size:15px;transition:opacity .15s;}
-.ia-header-btns span:hover{opacity:1;}
-
-.ia-quick-btns{display:flex;gap:6px;padding:10px 10px 6px;border-bottom:1px solid #f0f0f0;flex-wrap:wrap;flex-shrink:0;}
-.ia-qbtn{flex:1;min-width:100px;padding:7px 6px;border-radius:8px;border:1.5px solid #e0e0e0;
-  background:#fafafa;cursor:pointer;font-size:10.5px;font-weight:600;color:#555;
-  transition:all .18s;text-align:center;line-height:1.3;}
-.ia-qbtn:hover{border-color:var(--verde);background:var(--verde3);color:var(--verde);}
-.ia-qbtn.active{border-color:var(--verde);background:var(--verde);color:#fff;}
-
-.ia-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;
-  scrollbar-width:thin;scrollbar-color:#c8e6c9 transparent;}
-.ia-msg{padding:10px 14px;border-radius:12px;font-size:12.5px;max-width:90%;line-height:1.6;}
-.ia-msg.bot{background:var(--verde3);color:#1b5e20;align-self:flex-start;border-radius:12px 12px 12px 3px;}
-.ia-msg.user{background:var(--verde);color:#fff;align-self:flex-end;border-radius:12px 12px 3px 12px;}
-.ia-msg.alerta{background:#fff8e1;color:#92400e;border-left:3px solid #ffc107;align-self:flex-start;max-width:95%;}
-.ia-msg.critico{background:#fef2f2;color:#991b1b;border-left:3px solid #f44336;align-self:flex-start;max-width:95%;}
-.ia-msg.ok{background:#f0fdf4;color:#166534;border-left:3px solid #4caf50;align-self:flex-start;max-width:95%;}
-
-.ia-typing{display:flex;align-items:center;gap:4px;padding:10px 13px;background:var(--verde3);
-  border-radius:12px;align-self:flex-start;}
-.ia-typing span{width:6px;height:6px;border-radius:50%;background:#2e7d32;animation:typing .9s infinite;}
-.ia-typing span:nth-child(2){animation-delay:.2s;}
-.ia-typing span:nth-child(3){animation-delay:.4s;}
-@keyframes typing{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-6px);}}
-
-.ia-input{display:flex;padding:12px;border-top:1px solid #eee;gap:8px;flex-shrink:0;}
-.ia-input input{flex:1;border:1.5px solid #ddd;border-radius:9px;
-  padding:9px 12px;font-size:13px;outline:none;font-family:inherit;}
+.ia-header{background:linear-gradient(135deg,var(--dark),var(--verde2));
+  color:#fff;padding:12px 16px;font-size:13px;font-weight:700;
+  display:flex;justify-content:space-between;align-items:center;}
+.ia-msgs{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;}
+.ia-msg{padding:8px 12px;border-radius:10px;font-size:12px;max-width:85%;}
+.ia-msg.bot{background:var(--verde3);color:#1b5e20;align-self:flex-start;}
+.ia-msg.user{background:var(--verde);color:#fff;align-self:flex-end;}
+.ia-input{display:flex;padding:10px;border-top:1px solid #eee;gap:8px;}
+.ia-input input{flex:1;border:1px solid #ddd;border-radius:8px;
+  padding:8px 10px;font-size:12px;outline:none;}
 .ia-input input:focus{border-color:var(--verde);}
-.ia-send{background:var(--verde);color:#fff;border:none;border-radius:9px;
-  width:40px;cursor:pointer;font-size:18px;transition:background .15s;}
-.ia-send:hover{background:var(--dark);}
-
-/* Responsive automático */
-@media(max-width:600px){
-  .ia-panel.open{
-    top:0;left:0;right:0;bottom:0;
-    width:100vw;max-height:100vh;
-    border-radius:0;
-  }
-  .ia-panel.open .ia-msgs{font-size:14px;}
-}
+.ia-send{background:var(--verde);color:#fff;border:none;border-radius:8px;
+  width:34px;cursor:pointer;font-size:16px;}
 
 /* SEMAFORO */
 .dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:6px;}
@@ -273,195 +201,15 @@ tr:hover td{background:#fafffe;}
 
 .empty{text-align:center;color:#bbb;padding:24px;font-size:13px;}
 
-/* ── DASHBOARD HERO ── */
-.dash-hero{background:linear-gradient(135deg,#1b5e20 0%,#2e7d32 45%,#388e3c 100%);border-radius:18px;padding:28px 32px;margin-bottom:22px;position:relative;overflow:hidden;color:#fff;box-shadow:0 8px 32px rgba(27,94,32,0.35);}
-.dash-hero::before{content:'';position:absolute;top:-40px;right:-40px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,0.06);}
-.dash-hero::after{content:'';position:absolute;bottom:-60px;right:80px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,0.04);}
-.dash-hero-top{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:16px;}
-.dash-hero h2{font-size:22px;font-weight:700;letter-spacing:-.3px;}
-.dash-hero p{font-size:13px;opacity:.75;margin-top:4px;}
-.dash-badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
-.dash-badge{background:rgba(255,255,255,0.15);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.25);border-radius:20px;padding:5px 14px;font-size:11px;font-weight:600;display:inline-flex;align-items:center;gap:5px;}
-.dash-kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px;margin-bottom:20px;}
-.kpi{background:#fff;border-radius:14px;padding:16px 14px;box-shadow:0 2px 10px rgba(0,0,0,0.07);border-top:3px solid var(--verde2);position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s;}
-.kpi:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.12);}
-.kpi-icon{font-size:20px;margin-bottom:6px;}
-.kpi-val{font-size:28px;font-weight:800;color:var(--dark);line-height:1;font-family:'DM Mono',monospace;}
-.kpi-label{font-size:11px;color:#888;margin-top:4px;font-weight:500;}
-.kpi.kpi-warn{border-top-color:#ff9800;}.kpi.kpi-warn .kpi-val{color:#e65100;}
-.kpi.kpi-ok{border-top-color:#4caf50;}.kpi.kpi-ok .kpi-val{color:#2e7d32;}
-.kpi-glow{position:absolute;bottom:-10px;right:-10px;width:50px;height:50px;border-radius:50%;background:var(--verde3);opacity:.5;}
-.dash-grid{display:grid;grid-template-columns:1fr 340px;gap:16px;margin-bottom:18px;}
-.dash-section{background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 10px rgba(0,0,0,0.07);}
-.dash-section-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#999;margin-bottom:14px;display:flex;align-items:center;gap:6px;}
-.quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
-.qcard{border-radius:12px;padding:14px 12px;cursor:pointer;text-align:center;border:1.5px solid #eee;transition:all .2s;background:#fafafa;position:relative;overflow:hidden;}
-.qcard:hover{border-color:var(--verde2);background:var(--verde3);transform:translateY(-2px);}
-.qcard-icon{font-size:26px;margin-bottom:6px;transition:transform .2s;display:block;}
-.qcard:hover .qcard-icon{transform:scale(1.15);}
-.qcard-title{font-size:11px;font-weight:700;color:#333;}
-.qcard-sub{font-size:10px;color:#aaa;margin-top:2px;}
-.qcard-dot{position:absolute;top:8px;right:8px;width:7px;height:7px;border-radius:50%;background:#bbb;}
-.activity-list{display:flex;flex-direction:column;gap:0;}
-.act-item{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-bottom:1px solid #f4f4f4;}
-.act-item:last-child{border-bottom:none;}
-.act-dot{width:32px;height:32px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;margin-top:1px;}
-.act-dot.green{background:#e8f5e9;}.act-dot.blue{background:#e3f2fd;}.act-dot.yellow{background:#fff8e1;}
-.act-title{font-size:12px;font-weight:600;color:#333;}
-.act-sub{font-size:11px;color:#aaa;margin-top:2px;}
-.proceso-bar{margin-bottom:14px;}
-.proceso-bar-label{display:flex;justify-content:space-between;font-size:11px;color:#666;margin-bottom:5px;}
-.barra{height:8px;border-radius:20px;background:#eee;overflow:hidden;}
-.barra-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--verde),var(--verde2));transition:width .8s ease;}
-.sistema-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.sis-item{background:#f8f9f8;border-radius:10px;padding:12px;display:flex;align-items:center;gap:10px;}
-.sis-label{font-size:11px;color:#888;}.sis-val{font-size:13px;font-weight:700;color:#333;}
-.alert-banner{border-radius:12px;padding:12px 16px;font-size:12px;margin-bottom:10px;display:flex;align-items:center;gap:10px;border:1.5px solid;}
-.alert-banner.green{background:#f0fdf4;border-color:#86efac;color:#166534;}
-.alert-banner.yellow{background:#fffbeb;border-color:#fcd34d;color:#92400e;}
-.alert-banner.red{background:#fef2f2;border-color:#fca5a5;color:#991b1b;}
-.alert-banner-icon{font-size:18px;flex-shrink:0;}
-
-/* ── REGISTROS DIARIOS ── */
-.reg-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px;}
-.reg-title{font-size:20px;font-weight:700;color:var(--dark);}
-.reg-sub{font-size:12px;color:#888;margin-top:3px;}
-.reg-actions{display:flex;gap:8px;flex-wrap:wrap;}
-.semaforo-bar{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:20px;}
-.semaforo-item{background:#fff;border-radius:12px;padding:14px 12px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.07);border-top:4px solid #eee;transition:transform .15s;}
-.semaforo-item:hover{transform:translateY(-2px);}
-.semaforo-item.verde{border-top-color:#4caf50;}.semaforo-item.amarillo{border-top-color:#ffc107;}.semaforo-item.rojo{border-top-color:#f44336;}.semaforo-item.gris{border-top-color:#bbb;}
-.sem-dot{width:18px;height:18px;border-radius:50%;display:inline-block;margin-bottom:6px;}
-.sem-dot.verde{background:#4caf50;box-shadow:0 0 8px #4caf5066;}.sem-dot.amarillo{background:#ffc107;box-shadow:0 0 8px #ffc10766;}.sem-dot.rojo{background:#f44336;box-shadow:0 0 8px #f4433666;}.sem-dot.gris{background:#bbb;}
-.sem-label{font-size:11px;font-weight:700;color:#555;}.sem-val{font-size:10px;color:#aaa;margin-top:2px;}
-.reg-tbl-wrap{background:#fff;border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,0.07);overflow:hidden;margin-bottom:16px;}
-.reg-tbl-head{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #eee;background:#fafffe;gap:10px;flex-wrap:wrap;}
-.reg-tbl-head h3{font-size:13px;font-weight:700;color:var(--dark);}
-.reg-table{width:100%;border-collapse:collapse;}
-.reg-table th{background:#f6f9f6;padding:9px 12px;text-align:left;font-size:10px;color:#999;text-transform:uppercase;letter-spacing:.4px;}
-.reg-table td{padding:9px 12px;font-size:12px;border-bottom:1px solid #f3f3f3;vertical-align:middle;}
-.reg-table tr:last-child td{border-bottom:none;}
-.reg-table tr:hover td{background:#f9fffa;}
-.reg-empty{text-align:center;color:#ccc;padding:28px;font-size:13px;}
-.mreg{background:#fff;border-radius:16px;padding:26px;width:480px;max-width:96vw;box-shadow:0 8px 40px rgba(0,0,0,0.18);max-height:90vh;overflow-y:auto;}
-.mreg h3{font-size:16px;font-weight:700;color:var(--dark);margin-bottom:4px;}
-.mreg-sub{font-size:12px;color:#aaa;margin-bottom:18px;}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
-.form-row.solo{grid-template-columns:1fr;}.form-row.trio{grid-template-columns:1fr 1fr 1fr;}
-.form-group{display:flex;flex-direction:column;gap:4px;}
-.form-label{font-size:11px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:.4px;}
-.form-input{padding:9px 11px;border:1.5px solid #e0e0e0;border-radius:9px;font-size:13px;font-family:inherit;outline:none;transition:border-color .18s;background:#fafafa;}
-.form-input:focus{border-color:var(--verde2);background:#fff;}
-.form-input.ok{border-color:#4caf50;background:#f0fdf4;}.form-input.warn{border-color:#ff9800;background:#fffbf0;}.form-input.err{border-color:#f44336;background:#fff5f5;}
-.form-section{font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.6px;margin:14px 0 8px;padding-bottom:5px;border-bottom:1px solid #eee;}
-.mreg-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;padding-top:14px;border-top:1px solid #eee;}
-.ind{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;}
-.ind.ok{background:#e8f5e9;color:#2e7d32;}.ind.warn{background:#fff8e1;color:#e65100;}.ind.err{background:#ffebee;color:#c62828;}.ind.na{background:#f5f5f5;color:#888;}
-.btn-pdf{background:#e53935;color:#fff;}.btn-pdf:hover{background:#c62828;}
-.btn-xls{background:#1b5e20;color:#fff;}.btn-xls:hover{background:#0a3d0a;}
-.turno-tabs{display:flex;gap:6px;margin-bottom:16px;}
-.ttab{padding:6px 16px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid #ddd;background:#fff;color:#888;transition:all .18s;}
-.ttab.active{background:var(--verde);color:#fff;border-color:var(--verde);}
-
-/* ── ACORDEÓN SIDEBAR ── */
-.nav-group{}
-.nav-group-header{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:9px 18px;cursor:pointer;font-size:12px;font-weight:700;
-  color:var(--dark);background:#f5faf5;border-left:3px solid var(--verde2);
-  margin:6px 0 2px;letter-spacing:.2px;transition:background .15s;
+/* DRIVE STATUS */
+.drive-status{
+  display:none;align-items:center;gap:8px;
+  padding:10px 14px;border-radius:8px;font-size:12px;font-weight:600;
+  margin-top:10px;
 }
-.nav-group-header:hover{background:var(--verde3);}
-.nav-group-arrow{font-size:10px;transition:transform .2s;color:#aaa;}
-.nav-group-arrow.open{transform:rotate(90deg);}
-.nav-group-items{display:none;padding-left:10px;}
-.nav-group-items.open{display:block;}
-.nav-sub{display:flex;align-items:center;gap:9px;padding:8px 18px;
-  cursor:pointer;border-left:3px solid transparent;font-size:12px;color:#666;
-  transition:all .15s;}
-.nav-sub:hover{background:var(--verde3);color:var(--verde);}
-.nav-sub.active{background:#e8f5e9;color:var(--verde);border-left-color:var(--verde);font-weight:600;}
-.nav-sub-icon{font-size:13px;width:18px;text-align:center;}
-
-/* ── PÁGINA HACCP PLAN ── */
-.haccp-plan-box{background:#fff;border-radius:14px;box-shadow:0 2px 12px rgba(0,0,0,0.07);overflow:hidden;margin-bottom:16px;}
-.haccp-plan-banner{background:linear-gradient(135deg,#0d3b11,#2e7d32);color:#fff;padding:24px 28px;}
-.haccp-plan-banner h3{font-size:18px;font-weight:800;margin-bottom:4px;}
-.haccp-plan-banner p{font-size:12px;opacity:.8;}
-.haccp-plan-badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
-.haccp-plan-badge{background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.25);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:600;}
-.haccp-plan-body{padding:22px 28px;}
-.haccp-doc-upload{border:2px dashed #c8e6c9;border-radius:12px;padding:28px;text-align:center;cursor:pointer;transition:all .2s;background:#fafff9;}
-.haccp-doc-upload:hover{border-color:var(--verde);background:var(--verde3);}
-.haccp-doc-upload input{display:none;}
-.haccp-doc-upload-icon{font-size:40px;margin-bottom:8px;}
-.haccp-doc-uploaded{border:2px solid #86efac;border-radius:12px;padding:20px 24px;background:#f0fdf4;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;}
-.haccp-doc-uploaded-info{display:flex;align-items:center;gap:14px;}
-.haccp-doc-uploaded-icon{font-size:36px;}
-
-.eq-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px;}
-.eq-title{font-size:20px;font-weight:700;color:var(--dark);}
-.eq-sub{font-size:12px;color:#888;margin-top:3px;}
-
-.eq-grid{display:flex;flex-direction:column;gap:14px;}
-.eq-card{background:#fff;border-radius:14px;box-shadow:0 2px 12px rgba(0,0,0,0.07);overflow:hidden;border:1.5px solid #eef2ee;transition:box-shadow .2s;}
-.eq-card:hover{box-shadow:0 4px 20px rgba(46,125,50,0.12);}
-.eq-card-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;gap:14px;flex-wrap:wrap;}
-.eq-avatar{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,var(--dark),var(--verde2));color:#fff;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0;}
-.eq-info{flex:1;min-width:0;}
-.eq-nombre{font-size:15px;font-weight:700;color:#1a1a1a;}
-.eq-cargo{font-size:12px;color:#888;margin-top:2px;}
-.eq-rol-badge{display:inline-flex;align-items:center;gap:5px;background:var(--verde3);color:var(--verde);border-radius:20px;padding:3px 11px;font-size:11px;font-weight:600;margin-top:5px;}
-.eq-card-body{padding:0 20px 16px;display:flex;flex-direction:column;gap:10px;}
-.eq-delegacion{background:#f8faf8;border-radius:10px;padding:12px 14px;border-left:3px solid var(--verde2);}
-.eq-delegacion-label{font-size:9.5px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px;}
-.eq-delegacion-text{font-size:13px;color:#333;line-height:1.5;}
-.eq-acta-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;background:#fafafa;border-radius:10px;border:1.5px dashed #ddd;flex-wrap:wrap;}
-.eq-acta-row.firmado{background:#f0fdf4;border:1.5px solid #86efac;border-style:solid;}
-.eq-acta-info{display:flex;align-items:center;gap:9px;}
-.eq-acta-icon{font-size:20px;}
-.eq-acta-label{font-size:11px;font-weight:600;color:#555;}
-.eq-acta-file{font-size:10px;color:#888;margin-top:1px;}
-.eq-acta-actions{display:flex;gap:6px;flex-wrap:wrap;}
-.eq-card-footer{padding:10px 20px;border-top:1px solid #f0f0f0;display:flex;align-items:center;gap:8px;background:#fafffe;}
-.eq-estado-dot{width:8px;height:8px;border-radius:50%;background:#4caf50;}
-.eq-estado-txt{font-size:11px;color:#888;}
-
-.eq-empty{text-align:center;padding:48px 24px;color:#bbb;}
-.eq-empty-icon{font-size:48px;margin-bottom:12px;}
-.eq-empty-txt{font-size:14px;margin-bottom:6px;color:#999;font-weight:600;}
-.eq-empty-sub{font-size:12px;color:#bbb;}
-
-/* modal equipo */
-.meq{background:#fff;border-radius:16px;padding:28px;width:500px;max-width:96vw;
-  box-shadow:0 8px 40px rgba(0,0,0,0.18);max-height:90vh;overflow-y:auto;}
-.meq h3{font-size:16px;font-weight:700;color:var(--dark);margin-bottom:4px;}
-.meq-sub{font-size:12px;color:#aaa;margin-bottom:20px;}
-.meq-section{font-size:10px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:.7px;margin:16px 0 8px;padding-bottom:5px;border-bottom:1px solid #eee;}
-.meq-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;padding-top:14px;border-top:1px solid #eee;}
-.tag-firma{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;}
-.tag-firma.ok{background:#dcfce7;color:#166534;}
-.tag-firma.pend{background:#f5f5f5;color:#888;}
-
-.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);
-  background:#1b5e20;color:#fff;padding:10px 22px;border-radius:30px;
-  font-size:13px;font-weight:600;z-index:999;
-  opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap;
-  box-shadow:0 4px 20px rgba(27,94,32,0.4);}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-.toast.err{background:#c62828;}
-
-@media(max-width:900px){
-  aside{width:190px;}
-  .dash-grid{grid-template-columns:1fr;}
-  .quick-grid{grid-template-columns:repeat(2,1fr);}
-}
-@media(max-width:680px){
-  aside{display:none;}
-  .kpi-val{font-size:22px;}
-  .mreg{width:96vw;}
-  .reg-header{flex-direction:column;align-items:flex-start;}
-}
+.drive-ok{background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7;}
+.drive-error{background:#ffebee;color:#c62828;border:1px solid #ef9a9a;}
+.drive-loading{background:#e3f2fd;color:#1565c0;border:1px solid #90caf9;}
 </style>
 </head>
 <body>
@@ -486,69 +234,31 @@ tr:hover td{background:#fafffe;}
 <!-- SIDEBAR -->
 <aside>
   <div class="nav-label">Principal</div>
-  <div class="nav-item active" onclick="nav('dashboard',this)">
-    <span class="nav-icon">🏠</span>Dashboard
-  </div>
+  <div class="nav-item active" onclick="nav('dashboard',this)"><span class="nav-icon">🏠</span>Dashboard</div>
 
-  <!-- HACCP acordeón -->
-  <div class="nav-group">
-    <div class="nav-group-header" onclick="toggleNav('grp-haccp')">
-      <span>📋 HACCP</span>
-      <span class="nav-group-arrow" id="arr-grp-haccp">▶</span>
-    </div>
-    <div class="nav-group-items" id="grp-haccp">
-      <div class="nav-sub" onclick="nav('haccp-plan',this)"><span class="nav-sub-icon">📄</span>Plan HACCP v08</div>
-      <div class="nav-sub" onclick="nav('equipo',this)"><span class="nav-sub-icon">👥</span>Equipo HACCP</div>
-      <div class="nav-sub" onclick="nav('pcc',this)"><span class="nav-sub-icon">⭐</span>PPRO Activo</div>
-      <div class="nav-sub" onclick="nav('vigilancia',this)"><span class="nav-sub-icon">📊</span>Vigilancia PPRO</div>
-    </div>
-  </div>
+  <div class="nav-label">Plan HACCP</div>
+  <div class="nav-item" onclick="nav('equipo',this)"><span class="nav-icon">👥</span>Equipo HACCP</div>
+  <div class="nav-item" onclick="nav('producto',this)"><span class="nav-icon">🫙</span>Descripción Producto</div>
+  <div class="nav-item" onclick="nav('flujo',this)"><span class="nav-icon">🔄</span>Diagrama de Flujo</div>
+  <div class="nav-item" onclick="nav('peligros',this)"><span class="nav-icon">⚠️</span>Análisis de Peligros</div>
+  <div class="nav-item" onclick="nav('pcc',this)"><span class="nav-icon">🎯</span>PCC / PPRO</div>
+  <div class="nav-item" onclick="nav('vigilancia',this)"><span class="nav-icon">📊</span>Vigilancia</div>
 
-  <!-- Requisitos Previos acordeón -->
-  <div class="nav-group">
-    <div class="nav-group-header" onclick="toggleNav('grp-req')">
-      <span>📁 Requisitos Previos</span>
-      <span class="nav-group-arrow" id="arr-grp-req">▶</span>
-    </div>
-    <div class="nav-group-items" id="grp-req">
-      <div class="nav-sub" onclick="nav('bpm',this)"><span class="nav-sub-icon">📋</span>BPM</div>
-      <div class="nav-sub" onclick="nav('poes',this)"><span class="nav-sub-icon">🧼</span>POES</div>
-      <div class="nav-sub" onclick="nav('plagas',this)"><span class="nav-sub-icon">🐀</span>Control de Plagas</div>
-      <div class="nav-sub" onclick="nav('agua',this)"><span class="nav-sub-icon">💧</span>Control de Agua</div>
-      <div class="nav-sub" onclick="nav('capacitacion',this)"><span class="nav-sub-icon">🎓</span>Capacitaciones</div>
-      <div class="nav-sub" onclick="nav('mantenimiento',this)"><span class="nav-sub-icon">🔧</span>Mantenimiento</div>
-    </div>
-  </div>
+  <div class="nav-label">Requisitos Previos</div>
+  <div class="nav-item" onclick="nav('bpm',this)"><span class="nav-icon">📋</span>BPM</div>
+  <div class="nav-item" onclick="nav('poes',this)"><span class="nav-icon">🧼</span>POES</div>
+  <div class="nav-item" onclick="nav('plagas',this)"><span class="nav-icon">🐀</span>Control de Plagas</div>
+  <div class="nav-item" onclick="nav('agua',this)"><span class="nav-icon">💧</span>Control de Agua</div>
+  <div class="nav-item" onclick="nav('capacitacion',this)"><span class="nav-icon">🎓</span>Capacitaciones</div>
+  <div class="nav-item" onclick="nav('mantenimiento',this)"><span class="nav-icon">🔧</span>Mantenimiento</div>
 
-  <!-- Soporte Técnico acordeón -->
-  <div class="nav-group">
-    <div class="nav-group-header" onclick="toggleNav('grp-sop')">
-      <span>🔬 Soporte Técnico</span>
-      <span class="nav-group-arrow" id="arr-grp-sop">▶</span>
-    </div>
-    <div class="nav-group-items" id="grp-sop">
-      <div class="nav-sub" onclick="nav('especificaciones',this)"><span class="nav-sub-icon">📐</span>Especificaciones</div>
-      <div class="nav-sub" onclick="nav('calibraciones',this)"><span class="nav-sub-icon">⚖️</span>Calibraciones</div>
-      <div class="nav-sub" onclick="nav('laboratorio',this)"><span class="nav-sub-icon">🧪</span>Laboratorio</div>
-      <div class="nav-sub" onclick="nav('vidautil',this)"><span class="nav-sub-icon">📅</span>Vida Útil</div>
-    </div>
-  </div>
+  <div class="nav-label">Soporte Técnico</div>
+  <div class="nav-item" onclick="nav('especificaciones',this)"><span class="nav-icon">📐</span>Especificaciones</div>
+  <div class="nav-item" onclick="nav('calibraciones',this)"><span class="nav-icon">⚖️</span>Calibraciones</div>
+  <div class="nav-item" onclick="nav('laboratorio',this)"><span class="nav-icon">🔬</span>Laboratorio</div>
+  <div class="nav-item" onclick="nav('vidautil',this)"><span class="nav-icon">📅</span>Vida Útil</div>
 
-  <!-- Registros Diarios acordeón -->
-  <div class="nav-group">
-    <div class="nav-group-header" onclick="toggleNav('grp-reg')">
-      <span>📝 Registros Diarios</span>
-      <span class="nav-group-arrow" id="arr-grp-reg">▶</span>
-    </div>
-    <div class="nav-group-items" id="grp-reg">
-      <div class="nav-sub" onclick="nav('reg-agua',this)"><span class="nav-sub-icon">💧</span>Control de Agua</div>
-      <div class="nav-sub" onclick="nav('reg-higiene',this)"><span class="nav-sub-icon">🧑</span>Higiene Personal</div>
-      <div class="nav-sub" onclick="nav('reg-limpieza',this)"><span class="nav-sub-icon">🧹</span>Limpieza y Desinf.</div>
-      <div class="nav-sub" onclick="nav('reg-plagas',this)"><span class="nav-sub-icon">🐛</span>Inspección Plagas</div>
-    </div>
-  </div>
-
-  <div class="nav-label" style="margin-top:8px;">Gestión</div>
+  <div class="nav-label">Documentos</div>
   <div class="nav-item" onclick="nav('documentos',this)"><span class="nav-icon">📁</span>Todos los Documentos</div>
   <div class="nav-item" onclick="nav('auditoria',this)"><span class="nav-icon">🔍</span>Auditorías</div>
 </aside>
@@ -558,164 +268,42 @@ tr:hover td{background:#fafffe;}
 
 <!-- DASHBOARD -->
 <div class="page active" id="page-dashboard">
-  <div class="dash-hero">
-    <div class="dash-hero-top">
-      <div><h2>🌴 Sistema HACCP — OLPASA</h2><p>OLEAGINOSAS PADRE ABAD S.A. · Padre Abad, Ucayali, Peru</p></div>
-      <div style="text-align:right;opacity:.85;"><div style="font-size:11px;">Fecha actual</div><div style="font-size:13px;font-weight:700;" id="dash-fecha">—</div></div>
-    </div>
-    <div class="dash-badges">
-      <span class="dash-badge">📄 Plan v08 · 2023</span>
-      <span class="dash-badge">✅ Validado DIGESA</span>
-      <span class="dash-badge">🏭 Aceite Crudo de Palma</span>
-      <span class="dash-badge">⚙️ 12 Etapas</span>
-    </div>
+  <div class="ph"><h2>🏠 Dashboard</h2><p>Resumen del Sistema HACCP — OLPASA</p></div>
+  <div class="stats">
+    <div class="stat"><div class="stat-val" id="d-docs">0</div><div class="stat-label">Documentos Subidos</div></div>
+    <div class="stat"><div class="stat-val">0</div><div class="stat-label">PCC Identificados</div></div>
+    <div class="stat"><div class="stat-val">1</div><div class="stat-label">PPRO Activos</div></div>
+    <div class="stat"><div class="stat-val" id="d-alertas">0</div><div class="stat-label">Alertas Activas</div></div>
+    <div class="stat"><div class="stat-val">v08</div><div class="stat-label">Versión Plan HACCP</div></div>
+    <div class="stat"><div class="stat-val">12</div><div class="stat-label">Etapas del Proceso</div></div>
   </div>
-
-  <div class="dash-kpis">
-    <div class="kpi kpi-ok"><div class="kpi-icon">📁</div><div class="kpi-val" id="d-docs">0</div><div class="kpi-label">Docs. Subidos</div><div class="kpi-glow"></div></div>
-    <div class="kpi"><div class="kpi-icon">🎯</div><div class="kpi-val">0</div><div class="kpi-label">PCC Activos</div><div class="kpi-glow"></div></div>
-    <div class="kpi kpi-ok"><div class="kpi-icon">⭐</div><div class="kpi-val">1</div><div class="kpi-label">PPRO Activo</div><div class="kpi-glow"></div></div>
-    <div class="kpi" id="kpi-alertas-box"><div class="kpi-icon">🔔</div><div class="kpi-val" id="d-alertas">0</div><div class="kpi-label">Alertas Cal.</div><div class="kpi-glow"></div></div>
-    <div class="kpi kpi-ok"><div class="kpi-icon">📋</div><div class="kpi-val">v08</div><div class="kpi-label">Version Plan</div><div class="kpi-glow"></div></div>
-    <div class="kpi"><div class="kpi-icon">🔬</div><div class="kpi-val" id="kpi-cal-total">0</div><div class="kpi-label">Calibraciones</div><div class="kpi-glow"></div></div>
-  </div>
-
-  <div id="dash-alertas" style="margin-bottom:14px;"></div>
-  <div class="alert-banner green" style="margin-bottom:16px;">
-    <span class="alert-banner-icon">✅</span>
-    <div><b>Plan HACCP validado por DIGESA</b> — Version 08 — Diciembre 2023. Sin PCC. PPRO: Engrase vagones (esterilizado).</div>
-  </div>
-
-  <div class="dash-grid">
-    <div style="display:flex;flex-direction:column;gap:16px;">
-      <div class="dash-section">
-        <div class="dash-section-title">📊 Avance Documental</div>
-        <div class="proceso-bar"><div class="proceso-bar-label"><span>BPM (16)</span><span id="pct-bpm">0%</span></div><div class="barra"><div class="barra-fill" id="bar-bpm" style="width:0%"></div></div></div>
-        <div class="proceso-bar"><div class="proceso-bar-label"><span>POES (10)</span><span id="pct-poes">0%</span></div><div class="barra"><div class="barra-fill" id="bar-poes" style="width:0%"></div></div></div>
-        <div class="proceso-bar"><div class="proceso-bar-label"><span>Plagas (5)</span><span id="pct-plagas">0%</span></div><div class="barra"><div class="barra-fill" id="bar-plagas" style="width:0%"></div></div></div>
-        <div class="proceso-bar"><div class="proceso-bar-label"><span>Calibraciones (6)</span><span id="pct-cal">0%</span></div><div class="barra"><div class="barra-fill" id="bar-cal" style="width:0%"></div></div></div>
-        <div class="proceso-bar"><div class="proceso-bar-label"><span>Laboratorio (5)</span><span id="pct-lab">0%</span></div><div class="barra"><div class="barra-fill" id="bar-lab" style="width:0%"></div></div></div>
-        <div style="margin-top:14px;padding-top:12px;border-top:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:center;">
-          <span style="font-size:12px;color:#666;">Total general</span>
-          <span style="font-size:15px;font-weight:800;color:var(--verde)" id="pct-total">0 / 0 docs</span>
-        </div>
-      </div>
-      <div class="dash-section">
-        <div class="dash-section-title">⚡ Acceso Rapido</div>
-        <div class="quick-grid">
-          <div class="qcard" onclick="nav('bpm',null)"><span class="qcard-icon">📋</span><div class="qcard-title">BPM</div><div class="qcard-sub">16 documentos</div><div class="qcard-dot" id="dot-bpm"></div></div>
-          <div class="qcard" onclick="nav('poes',null)"><span class="qcard-icon">🧼</span><div class="qcard-title">POES</div><div class="qcard-sub">10 procedimientos</div><div class="qcard-dot" id="dot-poes"></div></div>
-          <div class="qcard" onclick="nav('calibraciones',null)"><span class="qcard-icon">⚖️</span><div class="qcard-title">Calibraciones</div><div class="qcard-sub">6 certificados</div><div class="qcard-dot" id="dot-cal"></div></div>
-          <div class="qcard" onclick="nav('reg-agua',null)"><span class="qcard-icon">💧</span><div class="qcard-title">Agua</div><div class="qcard-sub">Registro diario</div><div class="qcard-dot" id="dot-agua"></div></div>
-          <div class="qcard" onclick="nav('reg-higiene',null)"><span class="qcard-icon">🧑</span><div class="qcard-title">Higiene</div><div class="qcard-sub">Registro diario</div><div class="qcard-dot" id="dot-higiene"></div></div>
-          <div class="qcard" onclick="nav('reg-limpieza',null)"><span class="qcard-icon">🧹</span><div class="qcard-title">Limpieza</div><div class="qcard-sub">Checklist</div><div class="qcard-dot" id="dot-limpieza"></div></div>
-        </div>
-      </div>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:16px;">
-      <div class="dash-section">
-        <div class="dash-section-title">🔋 Estado del Sistema</div>
-        <div class="sistema-grid">
-          <div class="sis-item"><span style="font-size:18px;">🦠</span><div><div class="sis-label">Microbiol.</div><div class="sis-val" style="color:#2e7d32">Al dia</div></div></div>
-          <div class="sis-item"><span style="font-size:18px;">💧</span><div><div class="sis-label">Agua</div><div class="sis-val" style="color:#2e7d32">Diario</div></div></div>
-          <div class="sis-item"><span style="font-size:18px;">🐛</span><div><div class="sis-label">Plagas</div><div class="sis-val" style="color:#2e7d32">Mensual</div></div></div>
-          <div class="sis-item"><span style="font-size:18px;">🎓</span><div><div class="sis-label">Capacit.</div><div class="sis-val" style="color:#888">Pendiente</div></div></div>
-          <div class="sis-item" style="grid-column:span 2"><span style="font-size:18px;">⭐</span><div><div class="sis-label">PPRO — Engrase vagones</div><div class="sis-val" style="color:#2e7d32;font-size:12px;">Grasa grado alimentario · Semanal</div></div></div>
-        </div>
-      </div>
-      <div class="dash-section" style="flex:1;">
-        <div class="dash-section-title">🕐 Actividad Reciente</div>
-        <div class="activity-list">
-          <div class="act-item"><div class="act-dot green">✅</div><div><div class="act-title">Plan HACCP v08 validado</div><div class="act-sub">DIGESA — Diciembre 2023</div></div></div>
-          <div class="act-item"><div class="act-dot blue">🏭</div><div><div class="act-title">Sistema inicializado</div><div class="act-sub">Listo para cargar documentos</div></div></div>
-          <div class="act-item"><div class="act-dot yellow">⭐</div><div><div class="act-title">PPRO activo: Esterilizado</div><div class="act-sub">Monitoreo semanal requerido</div></div></div>
-          <div id="dash-act-docs"></div>
-        </div>
-        <div style="margin-top:14px;padding-top:12px;border-top:1px dashed #eee;text-align:center;">
-          <button class="btn btn-outline btn-sm" onclick="nav('documentos',null)">Ver todos los documentos →</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- PLAN HACCP -->
-<div class="page" id="page-haccp-plan">
-  <div class="ph"><h2>📋 Plan HACCP</h2><p>RM 449-2006/MINSA · OLEAGINOSAS PADRE ABAD S.A. · Validado DIGESA</p></div>
-
-  <div class="haccp-plan-box">
-    <div class="haccp-plan-banner">
-      <h3>🌴 Plan HACCP v08 — Aceite Crudo de Palma</h3>
-      <p>OLEAGINOSAS PADRE ABAD S.A. · Padre Abad, Ucayali, Perú · Diciembre 2023</p>
-      <div class="haccp-plan-badges">
-        <span class="haccp-plan-badge">✅ Validado DIGESA</span>
-        <span class="haccp-plan-badge">📄 Versión 08 · 2023</span>
-        <span class="haccp-plan-badge">🏭 Aceite Crudo de Palma</span>
-        <span class="haccp-plan-badge">⚙️ 12 Etapas de Proceso</span>
-        <span class="haccp-plan-badge">⭐ 1 PPRO Activo</span>
-        <span class="haccp-plan-badge">🎯 0 PCC Identificados</span>
-      </div>
-    </div>
-    <div class="haccp-plan-body">
-      <div id="haccp-plan-upload-area">
-        <div class="haccp-doc-upload" onclick="document.getElementById('haccp-plan-input').click()">
-          <input type="file" id="haccp-plan-input" accept=".pdf,.doc,.docx" onchange="handleHaccpPlan(event)">
-          <div class="haccp-doc-upload-icon">📄</div>
-          <p style="font-size:14px;font-weight:600;color:#555;margin-bottom:4px;">Subir Plan HACCP v08</p>
-          <p style="font-size:12px;color:#aaa;">Haz clic para seleccionar el PDF o Word del plan validado</p>
-        </div>
-      </div>
-      <div id="haccp-plan-uploaded" style="display:none;">
-        <div class="haccp-doc-uploaded">
-          <div class="haccp-doc-uploaded-info">
-            <span class="haccp-doc-uploaded-icon">📋</span>
-            <div>
-              <div style="font-size:14px;font-weight:700;color:#166534;" id="haccp-plan-fname"></div>
-              <div style="font-size:11px;color:#888;margin-top:2px;" id="haccp-plan-fmeta"></div>
-              <span class="tag-firma ok" style="margin-top:6px;display:inline-flex;">✅ Plan HACCP Validado — DIGESA</span>
-            </div>
-          </div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;">
-            <button class="btn btn-outline btn-sm" onclick="verHaccpPlan()">👁️ Ver Plan</button>
-            <button class="btn btn-green btn-sm" onclick="descargarHaccpPlan()">📥 Descargar</button>
-            <button class="btn btn-gray btn-sm" onclick="reemplazarHaccpPlan()">🔄 Reemplazar</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="alert-banner green">
-    <span class="alert-banner-icon">ℹ️</span>
-    <div>Este es el documento oficial validado. El contenido del plan — análisis de peligros, PPRO, equipo — está disponible en las secciones del menú. El equipo y el PPRO activo tienen sus propias pantallas de gestión.</div>
+  <div class="alert alert-green">✅ Plan HACCP validado por DIGESA — Versión 08 — Diciembre 2023</div>
+  <div id="dash-alertas"></div>
+  <div class="cards">
+    <div class="card" onclick="nav('bpm',null)"><div class="card-icon">📋</div><div class="card-title">BPM</div><div class="card-sub">Subir documentos</div></div>
+    <div class="card" onclick="nav('poes',null)"><div class="card-icon">🧼</div><div class="card-title">POES</div><div class="card-sub">5 procedimientos</div></div>
+    <div class="card" onclick="nav('calibraciones',null)"><div class="card-icon">⚖️</div><div class="card-title">Calibraciones</div><div class="card-sub">Equipos de medición</div></div>
+    <div class="card" onclick="nav('laboratorio',null)"><div class="card-icon">🔬</div><div class="card-title">Laboratorio</div><div class="card-sub">Análisis y resultados</div></div>
+    <div class="card" onclick="nav('plagas',null)"><div class="card-icon">🐀</div><div class="card-title">Control Plagas</div><div class="card-sub">Registros y certificados</div></div>
+    <div class="card" onclick="nav('auditoria',null)"><div class="card-icon">🔍</div><div class="card-title">Auditorías</div><div class="card-sub">Verificación sistema</div></div>
   </div>
 </div>
 
 <!-- EQUIPO HACCP -->
 <div class="page" id="page-equipo">
-  <div class="eq-header">
-    <div>
-      <div class="eq-title">👥 Equipo HACCP — SIG</div>
-      <div class="eq-sub">Paso 1 · RM 449-2006/MINSA · ISO 9001 — Formación y nombramiento del equipo</div>
-    </div>
-    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-      <span id="eq-badge-total" style="font-size:12px;color:#888;background:#f0f4f0;padding:5px 14px;border-radius:20px;"></span>
-      <span id="eq-badge-actas" style="font-size:12px;color:#888;background:#f0f4f0;padding:5px 14px;border-radius:20px;"></span>
-      <button class="btn btn-green" onclick="openModalEquipo()">+ Añadir miembro</button>
-    </div>
-  </div>
-
-  <div class="alert-banner green" style="margin-bottom:18px;">
-    <span class="alert-banner-icon">📋</span>
-    <div><b>Acta de Nombramiento</b> — Aprobada por la Alta Dirección · Plan HACCP v08 · ISO 9001. Sube el acta escaneada en PDF, Word o Excel junto a cada miembro.</div>
-  </div>
-
-  <div class="eq-grid" id="eq-grid">
-    <div class="eq-empty">
-      <div class="eq-empty-icon">👥</div>
-      <div class="eq-empty-txt">Sin miembros registrados aún</div>
-      <div class="eq-empty-sub">Haz clic en "+ Añadir miembro" para comenzar</div>
-    </div>
+  <div class="ph"><h2>👥 Equipo HACCP</h2><p>Paso 1 — Formación del Equipo · RM 449-2006/MINSA</p></div>
+  <div class="tbl-wrap">
+    <div class="tbl-head"><h3>Integrantes</h3></div>
+    <table>
+      <tr><th>Cargo</th><th>Rol HACCP</th><th>Estado</th></tr>
+      <tr><td>Gerente General</td><td>Aprobación del Plan</td><td><span class="tag tag-green">Activo</span></td></tr>
+      <tr><td>Gestor Calidad e Inocuidad</td><td>Líder HACCP</td><td><span class="tag tag-green">Activo</span></td></tr>
+      <tr><td>Jefe de Planta</td><td>Parámetros operativos</td><td><span class="tag tag-green">Activo</span></td></tr>
+      <tr><td>Gestor Mantenimiento</td><td>Integridad equipos</td><td><span class="tag tag-green">Activo</span></td></tr>
+      <tr><td>Gestor Logística</td><td>Trazabilidad</td><td><span class="tag tag-green">Activo</span></td></tr>
+      <tr><td>Gestor SST</td><td>Riesgos operativos</td><td><span class="tag tag-green">Activo</span></td></tr>
+      <tr><td>Gestor Medio Ambiente</td><td>Aspectos ambientales</td><td><span class="tag tag-green">Activo</span></td></tr>
+    </table>
   </div>
 </div>
 
@@ -970,101 +558,6 @@ tr:hover td{background:#fafffe;}
   </div>
 </div>
 
-<!-- ══ REGISTRO: CONTROL DE AGUA ══ -->
-<div class="page" id="page-reg-agua">
-  <div class="reg-header">
-    <div><div class="reg-title">💧 Control de Agua</div><div class="reg-sub">OLPASA-AQ-F-012 · OLPASA-AQ-POES-005 · Diario (mañana / tarde)</div></div>
-    <div class="reg-actions">
-      <button class="btn btn-sm btn-pdf" onclick="exportPDF('agua')">📄 PDF</button>
-      <button class="btn btn-sm btn-xls" onclick="exportXLS('agua')">📊 Excel</button>
-      <button class="btn btn-green btn-sm" onclick="openRegModal('agua')">+ Registrar</button>
-    </div>
-  </div>
-  <div class="semaforo-bar" id="sem-agua"></div>
-  <div class="turno-tabs">
-    <div class="ttab active" onclick="filtrarTurno('agua','todos',this)">Todos</div>
-    <div class="ttab" onclick="filtrarTurno('agua','manana',this)">🌅 Mañana</div>
-    <div class="ttab" onclick="filtrarTurno('agua','tarde',this)">🌆 Tarde</div>
-  </div>
-  <div class="reg-tbl-wrap">
-    <div class="reg-tbl-head"><h3>Registros — Cloro residual y pH</h3><span style="font-size:11px;color:#aaa;">Limites: Cloro 0.5–1.0 mg/L · pH 6.5–8.5</span></div>
-    <table class="reg-table" id="tbl-agua">
-      <tr><th>Fecha</th><th>Turno</th><th>Punto</th><th>Cloro (mg/L)</th><th>pH</th><th>Color</th><th>Olor</th><th>Estado</th><th>Responsable</th><th>Obs.</th></tr>
-      <tr><td colspan="10" class="reg-empty">Sin registros — haz clic en + Registrar</td></tr>
-    </table>
-  </div>
-</div>
-
-<!-- ══ REGISTRO: HIGIENE PERSONAL ══ -->
-<div class="page" id="page-reg-higiene">
-  <div class="reg-header">
-    <div><div class="reg-title">🧑 Higiene del Personal</div><div class="reg-sub">OLPASA-AQ-F-024 · OLPASA-AQ-POES-003 · Diario (ingreso a planta)</div></div>
-    <div class="reg-actions">
-      <button class="btn btn-sm btn-pdf" onclick="exportPDF('higiene')">📄 PDF</button>
-      <button class="btn btn-sm btn-xls" onclick="exportXLS('higiene')">📊 Excel</button>
-      <button class="btn btn-green btn-sm" onclick="openRegModal('higiene')">+ Registrar</button>
-    </div>
-  </div>
-  <div class="semaforo-bar" id="sem-higiene"></div>
-  <div class="turno-tabs">
-    <div class="ttab active" onclick="filtrarTurno('higiene','todos',this)">Todos</div>
-    <div class="ttab" onclick="filtrarTurno('higiene','manana',this)">🌅 Mañana</div>
-    <div class="ttab" onclick="filtrarTurno('higiene','tarde',this)">🌆 Tarde</div>
-  </div>
-  <div class="reg-tbl-wrap">
-    <div class="reg-tbl-head"><h3>Registros — Control Higiene y Signos de Enfermedad</h3></div>
-    <table class="reg-table" id="tbl-higiene">
-      <tr><th>Fecha</th><th>Turno</th><th>Personal</th><th>Uniforme</th><th>Manos/Uñas</th><th>Cabello</th><th>Sin heridas</th><th>Sin sintomas</th><th>Estado</th><th>Responsable</th></tr>
-      <tr><td colspan="10" class="reg-empty">Sin registros — haz clic en + Registrar</td></tr>
-    </table>
-  </div>
-</div>
-
-<!-- ══ REGISTRO: LIMPIEZA ══ -->
-<div class="page" id="page-reg-limpieza">
-  <div class="reg-header">
-    <div><div class="reg-title">🧹 Limpieza y Desinfeccion</div><div class="reg-sub">OLPASA-AQ-F-014 · OLPASA-AQ-POES-002 · Diario / Semanal por area</div></div>
-    <div class="reg-actions">
-      <button class="btn btn-sm btn-pdf" onclick="exportPDF('limpieza')">📄 PDF</button>
-      <button class="btn btn-sm btn-xls" onclick="exportXLS('limpieza')">📊 Excel</button>
-      <button class="btn btn-green btn-sm" onclick="openRegModal('limpieza')">+ Registrar</button>
-    </div>
-  </div>
-  <div class="semaforo-bar" id="sem-limpieza"></div>
-  <div class="reg-tbl-wrap">
-    <div class="reg-tbl-head"><h3>Checklist Limpieza y Desinfeccion por Area</h3></div>
-    <table class="reg-table" id="tbl-limpieza">
-      <tr><th>Fecha</th><th>Turno</th><th>Area</th><th>Tipo</th><th>Limpieza</th><th>Desinfeccion</th><th>Producto</th><th>Concentracion</th><th>Estado</th><th>Responsable</th></tr>
-      <tr><td colspan="10" class="reg-empty">Sin registros — haz clic en + Registrar</td></tr>
-    </table>
-  </div>
-</div>
-
-<!-- ══ REGISTRO: PLAGAS ══ -->
-<div class="page" id="page-reg-plagas">
-  <div class="reg-header">
-    <div><div class="reg-title">🐛 Inspeccion de Plagas</div><div class="reg-sub">OLPASA-AQ-F-021 · OLPASA-AQ-F-022 · Semanal cebaderos / Mensual fumigacion</div></div>
-    <div class="reg-actions">
-      <button class="btn btn-sm btn-pdf" onclick="exportPDF('plagas')">📄 PDF</button>
-      <button class="btn btn-sm btn-xls" onclick="exportXLS('plagas')">📊 Excel</button>
-      <button class="btn btn-green btn-sm" onclick="openRegModal('plagas')">+ Registrar</button>
-    </div>
-  </div>
-  <div class="semaforo-bar" id="sem-plagas"></div>
-  <div class="turno-tabs">
-    <div class="ttab active" onclick="filtrarTipoPlagas('todos',this)">Todos</div>
-    <div class="ttab" onclick="filtrarTipoPlagas('inspeccion',this)">🔍 Inspeccion</div>
-    <div class="ttab" onclick="filtrarTipoPlagas('fumigacion',this)">💨 Fumigacion</div>
-  </div>
-  <div class="reg-tbl-wrap">
-    <div class="reg-tbl-head"><h3>Registros de Control de Plagas</h3></div>
-    <table class="reg-table" id="tbl-plagas">
-      <tr><th>Fecha</th><th>Tipo</th><th>Area</th><th>Cebadero</th><th>Hallazgo</th><th>Actividad</th><th>Accion</th><th>Estado</th><th>Responsable</th></tr>
-      <tr><td colspan="9" class="reg-empty">Sin registros — haz clic en + Registrar</td></tr>
-    </table>
-  </div>
-</div>
-
 </main>
 </div>
 
@@ -1080,6 +573,7 @@ tr:hover td{background:#fafffe;}
       <span>PDF, Word, Excel</span>
     </div>
     <div id="file-preview" style="display:none;margin-top:12px;padding:10px;background:#f5f5f5;border-radius:8px;font-size:12px;"></div>
+    <div id="drive-status" class="drive-status"></div>
     <div class="modal-btns">
       <button class="btn btn-gray" onclick="closeModal('modal-upload')">Cancelar</button>
       <button class="btn btn-green" onclick="saveFile()">💾 Guardar</button>
@@ -1105,385 +599,71 @@ tr:hover td{background:#fafffe;}
   </div>
 </div>
 
-<!-- MODAL: CONTROL DE AGUA -->
-<div class="modal-bg" id="modal-reg-agua">
-  <div class="mreg">
-    <h3>💧 Registro Control de Agua</h3>
-    <div class="mreg-sub">OLPASA-AQ-F-012 — Complete todos los campos</div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Fecha</label><input type="date" id="rag-fecha" class="form-input"></div>
-      <div class="form-group"><label class="form-label">Turno</label>
-        <select id="rag-turno" class="form-input"><option value="manana">Manana</option><option value="tarde">Tarde</option></select>
-      </div>
-    </div>
-    <div class="form-row solo"><div class="form-group"><label class="form-label">Punto de muestreo</label>
-      <select id="rag-punto" class="form-input">
-        <option>Red interna planta</option><option>Cisterna principal</option><option>Tanque caldero</option><option>Laboratorio</option><option>Comedor / SSHH</option>
-      </select>
-    </div></div>
-    <div class="form-row trio">
-      <div class="form-group"><label class="form-label">Cloro (mg/L)</label><input type="number" step="0.1" id="rag-cloro" class="form-input" placeholder="0.5 – 1.0" oninput="colorInput(this,0.5,1.0)"></div>
-      <div class="form-group"><label class="form-label">pH</label><input type="number" step="0.1" id="rag-ph" class="form-input" placeholder="6.5 – 8.5" oninput="colorInput(this,6.5,8.5)"></div>
-      <div class="form-group"><label class="form-label">Temp. (C)</label><input type="number" step="0.5" id="rag-temp" class="form-input" placeholder="Opcional"></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Color</label>
-        <select id="rag-color" class="form-input"><option value="Incoloro OK">Incoloro OK</option><option value="Turbio AVISO">Turbio AVISO</option><option value="Muy turbio MAL">Muy turbio MAL</option></select>
-      </div>
-      <div class="form-group"><label class="form-label">Olor</label>
-        <select id="rag-olor" class="form-input"><option value="Sin olor OK">Sin olor OK</option><option value="Cloro leve OK">Cloro leve OK</option><option value="Olor extrano AVISO">Olor extrano AVISO</option></select>
-      </div>
-    </div>
-    <div class="form-row"><div class="form-group"><label class="form-label">Responsable</label><input type="text" id="rag-resp" class="form-input" placeholder="Nombre"></div>
-    <div class="form-group"><label class="form-label">Observaciones</label><input type="text" id="rag-obs" class="form-input" placeholder="Solo si hay desviacion..."></div></div>
-    <div class="mreg-btns">
-      <button class="btn btn-gray" onclick="closeModal('modal-reg-agua')">Cancelar</button>
-      <button class="btn btn-green" onclick="saveReg('agua')">Guardar Registro</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL: HIGIENE PERSONAL -->
-<div class="modal-bg" id="modal-reg-higiene">
-  <div class="mreg">
-    <h3>🧑 Registro Higiene del Personal</h3>
-    <div class="mreg-sub">OLPASA-AQ-F-024 — Complete al ingreso de cada turno</div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Fecha</label><input type="date" id="rhig-fecha" class="form-input"></div>
-      <div class="form-group"><label class="form-label">Turno</label>
-        <select id="rhig-turno" class="form-input"><option value="manana">Manana</option><option value="tarde">Tarde</option></select>
-      </div>
-    </div>
-    <div class="form-row solo"><div class="form-group"><label class="form-label">Nombre del personal</label><input type="text" id="rhig-personal" class="form-input" placeholder="Nombre completo"></div></div>
-    <div class="form-section">Verificacion de higiene</div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Uniforme limpio</label>
-        <select id="rhig-uniforme" class="form-input"><option value="OK">OK Cumple</option><option value="AVISO">AVISO Incompleto</option><option value="MAL">MAL No cumple</option></select>
-      </div>
-      <div class="form-group"><label class="form-label">Manos / Unas</label>
-        <select id="rhig-manos" class="form-input"><option value="OK">OK Cumple</option><option value="AVISO">AVISO Observacion</option><option value="MAL">MAL No cumple</option></select>
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Cabello cubierto</label>
-        <select id="rhig-cabello" class="form-input"><option value="OK">OK Cumple</option><option value="AVISO">AVISO Observacion</option><option value="MAL">MAL No cumple</option></select>
-      </div>
-      <div class="form-group"><label class="form-label">Sin heridas expuestas</label>
-        <select id="rhig-heridas" class="form-input"><option value="OK">OK Sin heridas</option><option value="AVISO">AVISO Herida cubierta</option><option value="MAL">MAL Herida expuesta</option></select>
-      </div>
-    </div>
-    <div class="form-section">Signos de enfermedad</div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Sintomas gastroint.</label>
-        <select id="rhig-gastro" class="form-input"><option value="OK">OK Ninguno</option><option value="MAL">MAL Presenta sintomas</option></select>
-      </div>
-      <div class="form-group"><label class="form-label">Fiebre / gripe / tos</label>
-        <select id="rhig-fiebre" class="form-input"><option value="OK">OK Ninguno</option><option value="MAL">MAL Presenta sintomas</option></select>
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Responsable verificacion</label><input type="text" id="rhig-resp" class="form-input" placeholder="Gestor Calidad / Jefe Turno"></div>
-      <div class="form-group"><label class="form-label">Observaciones</label><input type="text" id="rhig-obs" class="form-input" placeholder="Acciones tomadas..."></div>
-    </div>
-    <div class="mreg-btns">
-      <button class="btn btn-gray" onclick="closeModal('modal-reg-higiene')">Cancelar</button>
-      <button class="btn btn-green" onclick="saveReg('higiene')">Guardar Registro</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL: LIMPIEZA -->
-<div class="modal-bg" id="modal-reg-limpieza">
-  <div class="mreg">
-    <h3>🧹 Registro Limpieza y Desinfeccion</h3>
-    <div class="mreg-sub">OLPASA-AQ-F-014 — Complete por area y turno</div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Fecha</label><input type="date" id="rlim-fecha" class="form-input"></div>
-      <div class="form-group"><label class="form-label">Turno</label>
-        <select id="rlim-turno" class="form-input"><option value="manana">Manana</option><option value="tarde">Tarde</option><option value="fin-semana">Fin de Semana</option></select>
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Area</label>
-        <select id="rlim-area" class="form-input">
-          <option>Planta extraccion</option><option>Laboratorio</option><option>SSHH y vestuarios</option><option>Comedor</option><option>Almacen insumos</option><option>Patio / Exteriores</option>
-        </select>
-      </div>
-      <div class="form-group"><label class="form-label">Tipo</label>
-        <select id="rlim-tipo" class="form-input"><option value="Limpieza diaria">Limpieza diaria</option><option value="Limpieza semanal">Limpieza semanal</option><option value="Desinfeccion profunda">Desinfeccion profunda</option></select>
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Limpieza</label>
-        <select id="rlim-limpieza" class="form-input"><option value="OK Completa">OK Completa</option><option value="AVISO Parcial">AVISO Parcial</option><option value="MAL No realizada">MAL No realizada</option></select>
-      </div>
-      <div class="form-group"><label class="form-label">Desinfeccion</label>
-        <select id="rlim-desinfeccion" class="form-input"><option value="OK Completa">OK Completa</option><option value="AVISO Parcial">AVISO Parcial</option><option value="MAL No realizada">MAL No realizada</option><option value="NA">N/A</option></select>
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Producto</label>
-        <select id="rlim-producto" class="form-input"><option>Hipoclorito sodio 7.5%</option><option>Amonio cuaternario</option><option>Detergente industrial</option><option>Otro</option></select>
-      </div>
-      <div class="form-group"><label class="form-label">Concentracion</label><input type="text" id="rlim-conc" class="form-input" placeholder="p.ej. 200 ppm"></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Responsable</label><input type="text" id="rlim-resp" class="form-input" placeholder="Nombre"></div>
-      <div class="form-group"><label class="form-label">Observaciones</label><input type="text" id="rlim-obs" class="form-input" placeholder="Hallazgos, correcciones..."></div>
-    </div>
-    <div class="mreg-btns">
-      <button class="btn btn-gray" onclick="closeModal('modal-reg-limpieza')">Cancelar</button>
-      <button class="btn btn-green" onclick="saveReg('limpieza')">Guardar Registro</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL: PLAGAS -->
-<div class="modal-bg" id="modal-reg-plagas">
-  <div class="mreg">
-    <h3>🐛 Registro Inspeccion de Plagas</h3>
-    <div class="mreg-sub">OLPASA-AQ-F-021 / F-022</div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Fecha</label><input type="date" id="rplag-fecha" class="form-input"></div>
-      <div class="form-group"><label class="form-label">Tipo</label>
-        <select id="rplag-tipo" class="form-input"><option value="inspeccion">Inspeccion cebaderos</option><option value="fumigacion">Fumigacion interna</option><option value="externa">Empresa externa</option></select>
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Area</label>
-        <select id="rplag-area" class="form-input"><option>Planta extraccion</option><option>Almacen</option><option>Comedor</option><option>SSHH</option><option>Perimetro externo</option><option>Todas las areas</option></select>
-      </div>
-      <div class="form-group"><label class="form-label">Cebadero N.</label><input type="text" id="rplag-cebadero" class="form-input" placeholder="C-01, C-02..."></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Hallazgo</label>
-        <select id="rplag-hallazgo" class="form-input"><option value="Sin hallazgo OK">Sin hallazgo OK</option><option value="Excrementos AVISO">Excrementos AVISO</option><option value="Rastros roedores AVISO">Rastros roedores AVISO</option><option value="Plaga activa MAL">Plaga activa MAL</option></select>
-      </div>
-      <div class="form-group"><label class="form-label">Nivel actividad</label>
-        <select id="rplag-actividad" class="form-input"><option value="Ninguna OK">Ninguna OK</option><option value="Baja AVISO">Baja AVISO</option><option value="Media MAL">Media MAL</option><option value="Alta MAL">Alta MAL</option></select>
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Accion correctiva</label><input type="text" id="rplag-accion" class="form-input" placeholder="Recebo, sellado, reporte..."></div>
-      <div class="form-group"><label class="form-label">Responsable</label><input type="text" id="rplag-resp" class="form-input" placeholder="Nombre"></div>
-    </div>
-    <div class="mreg-btns">
-      <button class="btn btn-gray" onclick="closeModal('modal-reg-plagas')">Cancelar</button>
-      <button class="btn btn-green" onclick="saveReg('plagas')">Guardar Registro</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL: AÑADIR / EDITAR MIEMBRO EQUIPO -->
-<div class="modal-bg" id="modal-equipo">
-  <div class="meq">
-    <h3 id="meq-title">👤 Añadir Miembro al Equipo</h3>
-    <div class="mreg-sub">Complete la información del integrante del equipo SIG — HACCP</div>
-
-    <div class="meq-section">Datos personales</div>
-    <div class="form-row solo">
-      <div class="form-group">
-        <label class="form-label">Nombre completo *</label>
-        <input type="text" id="meq-nombre" class="form-input" placeholder="Ej. Juan Carlos Pérez Ríos">
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Cargo en la empresa *</label>
-        <input type="text" id="meq-cargo" class="form-input" placeholder="Ej. Gestor de Calidad e Inocuidad">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Rol en el equipo SIG *</label>
-        <input type="text" id="meq-rol" class="form-input" placeholder="Ej. Líder HACCP, Jefe de Planta, Aprobador del Plan...">
-      </div>
-    </div>
-
-    <div class="meq-section">Delegación referente al proceso</div>
-    <div class="form-row solo">
-      <div class="form-group">
-        <label class="form-label">Descripción de su delegación *</label>
-        <textarea id="meq-delegacion" class="form-input" rows="3"
-          placeholder="Ej. Responsable de supervisar las etapas de Esterilizado, Desfrutado y Malaxado (etapas 3-5). Verifica cumplimiento del PPRO de engrase de vagones y parámetros de temperatura del proceso. Coordina con mantenimiento para integridad de equipos."
-          style="resize:vertical;font-family:inherit;line-height:1.5;"></textarea>
-      </div>
-    </div>
-
-    <div class="meq-section">Estado</div>
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Estado del miembro</label>
-        <select id="meq-estado" class="form-input">
-          <option value="Activo">Activo</option>
-          <option value="Licencia">En licencia</option>
-          <option value="Inactivo">Inactivo</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Fecha de nombramiento</label>
-        <input type="date" id="meq-fecha" class="form-input">
-      </div>
-    </div>
-
-    <div class="meq-btns">
-      <button class="btn btn-gray" onclick="closeModal('modal-equipo')">Cancelar</button>
-      <button class="btn btn-green" onclick="saveMiembro()">💾 Guardar miembro</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL: SUBIR ACTA DE NOMBRAMIENTO -->
-<div class="modal-bg" id="modal-acta-eq">
-  <div class="modal">
-    <h3>📄 Acta de Nombramiento</h3>
-    <p id="modal-acta-nombre" style="font-weight:600;color:#333;margin-bottom:4px;"></p>
-    <p style="font-size:11px;color:#aaa;margin-bottom:14px;">Sube el acta firmada por la Alta Dirección — PDF, Word o Excel</p>
-    <div class="file-drop" onclick="document.getElementById('acta-input').click()">
-      <input type="file" id="acta-input" accept=".pdf,.doc,.docx,.xls,.xlsx" onchange="handleActaFile(event)">
-      <div class="file-drop-icon">📋</div>
-      <p>Haz clic para seleccionar el acta</p>
-      <span>PDF · Word · Excel</span>
-    </div>
-    <div id="acta-preview" style="display:none;margin-top:12px;padding:10px 14px;background:#f0fdf4;border-radius:8px;font-size:12px;border:1px solid #86efac;"></div>
-    <div class="modal-btns">
-      <button class="btn btn-gray" onclick="closeModal('modal-acta-eq')">Cancelar</button>
-      <button class="btn btn-green" onclick="saveActa()">💾 Guardar Acta</button>
-    </div>
-  </div>
-</div>
-
-<!-- OVERLAY fullscreen -->
-<div class="ia-overlay" id="ia-overlay" onclick="iaSetMode('compact')"></div>
-
-<!-- IA AUDITOR -->
-<div style="position:fixed;bottom:24px;right:24px;z-index:400;">
-  <button class="ia-btn" onclick="toggleIA()" title="Auditor IA — OLPASA">
-    🤖
-    <span class="ia-notif" id="ia-notif" style="display:none;">!</span>
-  </button>
-</div>
-
+<!-- IA CHAT -->
+<button class="ia-btn" onclick="toggleIA()" title="Asistente IA HACCP">🤖</button>
 <div class="ia-panel" id="ia-panel">
   <div class="ia-header">
-    <div class="ia-header-info">
-      <div class="ia-header-title">🤖 Auditor IA — OLPASA</div>
-      <div class="ia-header-sub">Asistente activo · Sistema HACCP + ISO 9001</div>
-    </div>
-    <div class="ia-header-btns">
-      <span onclick="toggleApiKey()" title="API Key">⚙️</span>
-      <span onclick="iaSetMode('drawer')" id="btn-drawer" title="Expandir">⛶</span>
-      <span onclick="iaSetMode('fullscreen')" id="btn-full" title="Pantalla completa">⤢</span>
-      <span onclick="iaSetMode('compact')" id="btn-compact" style="display:none;" title="Reducir">⤡</span>
-      <span onclick="toggleIA()" title="Cerrar">✕</span>
-    </div>
+    🤖 Asistente HACCP — OLPASA
+    <span onclick="toggleIA()" style="cursor:pointer;opacity:.7;">✕</span>
   </div>
-
-  <!-- API KEY CONFIG -->
-  <div id="ia-apikey-panel" style="display:none;padding:10px;background:#fffbeb;border-bottom:1px solid #fcd34d;flex-shrink:0;">
-    <div style="font-size:10px;font-weight:700;color:#92400e;margin-bottom:6px;">🔑 API Key de Anthropic</div>
-    <div style="display:flex;gap:6px;">
-      <input type="password" id="ia-apikey-input" placeholder="sk-ant-..."
-        style="flex:1;padding:6px 9px;border:1px solid #fcd34d;border-radius:7px;font-size:11px;outline:none;">
-      <button onclick="saveApiKey()"
-        style="background:#1b5e20;color:#fff;border:none;border-radius:7px;padding:6px 10px;font-size:11px;cursor:pointer;font-weight:600;">Guardar</button>
-    </div>
-    <div style="font-size:9px;color:#aaa;margin-top:4px;">Obtén tu key en console.anthropic.com · Se guarda solo en tu navegador</div>
-  </div>
-
-  <div class="ia-quick-btns">
-    <button class="ia-qbtn" onclick="iaAccion('estado')">📋 ¿Cómo estoy hoy?</button>
-    <button class="ia-qbtn" onclick="iaAccion('tareas')">⚡ Tareas de Hoy</button>
-    <button class="ia-qbtn" onclick="iaAccion('auditoria')">🔍 Prepararme para Auditoría</button>
-  </div>
-
   <div class="ia-msgs" id="ia-msgs">
-    <div class="ia-msg bot">¡Hola! Soy tu <b>Auditor IA</b>. Conozco tu sistema por dentro — registros, calibraciones, documentos y fechas.<br><br>Usa los botones de arriba o pregúntame lo que necesites. Estoy aquí para avisarte <b>antes</b> de que el auditor lo encuentre. 🌴</div>
+    <div class="ia-msg bot">¡Hola! Soy tu asistente HACCP. Puedo ayudarte con dudas sobre el Plan HACCP, BPM, POES, normativa RM 449-2006/MINSA y documentación de OLPASA. ¿En qué te ayudo?</div>
   </div>
-
   <div class="ia-input">
-    <input id="ia-q" placeholder="Pregúntame algo del sistema..." onkeydown="if(event.key==='Enter')sendIA()">
+    <input id="ia-q" placeholder="Escribe tu consulta..." onkeydown="if(event.key==='Enter')sendIA()">
     <button class="ia-send" onclick="sendIA()">➤</button>
   </div>
 </div>
 
-<!-- TOAST -->
-<div class="toast" id="toast"></div>
-
 <script>
-function showToast(msg, isErr=false){
-  const t=document.getElementById('toast');
-  t.textContent=msg; t.className='toast'+(isErr?' err':'');
-  setTimeout(()=>t.classList.add('show'),10);
-  setTimeout(()=>t.classList.remove('show'),2800);
+// ── GOOGLE DRIVE CONFIG ──
+const GOOGLE_CLIENT_ID = '208556091810-bsc5jg26k0tjepncl3q0gjq9k03hsbun.apps.googleusercontent.com';
+const DRIVE_FOLDER_ID  = '1b178QNnDgUIpoANcF3m7vr4ZzEmgCcP4';
+const DRIVE_SCOPES     = 'https://www.googleapis.com/auth/drive.file';
+
+let gAccessToken = null;
+let gTokenClient = null;
+
+// Inicializa el cliente OAuth2 (sin popup hasta que el usuario haga una acción)
+function initGoogleAuth(){
+  if(!window.google) return;
+  gTokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: GOOGLE_CLIENT_ID,
+    scope: DRIVE_SCOPES,
+    callback: (resp) => {
+      if(resp.error){ showDriveStatus('error','❌ Error al autenticar con Google'); return; }
+      gAccessToken = resp.access_token;
+      showDriveStatus('ok','✅ Conectado a Google Drive');
+      // Si había un archivo pendiente esperando auth, sube ahora
+      if(pendingFile && currentDocKey){
+        setTimeout(uploadToDrive, 300);
+      }
+    }
+  });
 }
 
-function nav(page, el){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-item,.nav-sub').forEach(n=>n.classList.remove('active'));
-  const target=document.getElementById('page-'+page);
-  if(target) target.classList.add('active');
-  if(el) el.classList.add('active');
-  else document.querySelectorAll('.nav-item,.nav-sub').forEach(n=>{
-    if((n.getAttribute('onclick')||'').includes("'"+page+"'")) n.classList.add('active');
-  });
-  // auto-abrir grupo
-  if(el && el.classList.contains('nav-sub')){
-    const grp=el.closest('.nav-group-items');
-    if(grp && !grp.classList.contains('open')){
-      grp.classList.add('open');
-      const arr=document.getElementById('arr-'+grp.id);
-      if(arr) arr.classList.add('open');
-    }
+function ensureAuth(callback){
+  if(gAccessToken){
+    callback();
+  } else {
+    // Guarda callback para ejecutar post-auth
+    pendingAuthCallback = callback;
+    gTokenClient.requestAccessToken({prompt:'consent'});
   }
 }
+let pendingAuthCallback = null;
 
-function toggleNav(id){
-  const el=document.getElementById(id);
-  const arr=document.getElementById('arr-'+id);
-  if(el) el.classList.toggle('open');
-  if(arr) arr.classList.toggle('open');
+// Estado visual de Drive en el modal
+function showDriveStatus(type, msg){
+  let el = document.getElementById('drive-status');
+  if(!el) return;
+  el.style.display = 'flex';
+  el.className = 'drive-status drive-' + type;
+  el.innerHTML = msg;
 }
 
-// ── PLAN HACCP ──
-let haccpPlanDoc=null;
-async function loadHaccpPlan(){
-  try{ const r=LS.get('haccp-plan-doc'); haccpPlanDoc=r?JSON.parse(r.value):null; }
-  catch(e){ haccpPlanDoc=null; }
-  renderHaccpPlan();
-}
-function renderHaccpPlan(){
-  const up=document.getElementById('haccp-plan-upload-area');
-  const done=document.getElementById('haccp-plan-uploaded');
-  if(!up||!done) return;
-  if(haccpPlanDoc){
-    up.style.display='none'; done.style.display='block';
-    document.getElementById('haccp-plan-fname').textContent='📄 '+haccpPlanDoc.name;
-    document.getElementById('haccp-plan-fmeta').textContent=`${(haccpPlanDoc.size/1024).toFixed(1)} KB · Subido: ${haccpPlanDoc.uploadedAt}`;
-  } else { up.style.display='block'; done.style.display='none'; }
-}
-function handleHaccpPlan(e){
-  const f=e.target.files[0]; if(!f) return;
-  const reader=new FileReader();
-  reader.onload=ev=>{
-    haccpPlanDoc={name:f.name,type:f.type,size:f.size,data:ev.target.result,uploadedAt:new Date().toLocaleDateString('es-PE')};
-    LS.set('haccp-plan-doc',JSON.stringify(haccpPlanDoc));
-    renderHaccpPlan();
-    showToast('✅ Plan HACCP subido correctamente');
-  };
-  reader.readAsDataURL(f);
-}
-function verHaccpPlan(){
-  if(!haccpPlanDoc) return;
-  if(haccpPlanDoc.type==='application/pdf'){
-    const w=window.open(); w.document.write(`<iframe src="${haccpPlanDoc.data}" style="width:100%;height:100vh;border:none;"></iframe>`);
-  } else { descargarHaccpPlan(); }
-}
-function descargarHaccpPlan(){
-  if(!haccpPlanDoc) return;
-  const a=document.createElement('a'); a.href=haccpPlanDoc.data; a.download=haccpPlanDoc.name; a.click();
-}
-function reemplazarHaccpPlan(){ document.getElementById('haccp-plan-input').click(); }
-
-// ── STORAGE ──
+// ── STORAGE (para calibraciones y metadata) ──
+const ST = window.storage;
 
 // ── DOCUMENTOS CONFIG ──
 const DOCS = {
@@ -1569,20 +749,40 @@ let currentDocKey = null;
 let calRows = [];
 
 async function loadState(){
-  try{ const r=LS.get('haccp-docs'); state=r?JSON.parse(r.value):{}; }
-  catch(e){ state={}; }
-  try{ const r=LS.get('haccp-cal'); calRows=r?JSON.parse(r.value):[]; }
-  catch(e){ calRows=[]; }
+  try{
+    const r = await ST.get('haccp-docs-meta');
+    // state guarda solo metadata: {code, name, driveFileId, driveUrl, uploadedAt}
+    state = r ? JSON.parse(r.value) : {};
+  }catch(e){ state={}; }
+  try{
+    const r = await ST.get('haccp-cal');
+    calRows = r ? JSON.parse(r.value) : [];
+  }catch(e){ calRows=[]; }
   renderAll();
+  // Init Google Auth después de cargar
+  setTimeout(initGoogleAuth, 500);
 }
 
 async function saveState(){
-  LS.set('haccp-docs', JSON.stringify(state));
+  // Solo guardamos metadata (no el archivo en sí)
+  const meta = {};
+  Object.keys(state).forEach(k => {
+    const d = state[k];
+    meta[k] = {
+      code: d.code,
+      name: d.name,
+      fileName: d.fileName,
+      driveFileId: d.driveFileId,
+      driveUrl: d.driveUrl,
+      uploadedAt: d.uploadedAt
+    };
+  });
+  await ST.set('haccp-docs-meta', JSON.stringify(meta));
   updateDashboard();
 }
 
 async function saveCals(){
-  LS.set('haccp-cal', JSON.stringify(calRows));
+  await ST.set('haccp-cal', JSON.stringify(calRows));
 }
 
 // ── RENDER DOCS ──
@@ -1598,12 +798,12 @@ function renderDocList(containerId, keys){
       <div class="doc-info">
         <div class="doc-code">${d.code}</div>
         <div class="doc-name">${d.name}</div>
+        ${saved ? `<div style="font-size:10px;color:#888;margin-top:2px;">📁 ${saved.fileName} · ${saved.uploadedAt}</div>` : ''}
       </div>
       <div class="doc-actions">
         ${saved
-          ? `<span class="tag tag-green">✅ Subido</span>
-             <button class="btn btn-sm btn-outline" onclick="viewDoc('${d.code}')">👁️ Ver</button>
-             <button class="btn btn-sm btn-green" onclick="downloadDoc('${d.code}')">📥 Descargar</button>
+          ? `<span class="tag tag-green">✅ En Drive</span>
+             <a class="btn btn-sm btn-outline" href="${saved.driveUrl}" target="_blank">👁️ Ver</a>
              <button class="btn btn-sm btn-gray" onclick="openUpload('${d.code}','${d.name}')">🔄 Reemplazar</button>`
           : `<span class="tag tag-gray">⬜ Pendiente</span>
              <button class="btn btn-sm btn-green" onclick="openUpload('${d.code}','${d.name}')">📤 Subir</button>`
@@ -1643,12 +843,12 @@ function renderAllDocs(){
       <div class="doc-info">
         <div class="doc-code">${d.code}</div>
         <div class="doc-name">${d.name}</div>
+        ${saved ? `<div style="font-size:10px;color:#888;margin-top:2px;">📁 ${saved.fileName} · ${saved.uploadedAt}</div>` : ''}
       </div>
       <div class="doc-actions">
         ${saved
-          ? `<span class="tag tag-green">✅ Subido</span>
-             <button class="btn btn-sm btn-outline" onclick="viewDoc('${d.code}')">👁️ Ver</button>
-             <button class="btn btn-sm btn-green" onclick="downloadDoc('${d.code}')">📥 Descargar</button>
+          ? `<span class="tag tag-green">✅ En Drive</span>
+             <a class="btn btn-sm btn-outline" href="${saved.driveUrl}" target="_blank">👁️ Ver</a>
              <button class="btn btn-sm btn-gray" onclick="openUpload('${d.code}','${d.name}')">🔄</button>`
           : `<span class="tag tag-gray">⬜ Pendiente</span>
              <button class="btn btn-sm btn-green" onclick="openUpload('${d.code}','${d.name}')">📤 Subir</button>`
@@ -1684,585 +884,189 @@ function getCalEstado(proxima){
 }
 
 function updateDashboard(){
-  // Fecha
-  const hoy = new Date();
-  const fe = document.getElementById('dash-fecha');
-  if(fe) fe.textContent = hoy.toLocaleDateString('es-PE',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-
   const subidos = Object.keys(state).length;
   document.getElementById('d-docs').textContent = subidos;
-  const calEl = document.getElementById('kpi-cal-total');
-  if(calEl) calEl.textContent = calRows.length;
-
-  // Barras progreso
-  function setPct(barId, pctId, docs){
-    const count = docs.filter(d=>state[d.code]).length;
-    const pct = docs.length>0 ? Math.round(count/docs.length*100) : 0;
-    const b=document.getElementById(barId); if(b) b.style.width=pct+'%';
-    const p=document.getElementById(pctId); if(p) p.textContent=pct+'%';
-    return pct;
-  }
-  const p_bpm   = setPct('bar-bpm',  'pct-bpm',  DOCS.bpm);
-  const p_poes  = setPct('bar-poes', 'pct-poes', DOCS.poes);
-  const p_plagas= setPct('bar-plagas','pct-plagas',DOCS.plagas);
-  const p_cal   = setPct('bar-cal',  'pct-cal',  DOCS.cal);
-  const p_lab   = setPct('bar-lab',  'pct-lab',  DOCS.lab);
-  const all=[...DOCS.bpm,...DOCS.poes,...DOCS.plagas,...DOCS.cal,...DOCS.lab];
-  const pt=document.getElementById('pct-total');
-  if(pt) pt.textContent=all.filter(d=>state[d.code]).length+' / '+all.length+' docs';
-
-  // Dots qcards
-  function setDot(id, pct){
-    const el=document.getElementById(id); if(!el) return;
-    el.style.background = pct===100?'#4caf50': pct>0?'#ff9800':'#f44336';
-  }
-  setDot('dot-bpm',p_bpm); setDot('dot-poes',p_poes); setDot('dot-plagas',p_plagas);
-  setDot('dot-cal',p_cal); setDot('dot-lab',p_lab);
-
-  // Alertas calibraciones
+  // alertas vencimiento calibraciones
   const vencidas = calRows.filter(r=>{
     if(!r.proxima) return false;
-    return Math.ceil((new Date(r.proxima)-new Date())/(1000*60*60*24))<=30;
+    const d=new Date(r.proxima), h=new Date();
+    return Math.ceil((d-h)/(1000*60*60*24))<=30;
   });
   document.getElementById('d-alertas').textContent = vencidas.length;
-  const kpiAl=document.getElementById('kpi-alertas-box');
-  if(kpiAl) kpiAl.className='kpi '+(vencidas.length>0?'kpi-warn':'kpi-ok');
-  const cont=document.getElementById('dash-alertas');
-  if(cont){
-    cont.innerHTML='';
-    vencidas.forEach(r=>{
-      const diff=Math.ceil((new Date(r.proxima)-new Date())/(1000*60*60*24));
-      const cls=diff<0?'red':'yellow';
-      cont.innerHTML+=`<div class="alert-banner ${cls}" style="margin-bottom:8px"><span class="alert-banner-icon">${diff<0?'🔴':'⚠️'}</span><div>${diff<0?'Calibracion VENCIDA':'Calibracion proxima en '+diff+' dias'} — <b>${r.equipo}</b></div></div>`;
-    });
-  }
-  // Actividad reciente
-  const actDocs=document.getElementById('dash-act-docs');
-  if(actDocs){
-    const rec=Object.entries(state).slice(-3).reverse();
-    actDocs.innerHTML=rec.map(([code,doc])=>`<div class="act-item"><div class="act-dot green">📄</div><div><div class="act-title">${doc.name}</div><div class="act-sub">${code} · ${doc.uploadedAt||''}</div></div></div>`).join('');
-  }
-  // Dots registros diarios
-  if(typeof regData!=='undefined'){
-    const todayStr=new Date().toISOString().split('T')[0];
-    const dAg=document.getElementById('dot-agua');
-    const dHi=document.getElementById('dot-higiene');
-    const dLi=document.getElementById('dot-limpieza');
-    if(dAg) dAg.style.background=regData.agua.some(r=>r.fecha===todayStr)?'#4caf50':'#f44336';
-    if(dHi) dHi.style.background=regData.higiene.some(r=>r.fecha===todayStr)?'#4caf50':'#f44336';
-    if(dLi) dLi.style.background=regData.limpieza.some(r=>r.fecha===todayStr)?'#4caf50':'#f44336';
-  }
+  const cont = document.getElementById('dash-alertas');
+  cont.innerHTML='';
+  vencidas.forEach(r=>{
+    const d=new Date(r.proxima),h=new Date();
+    const diff=Math.ceil((d-h)/(1000*60*60*24));
+    const cls = diff<0?'alert-red':'alert-yellow';
+    const msg = diff<0?`🔴 Calibración VENCIDA`:`🟡 Calibración próxima en ${diff} días`;
+    cont.innerHTML+=`<div class="alert ${cls}">${msg} — <b>${r.equipo}</b></div>`;
+  });
 }
 
-// ── STORAGE LOCAL (localStorage para uso offline) ──
-const LS = {
-  get: (key) => { try{ const v=localStorage.getItem(key); return v?{value:v}:null; }catch(e){return null;} },
-  set: (key, val) => { try{ localStorage.setItem(key, val); return true; }catch(e){return false;} },
-};
-
-// ── EQUIPO HACCP ──
-let equipoData = [];
-let currentMiembroIdx = null;
-let pendingActaFile = null;
-let actaMiembroIdx = null;
-
-async function loadEquipo(){
-  try{ const r=LS.get('haccp-equipo'); equipoData=r?JSON.parse(r.value):[]; }
-  catch(e){ equipoData=[]; }
-  renderEquipo();
-}
-
-async function saveEquipo(){
-  LS.set('haccp-equipo', JSON.stringify(equipoData));
-  renderEquipo();
-  updateDashboard();
-}
-
-function renderEquipo(){
-  const grid = document.getElementById('eq-grid');
-  if(!grid) return;
-
-  const total = equipoData.length;
-  const conActa = equipoData.filter(m=>m.acta).length;
-  const bTotal = document.getElementById('eq-badge-total');
-  const bActas = document.getElementById('eq-badge-actas');
-  if(bTotal) bTotal.textContent = `👥 ${total} miembro${total!==1?'s':''}`;
-  if(bActas) bActas.innerHTML = conActa===total && total>0
-    ? `<span style="color:#2e7d32;font-weight:600;">✅ ${conActa}/${total} diplomas subidos</span>`
-    : `<span style="color:#e65100;">📋 ${conActa}/${total} diplomas subidos</span>`;
-
-  if(!equipoData.length){
-    grid.innerHTML=`<div class="eq-empty"><div class="eq-empty-icon">👥</div><div class="eq-empty-txt">Sin miembros registrados aún</div><div class="eq-empty-sub">Haz clic en "+ Añadir miembro" para comenzar</div></div>`;
-    return;
-  }
-
-  grid.innerHTML = equipoData.map((m,i)=>{
-    const estadoColor = m.estado==='Activo'?'#4caf50':m.estado==='Licencia'?'#ffc107':'#bbb';
-
-    const actaHTML = m.acta
-      ? `<div class="eq-acta-row firmado">
-           <div class="eq-acta-info">
-             <span class="eq-acta-icon">📋</span>
-             <div>
-               <div class="eq-acta-label"><span class="tag-firma ok">✅ Diploma de Nombramiento — Alta Dirección</span></div>
-               <div class="eq-acta-file">📄 ${m.acta.name} · Subido: ${m.acta.uploadedAt}</div>
-             </div>
-           </div>
-           <div class="eq-acta-actions">
-             <button class="btn btn-sm btn-outline" onclick="verActa(${i})">👁️ Ver</button>
-             <button class="btn btn-sm btn-green" onclick="descargarActa(${i})">📥 Descargar</button>
-             <button class="btn btn-sm btn-gray" onclick="openActaModal(${i})" title="Reemplazar">🔄</button>
-           </div>
-         </div>`
-      : `<div class="eq-acta-row">
-           <div class="eq-acta-info">
-             <span class="eq-acta-icon">📋</span>
-             <div>
-               <div class="eq-acta-label"><span class="tag-firma pend">⬜ Diploma de Nombramiento pendiente</span></div>
-               <div class="eq-acta-file">Sube el diploma firmado por la Alta Dirección (PDF/Word/Excel)</div>
-             </div>
-           </div>
-           <div class="eq-acta-actions">
-             <button class="btn btn-sm btn-green" onclick="openActaModal(${i})">📤 Subir Diploma</button>
-           </div>
-         </div>`;
-
-    return `<div class="eq-card">
-      <div class="eq-card-header">
-        <div class="eq-avatar">👤</div>
-        <div class="eq-info">
-          <div class="eq-nombre">${m.nombre}</div>
-          <div class="eq-cargo">${m.cargo}</div>
-          <div class="eq-rol-badge">🎯 ${m.rol}</div>
-        </div>
-        <div style="display:flex;gap:6px;align-items:flex-start;flex-wrap:wrap;">
-          ${!m.acta ? `<button class="btn btn-sm btn-green" onclick="openActaModal(${i})">📤 Subir Diploma</button>` : ''}
-          <button class="btn btn-sm btn-outline" onclick="editMiembro(${i})">✏️ Editar</button>
-          <button class="btn btn-sm btn-gray" onclick="deleteMiembro(${i})">🗑️</button>
-        </div>
-      </div>
-      <div class="eq-card-body">
-        <div class="eq-delegacion">
-          <div class="eq-delegacion-label">Delegación referente al proceso</div>
-          <div class="eq-delegacion-text">${m.delegacion || '<span style="color:#bbb;font-style:italic;">Sin descripción registrada</span>'}</div>
-        </div>
-        ${actaHTML}
-      </div>
-      <div class="eq-card-footer">
-        <div class="eq-estado-dot" style="background:${estadoColor}"></div>
-        <div class="eq-estado-txt">${m.estado}${m.fechaNombramiento?' · Nombrado: '+m.fechaNombramiento:''}</div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function openModalEquipo(){
-  currentMiembroIdx = null;
-  document.getElementById('meq-title').textContent = '👤 Añadir Miembro al Equipo';
-  document.getElementById('meq-nombre').value = '';
-  document.getElementById('meq-cargo').value = '';
-  document.getElementById('meq-rol').value = '';
-  document.getElementById('meq-delegacion').value = '';
-  document.getElementById('meq-estado').value = 'Activo';
-  document.getElementById('meq-fecha').value = new Date().toISOString().split('T')[0];
-  openModal('modal-equipo');
-}
-
-function editMiembro(i){
-  currentMiembroIdx = i;
-  const m = equipoData[i];
-  document.getElementById('meq-title').textContent = '✏️ Editar Miembro';
-  document.getElementById('meq-nombre').value = m.nombre;
-  document.getElementById('meq-cargo').value = m.cargo;
-  document.getElementById('meq-rol').value = m.rol;
-  document.getElementById('meq-delegacion').value = m.delegacion || '';
-  document.getElementById('meq-estado').value = m.estado;
-  document.getElementById('meq-fecha').value = m.fechaNombramiento || '';
-  openModal('modal-equipo');
-}
-
-async function saveMiembro(){
-  const nombre = document.getElementById('meq-nombre').value.trim();
-  const cargo  = document.getElementById('meq-cargo').value.trim();
-  const rol    = document.getElementById('meq-rol').value.trim();
-  const delegacion = document.getElementById('meq-delegacion').value.trim();
-  if(!nombre || !cargo || !rol){ showToast('⚠️ Completa nombre, cargo y rol', true); return; }
-  const data = {
-    nombre, cargo, rol, delegacion,
-    estado: document.getElementById('meq-estado').value,
-    fechaNombramiento: document.getElementById('meq-fecha').value,
-    acta: currentMiembroIdx !== null ? equipoData[currentMiembroIdx].acta : null
-  };
-  if(currentMiembroIdx !== null){
-    equipoData[currentMiembroIdx] = data;
-    showToast('✅ Miembro actualizado');
-  } else {
-    equipoData.push(data);
-    showToast('✅ Miembro añadido al equipo');
-  }
-  await saveEquipo();
-  closeModal('modal-equipo');
-}
-
-async function deleteMiembro(i){
-  const m = equipoData[i];
-  if(!confirm(`¿Eliminar a ${m.nombre} del equipo?`)) return;
-  equipoData.splice(i,1);
-  await saveEquipo();
-  showToast('🗑️ Miembro eliminado');
-}
-
-function openActaModal(i){
-  actaMiembroIdx = i;
-  const m = equipoData[i];
-  document.getElementById('modal-acta-nombre').textContent = `👤 ${m.nombre} — ${m.cargo}`;
-  document.getElementById('acta-preview').style.display='none';
-  document.getElementById('acta-input').value='';
-  pendingActaFile = null;
-  openModal('modal-acta-eq');
-}
-
-function handleActaFile(e){
-  const f = e.target.files[0]; if(!f) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    pendingActaFile = {name:f.name, type:f.type, size:f.size, data:ev.target.result, uploadedAt:new Date().toLocaleDateString('es-PE')};
-    const prev = document.getElementById('acta-preview');
-    prev.style.display='block';
-    prev.innerHTML=`✅ <b>${f.name}</b> — ${(f.size/1024).toFixed(1)} KB listo para guardar`;
-  };
-  reader.readAsDataURL(f);
-}
-
-async function saveActa(){
-  if(!pendingActaFile){ showToast('⚠️ Selecciona un archivo primero', true); return; }
-  equipoData[actaMiembroIdx].acta = pendingActaFile;
-  await saveEquipo();
-  closeModal('modal-acta-eq');
-  pendingActaFile = null;
-  showToast('📋 Diploma de nombramiento guardado');
-}
-
-function verActa(i){
-  const acta = equipoData[i].acta; if(!acta) return;
-  if(acta.type==='application/pdf'){
-    const w=window.open(); w.document.write(`<iframe src="${acta.data}" style="width:100%;height:100vh;border:none;"></iframe>`);
-  } else {
-    const a=document.createElement('a'); a.href=acta.data; a.download=acta.name; a.click();
-  }
-}
-
-function descargarActa(i){
-  const acta = equipoData[i].acta; if(!acta) return;
-  const a=document.createElement('a'); a.href=acta.data; a.download=acta.name; a.click();
-}
-
-
-let regData = {agua:[],higiene:[],limpieza:[],plagas:[]};
-
-async function loadRegData(){
-  for(const key of ['agua','higiene','limpieza','plagas']){
-    try{ const r=LS.get('haccp-reg-'+key); regData[key]=r?JSON.parse(r.value):[]; }
-    catch(e){ regData[key]=[]; }
-  }
-  renderReg('agua'); renderReg('higiene'); renderReg('limpieza'); renderReg('plagas');
-}
-
-async function saveRegData(key){ LS.set('haccp-reg-'+key, JSON.stringify(regData[key])); }
-
-function estadoColor(val){
-  if(!val) return 'gris';
-  if(val.includes('MAL')) return 'rojo';
-  if(val.includes('AVISO')) return 'amarillo';
-  return 'verde';
-}
-function badgeEstado(e){
-  return e==='verde'?'<span class="ind ok">Conforme</span>':e==='amarillo'?'<span class="ind warn">Observacion</span>':e==='rojo'?'<span class="ind err">No conforme</span>':'<span class="ind na">Sin datos</span>';
-}
-function colorInput(el,min,max){
-  const v=parseFloat(el.value); el.className='form-input';
-  if(isNaN(v)) return;
-  if(v>=min&&v<=max) el.classList.add('ok');
-  else el.classList.add('err');
-}
-
-function getRegRow(key){
-  if(key==='agua'){
-    const c=parseFloat(document.getElementById('rag-cloro').value);
-    const p=parseFloat(document.getElementById('rag-ph').value);
-    const e=(c>=0.5&&c<=1.0&&p>=6.5&&p<=8.5)?'verde':(c>0&&p>0)?'amarillo':'gris';
-    return{fecha:document.getElementById('rag-fecha').value,turno:document.getElementById('rag-turno').value,
-      punto:document.getElementById('rag-punto').value,cloro:document.getElementById('rag-cloro').value,
-      ph:document.getElementById('rag-ph').value,temp:document.getElementById('rag-temp').value||'',
-      color:document.getElementById('rag-color').value,olor:document.getElementById('rag-olor').value,
-      estado:e,responsable:document.getElementById('rag-resp').value,obs:document.getElementById('rag-obs').value||''};
-  }
-  if(key==='higiene'){
-    const vals=[document.getElementById('rhig-uniforme').value,document.getElementById('rhig-manos').value,
-      document.getElementById('rhig-cabello').value,document.getElementById('rhig-heridas').value,
-      document.getElementById('rhig-gastro').value,document.getElementById('rhig-fiebre').value];
-    const e=vals.some(v=>v==='MAL')?'rojo':vals.some(v=>v==='AVISO')?'amarillo':'verde';
-    return{fecha:document.getElementById('rhig-fecha').value,turno:document.getElementById('rhig-turno').value,
-      personal:document.getElementById('rhig-personal').value,uniforme:vals[0],manos:vals[1],
-      cabello:vals[2],heridas:vals[3],sintomas:vals[4]+'/'+vals[5],estado:e,
-      responsable:document.getElementById('rhig-resp').value,obs:document.getElementById('rhig-obs').value||''};
-  }
-  if(key==='limpieza'){
-    const l=document.getElementById('rlim-limpieza').value,d=document.getElementById('rlim-desinfeccion').value;
-    const e=estadoColor(l==='MAL No realizada'?'MAL':d==='MAL No realizada'?'MAL':l.includes('AVISO')||d.includes('AVISO')?'AVISO':'OK');
-    return{fecha:document.getElementById('rlim-fecha').value,turno:document.getElementById('rlim-turno').value,
-      area:document.getElementById('rlim-area').value,tipo:document.getElementById('rlim-tipo').value,
-      limpieza:l,desinfeccion:d,producto:document.getElementById('rlim-producto').value,
-      conc:document.getElementById('rlim-conc').value||'',estado:e,
-      responsable:document.getElementById('rlim-resp').value,obs:document.getElementById('rlim-obs').value||''};
-  }
-  if(key==='plagas'){
-    const h=document.getElementById('rplag-hallazgo').value,a=document.getElementById('rplag-actividad').value;
-    const e=h.includes('MAL')||a.includes('MAL')?'rojo':h.includes('AVISO')||a.includes('AVISO')?'amarillo':'verde';
-    return{fecha:document.getElementById('rplag-fecha').value,tipo:document.getElementById('rplag-tipo').value,
-      area:document.getElementById('rplag-area').value,cebadero:document.getElementById('rplag-cebadero').value||'',
-      hallazgo:h,actividad:a,accion:document.getElementById('rplag-accion').value||'',estado:e,
-      responsable:document.getElementById('rplag-resp').value};
-  }
-}
-
-function validateReg(key){
-  const ids={agua:['rag-fecha','rag-cloro','rag-ph','rag-resp'],
-    higiene:['rhig-fecha','rhig-personal','rhig-resp'],
-    limpieza:['rlim-fecha','rlim-resp'],
-    plagas:['rplag-fecha','rplag-resp']};
-  for(const id of ids[key]){
-    if(!document.getElementById(id).value.trim()) return false;
-  }
-  return true;
-}
-
-function openRegModal(key){
-  const todayStr=new Date().toISOString().split('T')[0];
-  const dateIds={agua:'rag-fecha',higiene:'rhig-fecha',limpieza:'rlim-fecha',plagas:'rplag-fecha'};
-  const el=document.getElementById(dateIds[key]);
-  if(el&&!el.value) el.value=todayStr;
-  openModal('modal-reg-'+key);
-}
-
-async function saveReg(key){
-  if(!validateReg(key)){alert('Completa los campos obligatorios');return;}
-  const row=getRegRow(key);
-  regData[key].push(row);
-  await saveRegData(key);
-  renderReg(key);
-  closeModal('modal-reg-'+key);
-  clearReg(key);
-  updateDashboard();
-  showToast('✅ Registro guardado correctamente');
-}
-
-function clearReg(key){
-  const ids={agua:['rag-fecha','rag-cloro','rag-ph','rag-temp','rag-resp','rag-obs'],
-    higiene:['rhig-fecha','rhig-personal','rhig-resp','rhig-obs'],
-    limpieza:['rlim-fecha','rlim-conc','rlim-resp','rlim-obs'],
-    plagas:['rplag-fecha','rplag-cebadero','rplag-accion','rplag-resp']};
-  (ids[key]||[]).forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-}
-
-function renderReg(key, filtro='todos'){
-  const tblId={agua:'tbl-agua',higiene:'tbl-higiene',limpieza:'tbl-limpieza',plagas:'tbl-plagas'};
-  const tbl=document.getElementById(tblId[key]); if(!tbl) return;
-  let rows=regData[key];
-  if(filtro!=='todos') rows=rows.filter(r=>r.turno===filtro||r.tipo===filtro);
-  while(tbl.rows.length>1) tbl.deleteRow(1);
-  const cols={agua:10,higiene:10,limpieza:10,plagas:9};
-  if(!rows.length){
-    const tr=tbl.insertRow();
-    tr.innerHTML=`<td colspan="${cols[key]}" class="reg-empty">Sin registros — haz clic en + Registrar</td>`;
-  } else {
-    [...rows].reverse().forEach(r=>{
-      const tr=tbl.insertRow();
-      tr.innerHTML=rowHTML(key,r);
-    });
-  }
-  renderSemaforo(key);
-}
-
-function rowHTML(key,r){
-  if(key==='agua') return `<td>${r.fecha}</td><td>${r.turno}</td><td>${r.punto}</td><td><b>${r.cloro}</b></td><td><b>${r.ph}</b></td><td>${r.color}</td><td>${r.olor}</td><td>${badgeEstado(r.estado)}</td><td>${r.responsable}</td><td>${r.obs||''}</td>`;
-  if(key==='higiene') return `<td>${r.fecha}</td><td>${r.turno}</td><td>${r.personal}</td><td>${r.uniforme}</td><td>${r.manos}</td><td>${r.cabello}</td><td>${r.heridas}</td><td>${r.sintomas}</td><td>${badgeEstado(r.estado)}</td><td>${r.responsable}</td>`;
-  if(key==='limpieza') return `<td>${r.fecha}</td><td>${r.turno}</td><td>${r.area}</td><td>${r.tipo}</td><td>${r.limpieza}</td><td>${r.desinfeccion}</td><td>${r.producto}</td><td>${r.conc||''}</td><td>${badgeEstado(r.estado)}</td><td>${r.responsable}</td>`;
-  if(key==='plagas') return `<td>${r.fecha}</td><td>${r.tipo}</td><td>${r.area}</td><td>${r.cebadero||''}</td><td>${r.hallazgo}</td><td>${r.actividad}</td><td>${r.accion||''}</td><td>${badgeEstado(r.estado)}</td><td>${r.responsable}</td>`;
-  return '';
-}
-
-function renderSemaforo(key){
-  const semId={agua:'sem-agua',higiene:'sem-higiene',limpieza:'sem-limpieza',plagas:'sem-plagas'};
-  const sem=document.getElementById(semId[key]); if(!sem) return;
-  const rows=regData[key];
-  const todayStr=new Date().toISOString().split('T')[0];
-  let items=[];
-  if(key==='agua'){
-    const hoy=rows.filter(r=>r.fecha===todayStr);
-    const man=hoy.find(r=>r.turno==='manana');
-    const tar=hoy.find(r=>r.turno==='tarde');
-    items=[
-      {label:'Hoy Manana',val:man?'Cloro:'+man.cloro+' pH:'+man.ph:'Sin registro',e:man?man.estado:'gris'},
-      {label:'Hoy Tarde',val:tar?'Cloro:'+tar.cloro+' pH:'+tar.ph:'Sin registro',e:tar?tar.estado:'gris'},
-      {label:'Total registros',val:rows.length+' total',e:'verde'},
-    ];
-  } else if(key==='higiene'){
-    const hoy=rows.filter(r=>r.fecha===todayStr);
-    items=[
-      {label:'Registros hoy',val:hoy.length+' personas',e:hoy.length>0?'verde':'gris'},
-      {label:'Conformes',val:hoy.filter(r=>r.estado==='verde').length+' OK',e:'verde'},
-      {label:'Con observacion',val:hoy.filter(r=>r.estado!=='verde').length+' obs',e:hoy.some(r=>r.estado!=='verde')?'amarillo':'verde'},
-    ];
-  } else if(key==='limpieza'){
-    const hoy=rows.filter(r=>r.fecha===todayStr);
-    items=[
-      {label:'Areas hoy',val:hoy.length+' areas',e:hoy.length>0?'verde':'gris'},
-      {label:'Completas',val:hoy.filter(r=>r.estado==='verde').length+' OK',e:'verde'},
-      {label:'Historial',val:rows.length+' total',e:'verde'},
-    ];
-  } else {
-    const ok=rows.filter(r=>r.estado==='verde').length;
-    const warn=rows.filter(r=>r.estado==='amarillo').length;
-    const err=rows.filter(r=>r.estado==='rojo').length;
-    items=[
-      {label:'Sin hallazgo',val:ok+' reg',e:'verde'},
-      {label:'Con observacion',val:warn+' reg',e:warn>0?'amarillo':'verde'},
-      {label:'Plaga activa',val:err+' reg',e:err>0?'rojo':'verde'},
-    ];
-  }
-  sem.innerHTML=items.map(i=>`<div class="semaforo-item ${i.e}"><div class="sem-dot ${i.e}"></div><div class="sem-label">${i.label}</div><div class="sem-val">${i.val}</div></div>`).join('');
-}
-
-function filtrarTurno(key, turno, el){
-  el.closest('.turno-tabs').querySelectorAll('.ttab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  renderReg(key, turno);
-}
-function filtrarTipoPlagas(tipo, el){
-  el.closest('.turno-tabs').querySelectorAll('.ttab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  renderReg('plagas', tipo);
-}
-
-function exportPDF(key){
-  const rows=regData[key];
-  if(!rows.length){alert('No hay registros para exportar');return;}
-  const titles={agua:'Control de Agua',higiene:'Higiene del Personal',limpieza:'Limpieza y Desinfeccion',plagas:'Inspeccion de Plagas'};
-  const refs={agua:'OLPASA-AQ-F-012',higiene:'OLPASA-AQ-F-024',limpieza:'OLPASA-AQ-F-014',plagas:'OLPASA-AQ-F-021'};
-  const heads={agua:['Fecha','Turno','Punto','Cloro','pH','Color','Olor','Estado','Responsable','Obs'],
-    higiene:['Fecha','Turno','Personal','Uniforme','Manos','Cabello','Heridas','Sintomas','Estado','Responsable'],
-    limpieza:['Fecha','Turno','Area','Tipo','Limpieza','Desinfeccion','Producto','Conc','Estado','Responsable'],
-    plagas:['Fecha','Tipo','Area','Cebadero','Hallazgo','Actividad','Accion','Estado','Responsable']};
-  const getVals={
-    agua:r=>[r.fecha,r.turno,r.punto,r.cloro,r.ph,r.color,r.olor,r.estado,r.responsable,r.obs],
-    higiene:r=>[r.fecha,r.turno,r.personal,r.uniforme,r.manos,r.cabello,r.heridas,r.sintomas,r.estado,r.responsable],
-    limpieza:r=>[r.fecha,r.turno,r.area,r.tipo,r.limpieza,r.desinfeccion,r.producto,r.conc,r.estado,r.responsable],
-    plagas:r=>[r.fecha,r.tipo,r.area,r.cebadero,r.hallazgo,r.actividad,r.accion,r.estado,r.responsable],
-  };
-  const now=new Date().toLocaleDateString('es-PE');
-  const theadHTML = heads[key].map(h=>'<th>'+h+'</th>').join('');
-  const tbodyHTML = rows.map(r=>'<tr>'+getVals[key](r).map(v=>'<td>'+(v||'')+'</td>').join('')+'</tr>').join('');
-  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
-    @page{size:landscape;margin:15mm;}
-    body{font-family:Arial,sans-serif;margin:20px;font-size:10px;}
-    .header-box{border-left:5px solid #1b5e20;padding:8px 12px;margin-bottom:14px;background:#f0fdf4;}
-    h1{font-size:13px;color:#1b5e20;margin:0 0 3px;font-weight:bold;}
-    .sub{color:#555;font-size:9px;}
-    table{width:100%;border-collapse:collapse;margin-top:8px;}
-    th{background:#1b5e20;color:#fff;padding:6px 8px;text-align:left;font-size:9px;text-transform:uppercase;letter-spacing:.5px;}
-    td{padding:5px 8px;border-bottom:1px solid #e0e0e0;font-size:9px;vertical-align:middle;}
-    tr:nth-child(even) td{background:#f5f9f5;}
-    .footer{margin-top:14px;color:#aaa;font-size:8px;text-align:center;border-top:1px solid #eee;padding-top:8px;}
-  </style></head><body>
-  <div class="header-box">
-    <h1>OLEAGINOSAS PADRE ABAD S.A. (OLPASA) — ${titles[key]}</h1>
-    <div class="sub">${refs[key]} &nbsp;·&nbsp; Plan HACCP v08 &nbsp;·&nbsp; RM 449-2006/MINSA &nbsp;·&nbsp; Impreso: ${now} &nbsp;·&nbsp; Total: ${rows.length} registros</div>
-  </div>
-  <table><tr>${theadHTML}</tr>${tbodyHTML}</table>
-  <div class="footer">OLPASA &nbsp;·&nbsp; Padre Abad, Ucayali, Peru &nbsp;·&nbsp; ${now}</div>
-  </body></html>`;
-  const w=window.open('','_blank'); w.document.write(html); w.document.close(); setTimeout(()=>w.print(),500);
-}
-
-function exportXLS(key){
-  const rows=regData[key];
-  if(!rows.length){alert('No hay registros para exportar');return;}
-  const heads={agua:['Fecha','Turno','Punto','Cloro mg/L','pH','Color','Olor','Estado','Responsable','Obs'],
-    higiene:['Fecha','Turno','Personal','Uniforme','Manos','Cabello','Heridas','Sintomas','Estado','Responsable'],
-    limpieza:['Fecha','Turno','Area','Tipo','Limpieza','Desinfeccion','Producto','Concentracion','Estado','Responsable'],
-    plagas:['Fecha','Tipo','Area','Cebadero','Hallazgo','Actividad','Accion correctiva','Estado','Responsable']};
-  const getVals={
-    agua:r=>[r.fecha,r.turno,r.punto,r.cloro,r.ph,r.color,r.olor,r.estado,r.responsable,r.obs],
-    higiene:r=>[r.fecha,r.turno,r.personal,r.uniforme,r.manos,r.cabello,r.heridas,r.sintomas,r.estado,r.responsable],
-    limpieza:r=>[r.fecha,r.turno,r.area,r.tipo,r.limpieza,r.desinfeccion,r.producto,r.conc,r.estado,r.responsable],
-    plagas:r=>[r.fecha,r.tipo,r.area,r.cebadero,r.hallazgo,r.actividad,r.accion,r.estado,r.responsable],
-  };
-  const names={agua:'Control_Agua',higiene:'Higiene_Personal',limpieza:'Limpieza_Desinfeccion',plagas:'Inspeccion_Plagas'};
-  const esc=v=>{ const s=String(v||''); return s.includes(',')||s.includes('"')?'"'+s.replace(/"/g,'""')+'"':s; };
-  const lines=['OLEAGINOSAS PADRE ABAD S.A. (OLPASA)','Registro: '+names[key].replace(/_/g,' '),'Exportado: '+new Date().toLocaleDateString('es-PE'),'',heads[key].join(','),...rows.map(r=>getVals[key](r).map(esc).join(','))];
-  const blob=new Blob([lines.join('\n')],{type:'text/csv;charset=utf-8;'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download='OLPASA_'+names[key]+'_'+new Date().toISOString().split('T')[0]+'.csv';
-  a.click();
-}
-
-// ── UPLOAD ──
+// ── UPLOAD → GOOGLE DRIVE ──
 let pendingFile = null;
 
 function openUpload(code, name){
   currentDocKey = code;
+  currentDocName = name;
   document.getElementById('modal-doc-name').textContent = `📄 ${code} — ${name}`;
   document.getElementById('file-preview').style.display='none';
   document.getElementById('file-input').value='';
+  const ds = document.getElementById('drive-status');
+  if(ds){ ds.style.display='none'; }
   pendingFile = null;
   openModal('modal-upload');
 }
 
+let currentDocName = '';
+
 function handleFile(e){
   const f = e.target.files[0];
   if(!f) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    pendingFile = {name:f.name, type:f.type, size:f.size, data:ev.target.result};
-    const prev = document.getElementById('file-preview');
-    prev.style.display='block';
-    prev.innerHTML=`📄 <b>${f.name}</b> — ${(f.size/1024).toFixed(1)} KB`;
-  };
-  reader.readAsDataURL(f);
+  pendingFile = f; // guardamos el File original, no base64
+  const prev = document.getElementById('file-preview');
+  prev.style.display='block';
+  prev.innerHTML=`📄 <b>${f.name}</b> — ${(f.size/1024).toFixed(1)} KB`;
 }
 
 async function saveFile(){
   if(!pendingFile){ alert('Selecciona un archivo primero'); return; }
-  state[currentDocKey] = {
-    ...pendingFile,
-    uploadedAt: new Date().toLocaleDateString('es-PE'),
-    code: currentDocKey
-  };
-  await saveState();
-  renderAll();
-  closeModal('modal-upload');
-  pendingFile=null;
-  showToast('📄 Documento subido correctamente');
+  // Pide autenticación si no hay token
+  if(!gAccessToken){
+    showDriveStatus('loading','🔄 Conectando con Google...');
+    gTokenClient.requestAccessToken({prompt:''});
+    // La subida continua en el callback de gTokenClient
+    return;
+  }
+  await uploadToDrive();
 }
 
+async function uploadToDrive(){
+  if(!pendingFile) return;
+  showDriveStatus('loading','⏳ Subiendo a Google Drive...');
+
+  const btn = document.querySelector('#modal-upload .btn-green');
+  if(btn){ btn.disabled=true; btn.textContent='⏳ Subiendo...'; }
+
+  try{
+    // Nombre del archivo en Drive: CODIGO — Nombre.ext
+    const ext = pendingFile.name.split('.').pop();
+    const driveName = `${currentDocKey} — ${currentDocName}.${ext}`;
+
+    // ¿Ya existe un archivo anterior? Si sí, lo reemplazamos (update)
+    const existing = state[currentDocKey];
+    let fileId = existing ? existing.driveFileId : null;
+
+    let fileMetadata, response;
+
+    if(fileId){
+      // UPDATE — reemplaza el contenido
+      response = await updateDriveFile(fileId, driveName, pendingFile);
+    } else {
+      // CREATE — sube nuevo
+      response = await createDriveFile(driveName, pendingFile);
+      fileId = response.id;
+    }
+
+    const driveUrl = `https://drive.google.com/file/d/${fileId}/view`;
+
+    // Guarda metadata en state
+    state[currentDocKey] = {
+      code: currentDocKey,
+      name: currentDocName,
+      fileName: pendingFile.name,
+      driveFileId: fileId,
+      driveUrl: driveUrl,
+      uploadedAt: new Date().toLocaleDateString('es-PE')
+    };
+
+    await saveState();
+    renderAll();
+    showDriveStatus('ok',`✅ Guardado en Google Drive`);
+
+    setTimeout(()=>{
+      closeModal('modal-upload');
+      pendingFile = null;
+    }, 1200);
+
+  } catch(err){
+    console.error('Drive upload error:', err);
+    showDriveStatus('error',`❌ Error: ${err.message || 'No se pudo subir'}`);
+  } finally {
+    if(btn){ btn.disabled=false; btn.textContent='💾 Guardar'; }
+  }
+}
+
+async function createDriveFile(name, file){
+  // Multipart upload
+  const metadata = {
+    name: name,
+    parents: [DRIVE_FOLDER_ID]
+  };
+  const form = new FormData();
+  form.append('metadata', new Blob([JSON.stringify(metadata)], {type:'application/json'}));
+  form.append('file', file);
+
+  const res = await fetch(
+    'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,name,webViewLink',
+    {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${gAccessToken}` },
+      body: form
+    }
+  );
+  if(!res.ok){
+    const err = await res.json();
+    throw new Error(err.error?.message || 'Error al crear archivo en Drive');
+  }
+  return res.json();
+}
+
+async function updateDriveFile(fileId, name, file){
+  // Actualiza el contenido + nombre
+  const metaRes = await fetch(
+    `https://www.googleapis.com/drive/v3/files/${fileId}?fields=id`,
+    {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${gAccessToken}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ name: name })
+    }
+  );
+
+  // Actualiza contenido
+  const res = await fetch(
+    `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media&fields=id,name,webViewLink`,
+    {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${gAccessToken}`,
+        'Content-Type': file.type || 'application/octet-stream'
+      },
+      body: file
+    }
+  );
+  if(!res.ok){
+    const err = await res.json();
+    throw new Error(err.error?.message || 'Error al actualizar archivo en Drive');
+  }
+  return res.json();
+}
+
+// Ya no necesitamos estas funciones locales, pero las dejamos por compatibilidad
 function viewDoc(code){
   const doc = state[code];
-  if(!doc) return;
-  if(doc.type==='application/pdf'){
-    const w=window.open();
-    w.document.write(`<iframe src="${doc.data}" style="width:100%;height:100vh;border:none;"></iframe>`);
-  } else {
-    alert(`📄 Archivo: ${doc.name}\nSubido: ${doc.uploadedAt}\nTipo: ${doc.type}`);
-  }
+  if(!doc || !doc.driveUrl) return;
+  window.open(doc.driveUrl, '_blank');
 }
 
 function downloadDoc(code){
   const doc = state[code];
-  if(!doc) return;
-  const a=document.createElement('a');
-  a.href=doc.data; a.download=doc.name; a.click();
+  if(!doc || !doc.driveFileId) return;
+  window.open(`https://drive.google.com/uc?export=download&id=${doc.driveFileId}`, '_blank');
 }
 
 // ── CALIBRACIONES ──
@@ -2278,7 +1082,6 @@ async function saveCal(){
   updateDashboard();
   closeModal('modal-cal');
   ['cal-equipo','cal-area','cal-fecha','cal-proxima'].forEach(id=>document.getElementById(id).value='');
-  showToast('⚖️ Calibración registrada');
 }
 
 // ── MODAL ──
@@ -2288,204 +1091,21 @@ document.querySelectorAll('.modal-bg').forEach(m=>{
   m.addEventListener('click',e=>{ if(e.target===m) m.classList.remove('open'); });
 });
 
-// nav defined above
+// ── NAV ──
+function nav(page, el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const target=document.getElementById('page-'+page);
+  if(target) target.classList.add('active');
+  if(el) el.classList.add('active');
+  else document.querySelectorAll('.nav-item').forEach(n=>{
+    if((n.getAttribute('onclick')||'').includes("'"+page+"'")) n.classList.add('active');
+  });
+}
 
 // ── IA ──
 function toggleIA(){
-  const panel = document.getElementById('ia-panel');
-  panel.classList.toggle('open');
-  if(panel.classList.contains('open')){
-    document.getElementById('ia-notif').style.display='none';
-    const saved = localStorage.getItem('haccp-apikey');
-    if(saved) document.getElementById('ia-apikey-input').value = saved;
-    // Auto-drawer en pantallas grandes
-    if(window.innerWidth > 900) iaSetMode('drawer');
-  } else {
-    iaSetMode('compact');
-  }
-}
-
-function iaSetMode(modo){
-  const panel = document.getElementById('ia-panel');
-  const overlay = document.getElementById('ia-overlay');
-  const btnDrawer = document.getElementById('btn-drawer');
-  const btnFull = document.getElementById('btn-full');
-  const btnCompact = document.getElementById('btn-compact');
-  if(!panel) return;
-
-  // Quitar todos los modos
-  panel.classList.remove('drawer','fullscreen');
-  overlay.classList.remove('show');
-
-  if(modo === 'drawer'){
-    panel.classList.add('drawer');
-    btnDrawer.style.display='none';
-    btnFull.style.display='inline';
-    btnCompact.style.display='inline';
-  } else if(modo === 'fullscreen'){
-    panel.classList.add('fullscreen');
-    overlay.classList.add('show');
-    btnDrawer.style.display='none';
-    btnFull.style.display='none';
-    btnCompact.style.display='inline';
-  } else {
-    // compact
-    btnDrawer.style.display='inline';
-    btnFull.style.display='inline';
-    btnCompact.style.display='none';
-    if(!panel.classList.contains('open')) panel.classList.remove('open');
-  }
-}
-
-function toggleApiKey(){
-  const p = document.getElementById('ia-apikey-panel');
-  p.style.display = p.style.display==='none' ? 'block' : 'none';
-}
-
-function saveApiKey(){
-  const key = document.getElementById('ia-apikey-input').value.trim();
-  if(!key){ showToast('⚠️ Ingresa una API Key válida', true); return; }
-  localStorage.setItem('haccp-apikey', key);
-  document.getElementById('ia-apikey-panel').style.display='none';
-  showToast('🔑 API Key guardada correctamente');
-}
-
-function getApiKey(){
-  return localStorage.getItem('haccp-apikey') || '';
-}
-
-function getHeaders(){
-  return {
-    'Content-Type':'application/json',
-    'x-api-key': getApiKey(),
-    'anthropic-version':'2023-06-01',
-    'anthropic-dangerous-direct-browser-access':'true'
-  };
-}
-
-function getSystemContext(){
-  const hoy = new Date();
-  const todayStr = hoy.toISOString().split('T')[0];
-  const hoySemana = hoy.toLocaleDateString('es-PE',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-
-  // Documentos
-  const allDocs = [...(window.DOCS?.bpm||[]),...(window.DOCS?.poes||[]),...(window.DOCS?.cal||[]),...(window.DOCS?.lab||[])];
-  const docsSubidos = Object.keys(state||{}).length;
-  const docsPendientes = allDocs.filter(d=>!(state||{})[d.code]).map(d=>d.code+' — '+d.name);
-
-  // Calibraciones
-  const calVencidas = (calRows||[]).filter(r=>{
-    if(!r.proxima) return false;
-    return Math.ceil((new Date(r.proxima)-hoy)/(1000*60*60*24)) < 0;
-  });
-  const calProximas = (calRows||[]).filter(r=>{
-    if(!r.proxima) return false;
-    const diff = Math.ceil((new Date(r.proxima)-hoy)/(1000*60*60*24));
-    return diff>=0 && diff<=30;
-  });
-
-  // Registros diarios
-  const regHoy = {
-    agua: (regData?.agua||[]).filter(r=>r.fecha===todayStr),
-    higiene: (regData?.higiene||[]).filter(r=>r.fecha===todayStr),
-    limpieza: (regData?.limpieza||[]).filter(r=>r.fecha===todayStr),
-  };
-
-  // PPRO vigilancia
-  const semanaMs = 7*24*60*60*1000;
-  const vigilancia = JSON.parse(localStorage.getItem('haccp-vig')||'[]');
-  const ultimaVig = vigilancia.length ? new Date(vigilancia[vigilancia.length-1].fecha) : null;
-  const diasSinVig = ultimaVig ? Math.floor((hoy-ultimaVig)/semanaMs*7) : 999;
-
-  // Equipo
-  const miembrosSinActa = (equipoData||[]).filter(m=>!m.acta).map(m=>m.nombre);
-
-  return `
-Fecha y hora actual: ${hoySemana}
-
-=== ESTADO DEL SISTEMA HACCP — OLPASA ===
-
-DOCUMENTOS:
-- Subidos: ${docsSubidos} documentos
-- Pendientes (${docsPendientes.length}): ${docsPendientes.slice(0,8).join(' | ')  || 'Ninguno'}
-
-CALIBRACIONES:
-- Total registradas: ${(calRows||[]).length}
-- VENCIDAS: ${calVencidas.map(r=>r.equipo+' (venció '+r.proxima+')').join(', ')||'Ninguna'}
-- Próximas a vencer (≤30 días): ${calProximas.map(r=>r.equipo+' ('+Math.ceil((new Date(r.proxima)-hoy)/(1000*60*60*24))+'d — '+r.proxima+')').join(', ')||'Ninguna'}
-
-REGISTROS DE HOY (${todayStr}):
-- Control de Agua: ${regHoy.agua.length} registro(s) — ${regHoy.agua.length===0?'⚠️ SIN REGISTRO HOY':regHoy.agua.map(r=>'Turno '+r.turno+': Cloro '+r.cloro+' pH '+r.ph).join(' | ')}
-- Higiene Personal: ${regHoy.higiene.length} persona(s) registrada(s) hoy
-- Limpieza: ${regHoy.limpieza.length} área(s) registrada(s) hoy
-
-PPRO — ENGRASE DE VAGONES (Monitoreo semanal):
-- Último registro: ${ultimaVig ? ultimaVig.toLocaleDateString('es-PE') : 'NUNCA REGISTRADO'}
-- Días desde último monitoreo: ${diasSinVig === 999 ? 'Sin registro' : diasSinVig + ' días'}
-- Estado: ${diasSinVig > 7 ? '🔴 VENCIDO — requiere inspección urgente' : diasSinVig > 5 ? '🟡 Próximo a vencer' : '🟢 Al día'}
-
-EQUIPO HACCP:
-- Total miembros: ${(equipoData||[]).length}
-- Sin diploma de nombramiento: ${miembrosSinActa.length > 0 ? miembrosSinActa.join(', ') : 'Todos tienen diploma'}
-
-PLAN HACCP: ${haccpPlanDoc ? '✅ Plan v08 subido — '+haccpPlanDoc.name : '⚠️ Plan HACCP NO subido aún'}
-`;
-}
-
-async function iaAccion(tipo){
-  document.querySelectorAll('.ia-qbtn').forEach(b=>b.classList.remove('active'));
-  event.target.classList.add('active');
-  setTimeout(()=>event.target.classList.remove('active'), 2000);
-
-  const prompts = {
-    estado: `Analiza el estado actual del sistema y dame un resumen ejecutivo claro. Usa emojis 🟢🟡🔴 para indicar estado de cada área. Sé directo y específico con los datos reales que te doy.`,
-    tareas: `Dame la lista priorizada de tareas concretas que se deben hacer HOY para mantener el sistema en regla. Para cada tarea di: qué hacer exactamente, quién es el responsable, y cómo registrarlo en el sistema. Máximo 5 tareas, las más urgentes primero.`,
-    auditoria: `Actúa como auditor externo DIGESA/ISO 9001 que llega hoy a OLPASA. Basándote en los datos reales del sistema, dime qué observaciones y no conformidades me levantarías. Para cada una di: la observación exacta, qué norma incumple, y cómo subsanarla antes de que vuelvas. Sé duro — mejor que me lo digas tú ahora que el auditor real después.`
-  };
-
-  addMsg(tipo==='estado'?'📋 ¿Cómo estoy hoy?':tipo==='tareas'?'⚡ Tareas de Hoy':'🔍 Prepararme para Auditoría', 'user');
-  addTyping();
-
-  if(!getApiKey()){
-    removeTyping();
-    addMsg('⚙️ Para activar el Auditor IA necesitas configurar tu API Key. Haz clic en el ícono ⚙️ arriba para ingresarla.','bot');
-    document.getElementById('ia-apikey-panel').style.display='block';
-    return;
-  }
-
-  const context = getSystemContext();
-
-  try{
-    const res = await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers: getHeaders(),
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:1000,
-        system:`Eres el Auditor IA interno de OLEAGINOSAS PADRE ABAD S.A. (OLPASA), planta extractora de aceite crudo de palma en Padre Abad, Ucayali, Perú.
-
-Tu rol NO es responder preguntas teóricas sobre normas. Tu rol es:
-1. Leer los datos REALES del sistema que te paso
-2. Identificar problemas concretos y riesgos reales
-3. Decir exactamente qué hacer para subsanarlos HOY
-4. Actuar como auditor interno exigente que conoce cada detalle del sistema
-
-Contexto del sistema en este momento:
-${context}
-
-Normas aplicables: RM 449-2006/MINSA (HACCP), ISO 9001:2015, Codex Alimentarius.
-Responde siempre en español. Sé directo, específico y accionable. Usa los datos reales — no respondas en abstracto.`,
-        messages:[{role:'user', content: prompts[tipo]}]
-      })
-    });
-    const data = await res.json();
-    removeTyping();
-    const texto = data.content[0].text;
-    addMsgFormatted(texto, tipo==='auditoria'?'critico':tipo==='tareas'?'alerta':'bot');
-  }catch(e){
-    removeTyping();
-    addMsg('Error al conectar con el servidor. Verifica tu conexión.','bot');
-  }
+  document.getElementById('ia-panel').classList.toggle('open');
 }
 
 async function sendIA(){
@@ -2494,105 +1114,45 @@ async function sendIA(){
   if(!q) return;
   input.value='';
   addMsg(q,'user');
-  addTyping();
-
-  if(!getApiKey()){
-    removeTyping();
-    addMsg('⚙️ Configura tu API Key primero — haz clic en el ícono ⚙️ arriba.','bot');
-    document.getElementById('ia-apikey-panel').style.display='block';
-    return;
-  }
-
-  const context = getSystemContext();
+  addMsg('⏳ Consultando...','bot');
 
   try{
     const res = await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
-      headers: getHeaders(),
+      headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         model:'claude-sonnet-4-20250514',
         max_tokens:1000,
-        system:`Eres el Auditor IA interno de OLEAGINOSAS PADRE ABAD S.A. (OLPASA), planta extractora de aceite crudo de palma en Padre Abad, Ucayali, Perú.
-
-Conoces el sistema por dentro. Aquí está el estado actual real:
-${context}
-
-Tu trabajo: responder con datos reales, ser directo, práctico y accionable. 
-Normas: RM 449-2006/MINSA, ISO 9001:2015. Responde en español.`,
+        system:`Eres el asistente HACCP de OLEAGINOSAS PADRE ABAD S.A. (OLPASA), planta extractora de aceite crudo de palma ubicada en Padre Abad, Ucayali, Perú. 
+        Conoces el Plan HACCP v08 (2023), el Manual BPM v02 (2024), el Manual POES, y la normativa RM 449-2006/MINSA.
+        El proceso produce ACP (aceite crudo de palma), PKO (aceite crudo de palmiste) y PKM (harina de palmiste).
+        No hay PCC identificados. Hay 1 PPRO: engrase de vagones en esterilizado con grasa de grado alimentario.
+        Responde siempre en español, de forma concisa y práctica. Si te preguntan sobre documentos, menciona los códigos OLPASA correspondientes.`,
         messages:[{role:'user',content:q}]
       })
     });
     const data = await res.json();
-    removeTyping();
-    addMsgFormatted(data.content[0].text, 'bot');
+    const msgs = document.getElementById('ia-msgs');
+    msgs.lastChild.remove();
+    addMsg(data.content[0].text,'bot');
   }catch(e){
-    removeTyping();
+    const msgs = document.getElementById('ia-msgs');
+    msgs.lastChild.remove();
     addMsg('Error al conectar. Intenta nuevamente.','bot');
   }
 }
 
-function addMsg(text, type){
+function addMsg(text,type){
   const msgs=document.getElementById('ia-msgs');
   const div=document.createElement('div');
   div.className=`ia-msg ${type}`;
-  div.innerHTML=text;
+  div.textContent=text;
   msgs.appendChild(div);
   msgs.scrollTop=msgs.scrollHeight;
-}
-
-function addMsgFormatted(text, type){
-  const msgs=document.getElementById('ia-msgs');
-  const div=document.createElement('div');
-  div.className=`ia-msg ${type}`;
-  // Formato básico: saltos de línea y negritas
-  div.innerHTML=text
-    .replace(/\*\*(.*?)\*\*/g,'<b>$1</b>')
-    .replace(/\n/g,'<br>');
-  msgs.appendChild(div);
-  msgs.scrollTop=msgs.scrollHeight;
-}
-
-function addTyping(){
-  const msgs=document.getElementById('ia-msgs');
-  const div=document.createElement('div');
-  div.className='ia-typing'; div.id='ia-typing';
-  div.innerHTML='<span></span><span></span><span></span>';
-  msgs.appendChild(div);
-  msgs.scrollTop=msgs.scrollHeight;
-}
-
-function removeTyping(){
-  const t=document.getElementById('ia-typing');
-  if(t) t.remove();
-}
-
-// Chequeo automático de alertas al cargar
-function checkAlertas(){
-  const hoy = new Date();
-  let alertas = 0;
-  // Calibraciones vencidas o próximas
-  (calRows||[]).forEach(r=>{
-    if(!r.proxima) return;
-    const diff=Math.ceil((new Date(r.proxima)-hoy)/(1000*60*60*24));
-    if(diff<=30) alertas++;
-  });
-  // Sin registro de agua hoy
-  const todayStr=hoy.toISOString().split('T')[0];
-  if(!(regData?.agua||[]).some(r=>r.fecha===todayStr)) alertas++;
-  // Mostrar badge
-  const notif=document.getElementById('ia-notif');
-  if(notif){
-    if(alertas>0){ notif.style.display='flex'; notif.textContent=alertas; }
-    else notif.style.display='none';
-  }
 }
 
 // ── INIT ──
 loadState();
-loadRegData();
-loadEquipo();
-loadHaccpPlan();
-toggleNav('grp-haccp');
-setTimeout(checkAlertas, 1500);
 </script>
 </body>
+</html>
