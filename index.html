@@ -2893,6 +2893,68 @@ let revCode = '';
 let revName = '';
 
 // ── COMENTARIOS INLINE ──
+// ── ANÁLISIS IA POR DOCUMENTO ──
+async function analizarDoc(code, name){
+  if(!getApiKey()){ showToast('🔑 Configura tu API Key en el Auditor IA'); return; }
+  const doc = state[code];
+  if(!doc){ showToast('⚠️ Primero sube el archivo'); return; }
+
+  const safeId = code.replace(/[^a-zA-Z0-9]/g,'-');
+  const wrap = document.getElementById('doc-wrap-'+safeId);
+  // Mostrar loading en el botón
+  if(wrap){
+    const btns = wrap.querySelectorAll('button');
+    btns.forEach(b=>{ if(b.textContent.includes('Analizar') || b.textContent.includes('Re-analizar')){ b.disabled=true; b.textContent='⏳ Analizando...'; }});
+  }
+
+  const tipoDoc = code.includes('-P-')?'Procedimiento':code.includes('-M-')?'Manual':code.includes('POES')?'POES':code.includes('-F-')?'Formato':code.includes('-I-')?'Instructivo':code.includes('-L-')?'Plan':code.includes('-E-')?'Especificación':'Documento';
+
+  const prompt = `Eres auditor experto en HACCP para plantas de aceite de palma en Perú. Validas según RM 449-2006/MINSA.
+
+${RM449}
+
+Documento de OLEAGINOSAS PADRE ABAD S.A. (OLPASA), planta extractora de aceite crudo de palma, Padre Abad, Ucayali, Perú:
+- Código: ${code}
+- Título: ${name}
+- Tipo: ${tipoDoc}
+- Archivo: ${doc.fileName||doc.name}
+- Subido: ${doc.uploadedAt}
+${doc.comentarios?.length ? '\nHistorial de cambios:\n'+doc.comentarios.map(c=>'• '+c.texto).join('\n') : ''}
+
+Responde SOLO en JSON exacto sin markdown:
+{
+  "estado": "CUMPLE|CUMPLE_PARCIALMENTE|NO_CUMPLE",
+  "evaluacion": "Párrafo evaluando el documento en contexto de OLPASA y RM 449-2006/MINSA",
+  "evidencias": ["evidencia 1","evidencia 2","evidencia 3"],
+  "brechas": ["brecha 1","brecha 2"],
+  "cambioEstado": "Descripción del cambio de estado sugerido si aplica, sino string vacío",
+  "accion": "Acción concreta inmediata para cumplir con RM 449-2006/MINSA antes de auditoría DIGESA"
+}`;
+
+  try{
+    const res = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers: getHeaders(),
+      body: JSON.stringify({model:'claude-sonnet-4-20250514', max_tokens:1200,
+        messages:[{role:'user', content:prompt}]})
+    });
+    const data = await res.json();
+    const text = data.content[0].text.replace(/```json|```/g,'').trim();
+    const result = JSON.parse(text);
+    state[code].analysis = result;
+    await saveState();
+    // Re-renderizar el panel
+    if(wrap) wrap.innerHTML = buildDocRow(code, name, state[code]);
+    showToast('✅ Análisis completado');
+  } catch(err){
+    showToast('❌ Error: '+err.message, true);
+    if(wrap){
+      const btns = wrap.querySelectorAll('button');
+      btns.forEach(b=>{ if(b.disabled){ b.disabled=false; b.textContent='🤖 Analizar con IA'; }});
+    }
+  }
+}
+
 async function agregarComentarioDoc(code, safeId){
   const textarea = document.getElementById('new-comment-'+safeId);
   if(!textarea) return;
