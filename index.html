@@ -1682,23 +1682,50 @@ function renderCtrlDoc(){
   if(ctrlDocData){
     up.style.display='none'; done.style.display='block';
     document.getElementById('ctrl-doc-fname').textContent = '📄 ' + ctrlDocData.fileName;
-    document.getElementById('ctrl-doc-fmeta').textContent = `Subido: ${ctrlDocData.uploadedAt}`;
-    document.getElementById('ctrl-doc-ver-btn').href  = ctrlDocData.driveUrl || '#';
+    const meta = ctrlDocData.driveUrl
+      ? `Subido: ${ctrlDocData.uploadedAt} · ✅ En Drive`
+      : `Subido: ${ctrlDocData.uploadedAt} · ⏳ Pendiente Drive`;
+    document.getElementById('ctrl-doc-fmeta').textContent = meta;
+    const verBtn = document.getElementById('ctrl-doc-ver-btn');
+    if(ctrlDocData.driveUrl){
+      verBtn.href = ctrlDocData.driveUrl;
+      verBtn.style.display = 'inline-flex';
+    } else if(ctrlDocData.data){
+      verBtn.href = ctrlDocData.data;
+      verBtn.style.display = 'inline-flex';
+    }
     document.getElementById('ctrl-doc-desc-btn').href = ctrlDocData.driveFileId
-      ? `https://drive.google.com/uc?export=download&id=${ctrlDocData.driveFileId}` : '#';
+      ? `https://drive.google.com/uc?export=download&id=${ctrlDocData.driveFileId}`
+      : ctrlDocData.data || '#';
   } else { up.style.display='block'; done.style.display='none'; }
 }
 
 function handleCtrlDoc(e){
   const f = e.target.files[0]; if(!f) return;
-  if(!gAccessToken){
-    pendingUploadData = { code:'OLPASA-SIG-P-001', name:'Control de la Información Documentada', file:f, isCtrlDoc:true };
-    if(!gTokenClient) initGoogleAuth();
-    gTokenClient.requestAccessToken({prompt:''});
-    showToast('🔄 Conectando con Google Drive...');
-    return;
-  }
-  subirCtrlDoc(f);
+  const reader = new FileReader();
+  reader.onload = ev => {
+    // Guardar localmente primero — igual que Plan HACCP
+    ctrlDocData = {
+      fileName: f.name,
+      size: f.size,
+      data: ev.target.result,
+      uploadedAt: new Date().toLocaleDateString('es-PE'),
+      driveFileId: null,
+      driveUrl: null
+    };
+    LS.set('haccp-ctrl-doc', JSON.stringify(ctrlDocData));
+    renderCtrlDoc();
+    showToast('✅ Documento cargado — subiendo a Drive...');
+    // Luego subir a Drive en background
+    if(!gAccessToken){
+      pendingUploadData = { code:'OLPASA-SIG-P-001', name:'Control de la Información Documentada', file:f, isCtrlDoc:true };
+      if(!gTokenClient) initGoogleAuth();
+      gTokenClient.requestAccessToken({prompt:''});
+    } else {
+      subirCtrlDoc(f);
+    }
+  };
+  reader.readAsDataURL(f);
 }
 
 async function subirCtrlDoc(file){
