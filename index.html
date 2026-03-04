@@ -788,7 +788,8 @@ tr:hover td{background:#fafffe;}
 <!-- BPM -->
 <div class="page" id="page-bpm">
   <div class="ph"><h2>📋 BPM — Buenas Prácticas de Manufactura</h2><p>OLPASA-SIG-M-001 · Versión 02 · 2024 — Haz clic en 📤 para subir cada documento</p></div>
-  <div class="block"><h3>Documentos BPM</h3>
+  <div class="block">
+    <div class="tbl-head"><h3>Documentos BPM</h3><button class="btn btn-green btn-sm" onclick="openGenerarDoc('BPM')">✨ Generar documento</button></div>
     <div id="list-bpm"></div>
   </div>
 </div>
@@ -796,7 +797,8 @@ tr:hover td{background:#fafffe;}
 <!-- POES -->
 <div class="page" id="page-poes">
   <div class="ph"><h2>🧼 POES — Procedimientos Operativos de Saneamiento</h2><p>OLPASA-AQ-M-002 — Haz clic en 📤 para subir cada documento</p></div>
-  <div class="block"><h3>Procedimientos POES</h3>
+  <div class="block">
+    <div class="tbl-head"><h3>Procedimientos POES</h3><button class="btn btn-green btn-sm" onclick="openGenerarDoc('POES')">✨ Generar documento</button></div>
     <div id="list-poes"></div>
   </div>
 </div>
@@ -1315,6 +1317,89 @@ tr:hover td{background:#fafffe;}
     <div class="modal-btns">
       <button class="btn btn-gray" onclick="closeModal('modal-acta-eq')">Cancelar</button>
       <button class="btn btn-green" onclick="saveActa()">💾 Guardar Acta</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL GENERAR DOCUMENTO IA -->
+<div class="modal-bg" id="modal-generar-doc">
+  <div class="meq" style="max-width:600px;width:95%;">
+    <h3>✨ Generar Documento con IA</h3>
+    <div class="mreg-sub">La IA generará el documento siguiendo la estructura oficial OLPASA</div>
+
+    <div class="meq-section">Identificación del documento</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Tipo de documento *</label>
+        <select id="gdoc-tipo" class="form-input" onchange="actualizarCodigo()">
+          <option value="P">Procedimiento (P)</option>
+          <option value="M">Manual (M)</option>
+          <option value="POES">POES</option>
+          <option value="I">Instructivo (I)</option>
+          <option value="F">Formato (F)</option>
+          <option value="C">Cartilla (C)</option>
+          <option value="R">Reglamento (R)</option>
+          <option value="L">Plan (L)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Proceso/Área *</label>
+        <select id="gdoc-area" class="form-input" onchange="actualizarCodigo()">
+          <option value="SIG">SIG — Sistema Integrado de Gestión</option>
+          <option value="AQ">AQ — Calidad e Inocuidad</option>
+          <option value="PR">PR — Producción</option>
+          <option value="MT">MT — Mantenimiento</option>
+          <option value="RH">RH — Recursos Humanos</option>
+          <option value="LO">LO — Logística</option>
+          <option value="GC">GC — Gestión Comercial</option>
+          <option value="SSOMA">SSOMA — Seguridad y Medio Ambiente</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Número correlativo *</label>
+        <input type="text" id="gdoc-num" class="form-input" placeholder="Ej. 001" oninput="actualizarCodigo()">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Código generado</label>
+        <input type="text" id="gdoc-codigo" class="form-input" readonly style="background:#f5f5f5;color:#888;">
+      </div>
+    </div>
+
+    <div class="meq-section">Contenido</div>
+    <div class="form-row solo">
+      <div class="form-group">
+        <label class="form-label">Título del documento *</label>
+        <input type="text" id="gdoc-titulo" class="form-input" placeholder="Ej. Procedimiento de Control de Temperatura en Esterilizado">
+      </div>
+    </div>
+    <div class="form-row solo">
+      <div class="form-group">
+        <label class="form-label">Descripción / Instrucciones para la IA</label>
+        <textarea id="gdoc-desc" class="form-input" rows="3" style="resize:vertical;font-family:inherit;"
+          placeholder="Ej. Describe el proceso de control de temperatura durante la etapa de esterilizado a 50 Psi / 140°C / 60 min, incluyendo acciones correctivas si la temperatura baja de 135°C..."></textarea>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Elaborado por</label>
+        <input type="text" id="gdoc-elaborado" class="form-input" placeholder="Responsable de Calidad e Inocuidad">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Versión</label>
+        <input type="text" id="gdoc-version" class="form-input" placeholder="01" value="01">
+      </div>
+    </div>
+
+    <!-- Estado generación -->
+    <div id="gdoc-status" style="display:none;padding:10px 14px;border-radius:8px;font-size:12px;font-weight:600;margin:10px 0;"></div>
+
+    <div class="meq-btns">
+      <button class="btn btn-gray" onclick="closeModal('modal-generar-doc')">Cancelar</button>
+      <button class="btn btn-green" id="gdoc-btn" onclick="generarDocumento()">✨ Generar y subir a Drive</button>
     </div>
   </div>
 </div>
@@ -2540,6 +2625,166 @@ function downloadDoc(code){
   const doc = state[code];
   if(!doc || !doc.driveFileId) return;
   window.open(`https://drive.google.com/uc?export=download&id=${doc.driveFileId}`, '_blank');
+}
+
+// ── GENERADOR DE DOCUMENTOS IA ──
+let gdocSection = '';
+
+function openGenerarDoc(seccion){
+  gdocSection = seccion;
+  actualizarCodigo();
+  document.getElementById('gdoc-titulo').value = '';
+  document.getElementById('gdoc-desc').value = '';
+  document.getElementById('gdoc-num').value = '';
+  document.getElementById('gdoc-status').style.display = 'none';
+  openModal('modal-generar-doc');
+}
+
+function actualizarCodigo(){
+  const tipo = document.getElementById('gdoc-tipo').value;
+  const area = document.getElementById('gdoc-area').value;
+  const num  = document.getElementById('gdoc-num').value || 'XXX';
+  document.getElementById('gdoc-codigo').value = `OLPASA-${area}-${tipo}-${num}`;
+}
+
+async function generarDocumento(){
+  const apiKey = getApiKey();
+  if(!apiKey){
+    mostrarGdocStatus('error','🔑 Configura tu API Key primero (⚙️ en el Auditor IA)');
+    return;
+  }
+
+  const tipo    = document.getElementById('gdoc-tipo').value;
+  const area    = document.getElementById('gdoc-area').value;
+  const num     = document.getElementById('gdoc-num').value.trim();
+  const codigo  = document.getElementById('gdoc-codigo').value;
+  const titulo  = document.getElementById('gdoc-titulo').value.trim();
+  const desc    = document.getElementById('gdoc-desc').value.trim();
+  const elab    = document.getElementById('gdoc-elaborado').value.trim() || 'Responsable de Calidad e Inocuidad Alimentaria';
+  const version = document.getElementById('gdoc-version').value.trim() || '01';
+
+  if(!num || !titulo){ alert('Completa el número correlativo y el título'); return; }
+
+  const btn = document.getElementById('gdoc-btn');
+  btn.disabled = true; btn.textContent = '⏳ Generando...';
+  mostrarGdocStatus('loading','🤖 Generando documento con IA...');
+
+  const fecha = new Date().toLocaleDateString('es-PE',{day:'2-digit',month:'2-digit',year:'numeric'});
+
+  const tiposMap = {P:'Procedimiento',M:'Manual',POES:'Procedimiento Operativo Estándar de Saneamiento',
+    I:'Instructivo',F:'Formato',C:'Cartilla',R:'Reglamento',L:'Plan'};
+
+  const prompt = `Eres un experto en documentación para sistemas HACCP e ISO 9001 de OLEAGINOSAS PADRE ABAD S.A. (OLPASA), planta extractora de aceite crudo de palma en Padre Abad, Ucayali, Perú.
+
+Genera el documento completo siguiendo EXACTAMENTE la estructura oficial de OLPASA según el tipo "${tiposMap[tipo]}":
+
+DATOS DEL DOCUMENTO:
+- Código: ${codigo}
+- Título: ${titulo}
+- Tipo: ${tiposMap[tipo]}
+- Versión: ${version}
+- Fecha: ${fecha}
+- Elaborado por: ${elab}
+- Revisado por: Responsable de Sostenibilidad y SIG
+- Aprobado por: Gerente General
+${desc ? `\nINSTRUCCIONES ADICIONALES:\n${desc}` : ''}
+
+ESTRUCTURA OBLIGATORIA según OLPASA-SIG-P-001:
+1. ENCABEZADO (código, título, versión, fecha, elaborado/revisado/aprobado)
+2. OBJETIVO
+3. ALCANCE
+4. DEFINICIONES (si aplica)
+5. ABREVIATURAS (si aplica)
+6. RESPONSABILIDADES
+7. DOCUMENTOS DE REFERENCIA
+8. POLÍTICAS (si aplica)
+9. DESCRIPCIÓN DEL PROCESO (detallado, con etapas claras)
+10. DOCUMENTOS ASOCIADOS
+11. HISTORIAL DE DOCUMENTOS
+
+Normas aplicables: RM 449-2006/MINSA, ISO 9001:2015, ISO 14001:2015.
+Usa formato profesional, Arial 12, lenguaje técnico preciso. Genera el contenido completo y detallado.`;
+
+  try{
+    const res = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:4000,
+        messages:[{role:'user', content: prompt}]
+      })
+    });
+    const data = await res.json();
+    const contenido = data.content[0].text;
+
+    mostrarGdocStatus('loading','📤 Subiendo a Google Drive...');
+
+    // Crear archivo de texto en Drive
+    if(!gAccessToken){
+      gTokenClient.requestAccessToken({prompt:''});
+      // Guardar datos para después del auth
+      pendingUploadData = {
+        code: codigo,
+        name: titulo,
+        file: new File([contenido], `${codigo} — ${titulo}.txt`, {type:'text/plain'})
+      };
+      mostrarGdocStatus('loading','🔄 Autenticando con Google...');
+      return;
+    }
+
+    await subirDocGenerado(codigo, titulo, contenido, version);
+
+  } catch(err){
+    console.error(err);
+    mostrarGdocStatus('error','❌ Error al generar. Verifica tu API Key.');
+  } finally {
+    btn.disabled = false; btn.textContent = '✨ Generar y subir a Drive';
+  }
+}
+
+async function subirDocGenerado(codigo, titulo, contenido, version){
+  try{
+    const fecha = new Date().toLocaleDateString('es-PE');
+    const nombreArchivo = `${codigo} — ${titulo} v${version}.txt`;
+    const file = new File([contenido], nombreArchivo, {type:'text/plain;charset=utf-8'});
+
+    const result = await createDriveFile(nombreArchivo, file);
+    const fileId = result.id;
+    const driveUrl = `https://drive.google.com/file/d/${fileId}/view`;
+
+    // Registrar en state
+    state[codigo] = {
+      code: codigo,
+      name: titulo,
+      fileName: nombreArchivo,
+      driveFileId: fileId,
+      driveUrl,
+      uploadedAt: new Date().toLocaleDateString('es-PE'),
+      generado: true
+    };
+
+    await saveState();
+    renderAll();
+    mostrarGdocStatus('ok',`✅ Documento generado y guardado en Drive`);
+    showToast(`✨ ${codigo} generado y subido a Drive`);
+    setTimeout(()=>{ closeModal('modal-generar-doc'); }, 1800);
+
+  } catch(err){
+    mostrarGdocStatus('error',`❌ Error al subir: ${err.message}`);
+  }
+}
+
+function mostrarGdocStatus(tipo, msg){
+  const el = document.getElementById('gdoc-status');
+  const estilos = {
+    ok:      'background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7;',
+    error:   'background:#ffebee;color:#c62828;border:1px solid #ef9a9a;',
+    loading: 'background:#e3f2fd;color:#1565c0;border:1px solid #90caf9;'
+  };
+  el.style.cssText = estilos[tipo] || estilos.loading;
+  el.textContent = msg;
+  el.style.display = 'block';
 }
 
 // ── ANÁLISIS IA DE DOCUMENTOS ──
