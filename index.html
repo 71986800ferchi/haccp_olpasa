@@ -1319,6 +1319,79 @@ tr:hover td{background:#fafffe;}
   </div>
 </div>
 
+<!-- MODAL ANÁLISIS DOCUMENTO IA -->
+<div class="modal-bg" id="modal-doc-analysis">
+  <div class="modal" style="max-width:720px;width:95%;max-height:90vh;overflow-y:auto;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
+      <div>
+        <h3 id="analysis-doc-title" style="font-size:15px;font-weight:700;color:#1b5e20;"></h3>
+        <p id="analysis-doc-meta" style="font-size:11px;color:#888;margin:2px 0 0;"></p>
+      </div>
+      <button onclick="closeModal('modal-doc-analysis')" style="background:none;border:none;font-size:18px;cursor:pointer;color:#aaa;">✕</button>
+    </div>
+
+    <!-- Botones acción -->
+    <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
+      <a id="analysis-view-btn" href="#" target="_blank" class="btn btn-outline btn-sm">👁️ Ver en Drive</a>
+      <a id="analysis-download-btn" href="#" target="_blank" class="btn btn-sm btn-gray">📥 Descargar</a>
+      <button id="analysis-replace-btn" class="btn btn-sm btn-gray" onclick="replaceFromAnalysis()">🔄 Reemplazar</button>
+      <button id="analysis-ai-btn" class="btn btn-sm btn-green" onclick="analyzeDoc()" style="margin-left:auto;">🤖 Analizar con IA</button>
+    </div>
+
+    <!-- Resultado análisis -->
+    <div id="analysis-result" style="display:none;">
+      <!-- Estado badge -->
+      <div id="analysis-estado" style="margin-bottom:12px;"></div>
+
+      <!-- Evidencias -->
+      <div class="analysis-section" id="analysis-evidencias-box" style="background:#e8f5e9;border:1px solid #a5d6a7;border-radius:10px;padding:14px;margin-bottom:10px;">
+        <div style="font-weight:700;color:#2e7d32;margin-bottom:8px;">✅ EVIDENCIAS QUE CUMPLE</div>
+        <div id="analysis-evidencias" style="font-size:13px;color:#2e7d32;line-height:1.7;"></div>
+      </div>
+
+      <!-- Brechas -->
+      <div class="analysis-section" id="analysis-brechas-box" style="background:#fff8e1;border:1px solid #ffe082;border-radius:10px;padding:14px;margin-bottom:10px;">
+        <div style="font-weight:700;color:#f57f17;margin-bottom:8px;">⚠️ BRECHAS QUE PERSISTEN</div>
+        <div id="analysis-brechas" style="font-size:13px;color:#795548;line-height:1.7;"></div>
+      </div>
+
+      <!-- Acción inmediata -->
+      <div class="analysis-section" id="analysis-accion-box" style="background:#e3f2fd;border:1px solid #90caf9;border-radius:10px;padding:14px;margin-bottom:10px;">
+        <div style="font-weight:700;color:#1565c0;margin-bottom:8px;">💡 ACCIÓN INMEDIATA ANTES DE LA AUDITORÍA</div>
+        <div id="analysis-accion" style="font-size:13px;color:#1565c0;line-height:1.7;"></div>
+      </div>
+
+      <!-- Re-analizar -->
+      <button onclick="analyzeDoc()" class="btn btn-sm btn-green" style="margin-bottom:16px;">🔄 Re-analizar</button>
+    </div>
+
+    <!-- Loading -->
+    <div id="analysis-loading" style="display:none;text-align:center;padding:24px;color:#888;">
+      <div style="font-size:24px;margin-bottom:8px;">🤖</div>
+      <div style="font-size:13px;">Analizando documento con IA...</div>
+      <div style="font-size:11px;color:#bbb;margin-top:4px;">Esto puede tomar unos segundos</div>
+    </div>
+
+    <!-- Sin API Key -->
+    <div id="analysis-no-key" style="display:none;text-align:center;padding:20px;background:#fff8e1;border-radius:10px;border:1px solid #ffe082;">
+      <div style="font-size:20px;margin-bottom:6px;">🔑</div>
+      <div style="font-size:13px;color:#795548;font-weight:600;">Configura tu API Key para analizar</div>
+      <div style="font-size:11px;color:#aaa;margin-top:4px;">Haz clic en el ícono ⚙️ del Auditor IA</div>
+    </div>
+
+    <!-- Notas del equipo -->
+    <div style="margin-top:16px;border-top:1px solid #eee;padding-top:16px;">
+      <div style="font-size:11px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">📝 NOTAS DEL EQUIPO</div>
+      <textarea id="analysis-notes" rows="3" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;font-size:13px;resize:vertical;font-family:inherit;" placeholder="Agrega observaciones, pendientes o comentarios sobre este documento..."></textarea>
+    </div>
+
+    <div class="modal-btns">
+      <button class="btn btn-gray" onclick="closeModal('modal-doc-analysis')">Cerrar</button>
+      <button class="btn btn-green" onclick="saveDocNotes()">💾 Guardar cambios</button>
+    </div>
+  </div>
+</div>
+
 <!-- IA AUDITOR -->
 <div style="position:fixed;bottom:24px;right:24px;z-index:400;">
   <button class="ia-btn" onclick="toggleIA()" title="Auditor IA — OLPASA">
@@ -1638,7 +1711,7 @@ function renderDocList(containerId, keys){
       <div class="doc-actions">
         ${saved
           ? `<span class="tag tag-green">✅ En Drive</span>
-             <a class="btn btn-sm btn-outline" href="${saved.driveUrl}" target="_blank" rel="noopener">👁️ Ver</a>
+             <button class="btn btn-sm btn-green" onclick="openDocAnalysis('${d.code}','${d.name}')">🔍 Revisar</button>
              <button class="btn btn-sm btn-gray" onclick="openUpload('${d.code}','${d.name}')">🔄 Reemplazar</button>`
           : `<span class="tag tag-gray">⬜ Pendiente</span>
              <button class="btn btn-sm btn-green" onclick="openUpload('${d.code}','${d.name}')">📤 Subir</button>`
@@ -1683,7 +1756,7 @@ function renderAllDocs(){
       <div class="doc-actions">
         ${saved
           ? `<span class="tag tag-green">✅ En Drive</span>
-             <a class="btn btn-sm btn-outline" href="${saved.driveUrl}" target="_blank" rel="noopener">👁️ Ver</a>
+             <button class="btn btn-sm btn-green" onclick="openDocAnalysis('${d.code}','${d.name}')">🔍 Revisar</button>
              <button class="btn btn-sm btn-gray" onclick="openUpload('${d.code}','${d.name}')">🔄</button>`
           : `<span class="tag tag-gray">⬜ Pendiente</span>
              <button class="btn btn-sm btn-green" onclick="openUpload('${d.code}','${d.name}')">📤 Subir</button>`
@@ -2467,6 +2540,140 @@ function downloadDoc(code){
   const doc = state[code];
   if(!doc || !doc.driveFileId) return;
   window.open(`https://drive.google.com/uc?export=download&id=${doc.driveFileId}`, '_blank');
+}
+
+// ── ANÁLISIS IA DE DOCUMENTOS ──
+let currentAnalysisCode = '';
+let currentAnalysisName = '';
+
+function openDocAnalysis(code, name){
+  const doc = state[code];
+  if(!doc) return;
+  currentAnalysisCode = code;
+  currentAnalysisName = name;
+
+  document.getElementById('analysis-doc-title').textContent = `📄 ${code} — ${name}`;
+  document.getElementById('analysis-doc-meta').textContent = `${doc.fileName||doc.name} · Subido: ${doc.uploadedAt}`;
+  document.getElementById('analysis-view-btn').href = doc.driveUrl || '#';
+  document.getElementById('analysis-download-btn').href = doc.driveFileId ? `https://drive.google.com/uc?export=download&id=${doc.driveFileId}` : '#';
+
+  // Mostrar notas guardadas
+  const notes = (doc.notes) || '';
+  document.getElementById('analysis-notes').value = notes;
+
+  // Mostrar análisis previo si existe
+  document.getElementById('analysis-loading').style.display = 'none';
+  document.getElementById('analysis-no-key').style.display = 'none';
+
+  if(doc.analysis){
+    showAnalysisResult(doc.analysis);
+  } else {
+    document.getElementById('analysis-result').style.display = 'none';
+  }
+
+  openModal('modal-doc-analysis');
+}
+
+function replaceFromAnalysis(){
+  closeModal('modal-doc-analysis');
+  openUpload(currentAnalysisCode, currentAnalysisName);
+}
+
+async function analyzeDoc(){
+  const apiKey = getApiKey();
+  if(!apiKey){
+    document.getElementById('analysis-no-key').style.display = 'block';
+    document.getElementById('analysis-result').style.display = 'none';
+    return;
+  }
+
+  document.getElementById('analysis-no-key').style.display = 'none';
+  document.getElementById('analysis-result').style.display = 'none';
+  document.getElementById('analysis-loading').style.display = 'block';
+
+  const doc = state[currentAnalysisCode];
+  const prompt = `Eres un auditor experto en sistemas HACCP, BPM, POES e ISO 9001 para plantas de aceite de palma en Perú (RM 449-2006/MINSA).
+
+Analiza el documento: "${currentAnalysisCode} — ${currentAnalysisName}" de OLEAGINOSAS PADRE ABAD S.A. (OLPASA).
+
+Archivo subido: ${doc.fileName||doc.name} (${doc.uploadedAt})
+URL Drive: ${doc.driveUrl}
+
+Responde SOLO en este formato JSON exacto, sin texto adicional:
+{
+  "estado": "CUMPLE|CUMPLE_PARCIALMENTE|NO_CUMPLE",
+  "evidencias": ["evidencia 1", "evidencia 2", "evidencia 3"],
+  "brechas": ["brecha 1", "brecha 2"],
+  "accion": "Acción inmediata concreta antes de la auditoría"
+}
+
+Basa tu análisis en los requisitos típicos de este tipo de documento para HACCP/ISO 9001 en plantas de aceite de palma en Perú. Si no puedes acceder al contenido del archivo, analiza basándote en el nombre del documento y los estándares aplicables.`;
+
+  try{
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await res.json();
+    const text = data.content[0].text;
+    const clean = text.replace(/```json|```/g,'').trim();
+    const result = JSON.parse(clean);
+
+    // Guardar análisis en state
+    state[currentAnalysisCode].analysis = result;
+    await saveState();
+
+    document.getElementById('analysis-loading').style.display = 'none';
+    showAnalysisResult(result);
+
+  } catch(err){
+    document.getElementById('analysis-loading').style.display = 'none';
+    document.getElementById('analysis-result').style.display = 'none';
+    showToast('❌ Error al analizar. Verifica tu API Key.', true);
+  }
+}
+
+function showAnalysisResult(result){
+  // Estado badge
+  const estadoEl = document.getElementById('analysis-estado');
+  const estados = {
+    'CUMPLE': '<span style="background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7;padding:6px 16px;border-radius:20px;font-size:12px;font-weight:700;">✅ CUMPLE</span>',
+    'CUMPLE_PARCIALMENTE': '<span style="background:#fff8e1;color:#f57f17;border:1px solid #ffe082;padding:6px 16px;border-radius:20px;font-size:12px;font-weight:700;">⚠️ CUMPLE PARCIALMENTE</span>',
+    'NO_CUMPLE': '<span style="background:#ffebee;color:#c62828;border:1px solid #ef9a9a;padding:6px 16px;border-radius:20px;font-size:12px;font-weight:700;">❌ NO CUMPLE</span>'
+  };
+  estadoEl.innerHTML = estados[result.estado] || estados['CUMPLE_PARCIALMENTE'];
+
+  // Evidencias
+  document.getElementById('analysis-evidencias').innerHTML =
+    (result.evidencias||[]).map(e=>`• ${e}`).join('<br>');
+
+  // Brechas
+  const brechasEl = document.getElementById('analysis-brechas');
+  if(result.brechas && result.brechas.length > 0){
+    brechasEl.innerHTML = result.brechas.map(b=>`• ${b}`).join('<br>');
+    document.getElementById('analysis-brechas-box').style.display = 'block';
+  } else {
+    document.getElementById('analysis-brechas-box').style.display = 'none';
+  }
+
+  // Acción
+  document.getElementById('analysis-accion').textContent = result.accion || '';
+
+  document.getElementById('analysis-result').style.display = 'block';
+}
+
+async function saveDocNotes(){
+  const notes = document.getElementById('analysis-notes').value;
+  if(state[currentAnalysisCode]){
+    state[currentAnalysisCode].notes = notes;
+    await saveState();
+    showToast('💾 Notas guardadas');
+  }
 }
 
 // ── CALIBRACIONES ──
