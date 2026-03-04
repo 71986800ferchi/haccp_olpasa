@@ -1979,36 +1979,103 @@ function renderDocList(containerId, keys){
   if(!el) return;
   el.innerHTML = '';
   if(keys.length === 0){
-    el.innerHTML = '<div style="padding:16px;color:#bbb;font-size:13px;text-align:center;">Sin documentos — haz clic en ✨ Generar o 📤 Subir</div>';
+    el.innerHTML = `<div style="padding:20px;text-align:center;">
+      <button class="btn btn-green" onclick="openUpload('nuevo-'+containerId, 'Nuevo Documento')">📤 Subir documento</button>
+    </div>`;
     return;
   }
   keys.forEach(d => {
     const saved = state[d.code];
-    const row = document.createElement('div');
-    row.className = 'doc-row';
-    const nComentarios = saved?.comentarios?.length || 0;
-    const estadoColor = saved?.analysis ? (saved.analysis.estado==='CUMPLE'?'#2e7d32':saved.analysis.estado==='NO_CUMPLE'?'#c62828':'#f57f17') : null;
-    row.innerHTML = `
-      <div class="doc-info">
-        <div class="doc-code">${d.code}</div>
-        <div class="doc-name">${d.name}</div>
-        ${saved ? `<div style="font-size:10px;color:#888;margin-top:2px;">
-          📁 ${saved.fileName||saved.name} · ${saved.uploadedAt}
-          ${nComentarios>0?`· 💬 ${nComentarios}`:''}
-          ${estadoColor?`· <span style="color:${estadoColor};font-weight:700;">●</span>`:''}
-        </div>` : ''}
-      </div>
-      <div class="doc-actions">
-        ${saved
-          ? `<span class="tag tag-green">✅ En Drive</span>
-             <button class="btn btn-sm btn-green" onclick="openRevision('${d.code}','${d.name}')">🔍 Revisar</button>
-             <button class="btn btn-sm btn-gray" onclick="openUpload('${d.code}','${d.name}')">🔄</button>`
-          : `<span class="tag tag-gray">⬜ Pendiente</span>
-             <button class="btn btn-sm btn-green" onclick="openUpload('${d.code}','${d.name}')">📤 Subir</button>`
-        }
-      </div>`;
-    el.appendChild(row);
+    const wrap = document.createElement('div');
+    wrap.id = 'doc-wrap-' + d.code.replace(/[^a-zA-Z0-9]/g,'-');
+    wrap.style.cssText = 'margin-bottom:20px;';
+    wrap.innerHTML = buildDocPanel(d.code, d.name, saved);
+    el.appendChild(wrap);
   });
+}
+
+function buildDocPanel(code, name, saved){
+  const safeId = code.replace(/[^a-zA-Z0-9]/g,'-');
+  if(!saved){
+    return `<div style="background:#fafafa;border:2px dashed #e0e0e0;border-radius:12px;padding:20px;display:flex;align-items:center;justify-content:space-between;gap:12px;">
+      <div>
+        <div style="font-size:12px;font-weight:700;color:#aaa;">${code}</div>
+        <div style="font-size:14px;color:#bbb;">${name}</div>
+      </div>
+      <button class="btn btn-green btn-sm" onclick="openUpload('${code}','${name}')">📤 Subir documento</button>
+    </div>`;
+  }
+
+  const ext = (saved.fileName||'').split('.').pop().toUpperCase();
+  const size = saved.size ? (saved.size > 1024*1024 ? (saved.size/1024/1024).toFixed(1)+'MB' : Math.round(saved.size/1024)+'KB') : '';
+  const notas = saved.notas || '';
+  const analysis = saved.analysis;
+
+  const estadoBadge = analysis ? ({
+    'CUMPLE': '<span style="background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;">✅ CUMPLE</span>',
+    'CUMPLE_PARCIALMENTE': '<span style="background:#fff8e1;color:#f57f17;border:1px solid #ffe082;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;">⚠️ CUMPLE PARCIALMENTE</span>',
+    'NO_CUMPLE': '<span style="background:#ffebee;color:#c62828;border:1px solid #ef9a9a;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;">❌ NO CUMPLE</span>'
+  }[analysis.estado] || '') : '';
+
+  const analysisHtml = analysis ? `
+    <div style="background:#1a237e;color:white;border-radius:8px;padding:12px 16px;margin:12px 0 8px;font-size:12px;font-weight:700;display:flex;justify-content:space-between;align-items:center;">
+      <span>✦ Análisis IA — ${saved.fileName}</span>
+      <span style="font-size:11px;opacity:0.7;">Actualizado ${saved.uploadedAt}</span>
+    </div>
+    <div style="border:1px solid #e0e0e0;border-radius:0 0 10px 10px;padding:16px;background:white;margin-bottom:8px;">
+      <div style="font-size:12px;font-weight:700;color:#555;margin-bottom:8px;text-transform:uppercase;">📋 EVALUACIÓN DEL DOCUMENTO</div>
+      <div style="font-size:13px;color:#333;line-height:1.6;margin-bottom:12px;">${analysis.evaluacion||'—'}</div>
+      ${estadoBadge ? `<div style="margin-bottom:12px;">${estadoBadge}</div>` : ''}
+      <div style="font-size:12px;font-weight:700;color:#2e7d32;margin-bottom:6px;">✅ EVIDENCIAS QUE CUMPLE</div>
+      <div style="font-size:13px;color:#2e7d32;line-height:1.7;margin-bottom:12px;">${(analysis.evidencias||[]).map(e=>`• ${e}`).join('<br>')}</div>
+      ${analysis.brechas?.length ? `
+      <div style="font-size:12px;font-weight:700;color:#f57f17;margin-bottom:6px;">⚠️ BRECHAS QUE PERSISTEN</div>
+      <div style="font-size:13px;color:#795548;line-height:1.7;margin-bottom:12px;">${analysis.brechas.map(b=>`• ${b}`).join('<br>')}</div>` : ''}
+      ${analysis.cambioEstado ? `
+      <div style="font-size:12px;font-weight:700;color:#1565c0;margin-bottom:4px;">🔄 CAMBIO DE ESTADO SUGERIDO</div>
+      <div style="font-size:13px;color:#1565c0;line-height:1.6;margin-bottom:12px;">${analysis.cambioEstado}</div>` : ''}
+      <div style="font-size:12px;font-weight:700;color:#e65100;margin-bottom:4px;">💡 ACCIÓN INMEDIATA ANTES DE LA AUDITORÍA</div>
+      <div style="font-size:13px;color:#e65100;line-height:1.6;margin-bottom:12px;">${analysis.accion||'—'}</div>
+      <button onclick="analizarDoc('${code}','${name}')" class="btn btn-green btn-sm">🔄 Re-analizar</button>
+    </div>` :
+    `<div style="background:#f5f5f5;border-radius:8px;padding:14px;margin:10px 0;display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-size:13px;color:#888;">Sin análisis IA aún</span>
+      <button onclick="analizarDoc('${code}','${name}')" class="btn btn-green btn-sm">🤖 Analizar con IA</button>
+    </div>`;
+
+  return `
+    <div style="border:1px solid #e0e0e0;border-radius:12px;overflow:hidden;background:white;">
+      <!-- Cabecera documento -->
+      <div style="background:#ffebee;border-left:4px solid #c62828;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="background:#c62828;color:white;border-radius:6px;padding:6px 8px;font-size:11px;font-weight:700;min-width:32px;text-align:center;">${ext||'DOC'}</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:#222;">${saved.fileName||name}</div>
+            <div style="font-size:11px;color:#888;">Subido por Gestor de Calidad · ${saved.uploadedAt}${size?' · '+size:''}</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <a href="${saved.driveUrl||'#'}" target="_blank" class="btn btn-sm btn-gray">📥 Descargar</a>
+          <button onclick="openUpload('${code}','${name}')" class="btn btn-sm btn-gray">🔄 Reemplazar</button>
+        </div>
+      </div>
+
+      <div style="padding:0 16px 16px;">
+        ${analysisHtml}
+
+        <!-- Notas del equipo -->
+        <div style="margin-top:14px;">
+          <div style="font-size:12px;font-weight:700;color:#555;margin-bottom:8px;text-transform:uppercase;">📝 Notas del equipo</div>
+          <textarea id="notas-${safeId}" rows="3"
+            style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;font-size:13px;resize:vertical;font-family:inherit;box-sizing:border-box;"
+            placeholder="Ej: v02 — Se actualizó responsable de área por cambio de personal..."
+          >${notas}</textarea>
+        </div>
+        <div style="margin-top:10px;display:flex;justify-content:flex-end;">
+          <button onclick="guardarNotas('${code}','${safeId}')" class="btn btn-green" style="min-width:140px;">💾 Guardar cambios</button>
+        </div>
+      </div>
+    </div>`;
 }
 
 function renderAll(){
@@ -2263,14 +2330,14 @@ async function uploadToDrive(){
     await saveState();
     renderAll();
     showDriveStatus('ok','✅ Guardado en Google Drive');
-    showToast('📁 Documento guardado en Google Drive');
+    showToast('📁 Documento guardado — analizando con IA...');
     setTimeout(()=>{
       closeModal('modal-upload');
       pendingFile=null;
       pendingUploadData=null;
-      // Abrir panel de revisión automáticamente
-      openRevision(ctx.code, ctx.name);
-    }, 1400);
+      // Análisis IA automático al subir
+      if(getApiKey()) analizarDoc(ctx.code, ctx.name);
+    }, 1000);
 
   } catch(err){
     console.error(err);
@@ -3066,6 +3133,82 @@ function mostrarResultadoIA(result){
   document.getElementById('rev-accion').textContent = result.accion || '';
   document.getElementById('rev-ia-resultado').style.display = 'block';
 }
+
+// ── ANÁLISIS INLINE POR DOCUMENTO ──
+async function analizarDoc(code, name){
+  if(!getApiKey()){ showToast('🔑 Configura tu API Key en el Auditor IA'); return; }
+  const doc = state[code];
+  if(!doc) return;
+
+  // Mostrar loading en el panel
+  const safeId = code.replace(/[^a-zA-Z0-9]/g,'-');
+  const wrap = document.getElementById('doc-wrap-'+safeId);
+  if(wrap){
+    const btn = wrap.querySelector('button[onclick*="analizarDoc"]');
+    if(btn){ btn.disabled=true; btn.textContent='⏳ Analizando...'; }
+  }
+
+  const tipoDoc = code.includes('-P-')?'Procedimiento':code.includes('-M-')?'Manual':code.includes('POES')?'POES':code.includes('-F-')?'Formato':code.includes('-I-')?'Instructivo':code.includes('-L-')?'Plan':code.includes('-E-')?'Especificación':'Documento';
+  const notasTexto = doc.notas ? `\nNotas del equipo: ${doc.notas}` : '';
+
+  const prompt = `Eres auditor experto en HACCP para plantas de aceite de palma en Perú. Validas según RM 449-2006/MINSA.
+
+${RM449}
+
+Documento de OLEAGINOSAS PADRE ABAD S.A. (OLPASA), planta extractora de aceite crudo de palma, Padre Abad, Ucayali, Perú:
+- Código: ${code}
+- Título: ${name}
+- Tipo: ${tipoDoc}
+- Archivo: ${doc.fileName||doc.name}
+- Subido: ${doc.uploadedAt}
+${notasTexto}
+
+Responde SOLO en JSON exacto sin markdown:
+{
+  "estado": "CUMPLE|CUMPLE_PARCIALMENTE|NO_CUMPLE",
+  "evaluacion": "Párrafo corto evaluando el documento en contexto de OLPASA y la RM 449-2006/MINSA",
+  "evidencias": ["evidencia 1","evidencia 2","evidencia 3"],
+  "brechas": ["brecha 1","brecha 2"],
+  "cambioEstado": "• Descripción del cambio de estado sugerido si aplica",
+  "accion": "Acción concreta inmediata para cumplir con la RM 449-2006/MINSA antes de auditoría DIGESA"
+}`;
+
+  try{
+    const res = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers: getHeaders(),
+      body: JSON.stringify({model:'claude-sonnet-4-20250514', max_tokens:1200,
+        messages:[{role:'user', content:prompt}]})
+    });
+    const data = await res.json();
+    const text = data.content[0].text.replace(/```json|```/g,'').trim();
+    const result = JSON.parse(text);
+    state[code].analysis = result;
+    await saveState();
+    // Re-renderizar solo este panel
+    const safeId2 = code.replace(/[^a-zA-Z0-9]/g,'-');
+    const wrapEl = document.getElementById('doc-wrap-'+safeId2);
+    if(wrapEl) wrapEl.innerHTML = buildDocPanel(code, name, state[code]);
+    showToast('✅ Análisis completado');
+  } catch(err){
+    showToast('❌ Error al analizar: '+err.message, true);
+    if(wrap){
+      const btn2 = wrap.querySelector('button[onclick*="analizarDoc"]');
+      if(btn2){ btn2.disabled=false; btn2.textContent='🤖 Analizar con IA'; }
+    }
+  }
+}
+
+async function guardarNotas(code, safeId){
+  if(!state[code]) return;
+  const textarea = document.getElementById('notas-'+safeId);
+  if(!textarea) return;
+  state[code].notas = textarea.value;
+  await saveState();
+  showToast('💾 Notas guardadas');
+}
+
+function openRevision(code, name){ analizarDoc(code, name); }
 
 function viewDoc(code){
   const doc = state[code];
