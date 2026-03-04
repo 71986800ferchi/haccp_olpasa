@@ -1756,8 +1756,8 @@ function initGoogleAuth(){
       gAccessToken = resp.access_token;
       // Token válido 1h — limpiar automáticamente
       setTimeout(()=>{ gAccessToken = null; }, 3500 * 1000);
-      // Si había upload pendiente, continúa
-      if(pendingFile && currentDocKey){
+      // Si había upload pendiente, continúa con contexto seguro
+      if(pendingUploadData){
         setTimeout(uploadToDrive, 200);
       }
     }
@@ -1801,31 +1801,34 @@ async function updateDriveFile(fileId, name, file){
 }
 
 async function uploadToDrive(){
-  if(!pendingFile) return;
+  // Usar pendingUploadData como fuente confiable (no se pierde post-auth)
+  const ctx = pendingUploadData || { code: currentDocKey, name: currentDocName, file: pendingFile };
+  if(!ctx.file) return;
+
   showDriveStatus('loading','⏳ Subiendo a Google Drive...');
   const btn = document.querySelector('#modal-upload .btn-green');
   if(btn){ btn.disabled=true; btn.textContent='⏳ Subiendo...'; }
 
   try{
-    const ext = pendingFile.name.split('.').pop();
-    const driveName = `${currentDocKey} — ${currentDocName}.${ext}`;
-    const existing = state[currentDocKey];
+    const ext = ctx.file.name.split('.').pop();
+    const driveName = `${ctx.code} — ${ctx.name}.${ext}`;
+    const existing = state[ctx.code];
     let fileId = existing?.driveFileId || null;
     let result;
 
     if(fileId){
-      result = await updateDriveFile(fileId, driveName, pendingFile);
+      result = await updateDriveFile(fileId, driveName, ctx.file);
     } else {
-      result = await createDriveFile(driveName, pendingFile);
+      result = await createDriveFile(driveName, ctx.file);
       fileId = result.id;
     }
 
     const driveUrl = `https://drive.google.com/file/d/${fileId}/view`;
 
-    state[currentDocKey] = {
-      code: currentDocKey,
-      name: currentDocName,
-      fileName: pendingFile.name,
+    state[ctx.code] = {
+      code: ctx.code,
+      name: ctx.name,
+      fileName: ctx.file.name,
       driveFileId: fileId,
       driveUrl,
       uploadedAt: new Date().toLocaleDateString('es-PE')
@@ -1835,7 +1838,7 @@ async function uploadToDrive(){
     renderAll();
     showDriveStatus('ok','✅ Guardado en Google Drive');
     showToast('📁 Documento guardado en Google Drive');
-    setTimeout(()=>{ closeModal('modal-upload'); pendingFile=null; }, 1400);
+    setTimeout(()=>{ closeModal('modal-upload'); pendingFile=null; pendingUploadData=null; }, 1400);
 
   } catch(err){
     console.error(err);
@@ -2302,6 +2305,7 @@ function exportXLS(key){
 // ── UPLOAD → GOOGLE DRIVE ──
 let pendingFile = null;
 let currentDocName = '';
+let pendingUploadData = null; // seguro contra pérdida de contexto post-auth
 
 function openUpload(code, name){
   currentDocKey = code;
@@ -2312,13 +2316,14 @@ function openUpload(code, name){
   const ds = document.getElementById('drive-status');
   if(ds){ ds.className='drive-status'; ds.textContent=''; }
   pendingFile = null;
+  pendingUploadData = null;
   openModal('modal-upload');
 }
 
 function handleFile(e){
   const f = e.target.files[0];
   if(!f) return;
-  pendingFile = f; // File original — no necesitamos base64
+  pendingFile = f;
   const prev = document.getElementById('file-preview');
   prev.style.display='block';
   prev.innerHTML=`📄 <b>${f.name}</b> — ${(f.size/1024).toFixed(1)} KB`;
@@ -2326,8 +2331,9 @@ function handleFile(e){
 
 async function saveFile(){
   if(!pendingFile){ alert('Selecciona un archivo primero'); return; }
+  // Guardar contexto antes del auth por si el callback llega tarde
+  pendingUploadData = { code: currentDocKey, name: currentDocName, file: pendingFile };
   if(!gAccessToken){
-    // Solicita autenticación — el callback continuará uploadToDrive
     showDriveStatus('loading','🔄 Conectando con Google...');
     if(!gTokenClient) initGoogleAuth();
     gTokenClient.requestAccessToken({prompt:''});
