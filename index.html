@@ -1545,6 +1545,73 @@ tr:hover td{background:#fafffe;}
   </div>
 </div>
 
+<!-- MODAL REVISIÓN DE DOCUMENTO -->
+<div class="modal-bg" id="modal-revision">
+  <div class="modal" style="max-width:740px;width:95%;max-height:92vh;overflow-y:auto;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;">
+      <div>
+        <h3 id="rev-titulo" style="font-size:15px;font-weight:700;color:#1b5e20;margin:0;"></h3>
+        <p id="rev-meta" style="font-size:11px;color:#aaa;margin:3px 0 0;"></p>
+      </div>
+      <button onclick="closeModal('modal-revision')" style="background:none;border:none;font-size:20px;cursor:pointer;color:#bbb;">✕</button>
+    </div>
+
+    <!-- Acciones -->
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+      <a id="rev-ver-btn" href="#" target="_blank" class="btn btn-outline btn-sm">👁️ Ver en Drive</a>
+      <a id="rev-dl-btn" href="#" target="_blank" class="btn btn-sm btn-gray">📥 Descargar</a>
+      <button id="rev-reemplazar-btn" class="btn btn-sm btn-gray" onclick="reemplazarDesdeRevision()">🔄 Reemplazar</button>
+      <button class="btn btn-sm btn-green" id="rev-analizar-btn" onclick="analizarDocumento()" style="margin-left:auto;">🤖 Analizar con IA</button>
+    </div>
+
+    <!-- Loading IA -->
+    <div id="rev-ia-loading" style="display:none;text-align:center;padding:20px;background:#e3f2fd;border-radius:10px;margin-bottom:12px;">
+      <div style="font-size:22px;margin-bottom:6px;">🤖</div>
+      <div style="font-size:13px;font-weight:600;color:#1565c0;">Analizando según RM 449-2006/MINSA...</div>
+      <div style="font-size:11px;color:#90caf9;margin-top:3px;">Usando norma oficial como referencia</div>
+    </div>
+
+    <!-- Sin API Key -->
+    <div id="rev-no-key" style="display:none;text-align:center;padding:14px;background:#fff8e1;border-radius:10px;border:1px solid #ffe082;margin-bottom:12px;">
+      <div style="font-size:13px;color:#795548;font-weight:600;">🔑 Configura tu API Key para usar el análisis IA (⚙️ en el Auditor IA)</div>
+    </div>
+
+    <!-- Resultado IA -->
+    <div id="rev-ia-resultado" style="display:none;margin-bottom:14px;">
+      <div id="rev-estado" style="margin-bottom:10px;"></div>
+      <div id="rev-evidencias-box" style="background:#e8f5e9;border:1px solid #a5d6a7;border-radius:10px;padding:14px;margin-bottom:8px;">
+        <div style="font-weight:700;color:#2e7d32;font-size:13px;margin-bottom:6px;">✅ EVIDENCIAS QUE CUMPLE</div>
+        <div id="rev-evidencias" style="font-size:13px;color:#2e7d32;line-height:1.7;"></div>
+      </div>
+      <div id="rev-brechas-box" style="background:#fff8e1;border:1px solid #ffe082;border-radius:10px;padding:14px;margin-bottom:8px;">
+        <div style="font-weight:700;color:#f57f17;font-size:13px;margin-bottom:6px;">⚠️ BRECHAS QUE PERSISTEN</div>
+        <div id="rev-brechas" style="font-size:13px;color:#795548;line-height:1.7;"></div>
+      </div>
+      <div style="background:#e3f2fd;border:1px solid #90caf9;border-radius:10px;padding:14px;margin-bottom:10px;">
+        <div style="font-weight:700;color:#1565c0;font-size:13px;margin-bottom:6px;">💡 ACCIÓN INMEDIATA ANTES DE LA AUDITORÍA</div>
+        <div id="rev-accion" style="font-size:13px;color:#1565c0;line-height:1.7;"></div>
+      </div>
+      <button onclick="analizarDocumento()" class="btn btn-sm btn-green">🔄 Re-analizar</button>
+    </div>
+
+    <!-- Comentarios -->
+    <div style="border-top:1px solid #eee;padding-top:14px;margin-top:4px;">
+      <div style="font-size:11px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">💬 COMENTARIOS Y MODIFICACIONES</div>
+      <div id="rev-comentarios-lista" style="margin-bottom:12px;max-height:200px;overflow-y:auto;"></div>
+      <div style="display:flex;gap:8px;align-items:flex-start;">
+        <textarea id="rev-comentario-nuevo" rows="2"
+          style="flex:1;padding:10px;border:1px solid #ddd;border-radius:8px;font-size:13px;resize:none;font-family:inherit;"
+          placeholder="Escribe un comentario, observación o nota de modificación..."></textarea>
+        <button onclick="agregarComentario()" class="btn btn-green btn-sm" style="white-space:nowrap;margin-top:2px;">+ Agregar</button>
+      </div>
+    </div>
+
+    <div class="modal-btns" style="margin-top:16px;">
+      <button class="btn btn-gray" onclick="closeModal('modal-revision')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
 <!-- IA AUDITOR -->
 <div style="position:fixed;bottom:24px;right:24px;z-index:400;">
   <button class="ia-btn" onclick="toggleIA()" title="Auditor IA — OLPASA">
@@ -1901,21 +1968,31 @@ function renderDocList(containerId, keys){
   const el = document.getElementById(containerId);
   if(!el) return;
   el.innerHTML = '';
+  if(keys.length === 0){
+    el.innerHTML = '<div style="padding:16px;color:#bbb;font-size:13px;text-align:center;">Sin documentos — haz clic en ✨ Generar o 📤 Subir</div>';
+    return;
+  }
   keys.forEach(d => {
     const saved = state[d.code];
     const row = document.createElement('div');
     row.className = 'doc-row';
+    const nComentarios = saved?.comentarios?.length || 0;
+    const estadoColor = saved?.analysis ? (saved.analysis.estado==='CUMPLE'?'#2e7d32':saved.analysis.estado==='NO_CUMPLE'?'#c62828':'#f57f17') : null;
     row.innerHTML = `
       <div class="doc-info">
         <div class="doc-code">${d.code}</div>
         <div class="doc-name">${d.name}</div>
-        ${saved ? `<div style="font-size:10px;color:#888;margin-top:2px;">📁 ${saved.fileName||saved.name} · ${saved.uploadedAt}</div>` : ''}
+        ${saved ? `<div style="font-size:10px;color:#888;margin-top:2px;">
+          📁 ${saved.fileName||saved.name} · ${saved.uploadedAt}
+          ${nComentarios>0?`· 💬 ${nComentarios}`:''}
+          ${estadoColor?`· <span style="color:${estadoColor};font-weight:700;">●</span>`:''}
+        </div>` : ''}
       </div>
       <div class="doc-actions">
         ${saved
           ? `<span class="tag tag-green">✅ En Drive</span>
-             <a class="btn btn-sm btn-outline" href="${saved.driveUrl}" target="_blank" rel="noopener">👁️ Ver</a>
-             <button class="btn btn-sm btn-gray" onclick="openUpload('${d.code}','${d.name}')">🔄 Reemplazar</button>`
+             <button class="btn btn-sm btn-green" onclick="openRevision('${d.code}','${d.name}')">🔍 Revisar</button>
+             <button class="btn btn-sm btn-gray" onclick="openUpload('${d.code}','${d.name}')">🔄</button>`
           : `<span class="tag tag-gray">⬜ Pendiente</span>
              <button class="btn btn-sm btn-green" onclick="openUpload('${d.code}','${d.name}')">📤 Subir</button>`
         }
@@ -2800,6 +2877,164 @@ async function subirDocGenerado(codigo, titulo, contenido, version){
     mostrarGdocStatus('error','❌ Error al subir: '+err.message);
     document.getElementById('gdoc-btn').disabled = false;
   }
+}
+
+// ── PANEL DE REVISIÓN ──
+const RM449 = `NORMA RM 449-2006/MINSA — Puntos clave para validación:
+REQUISITOS PREVIOS (Art.7-14): BPM, POES, Control de Plagas, Control de Agua, Mantenimiento, Higiene y Capacitación del personal, Transporte, Información del producto. Todos deben estar documentados y con registros disponibles para DIGESA.
+7 PRINCIPIOS HACCP (Art.15): P1-Análisis de Peligros, P2-PCC, P3-Límites Críticos, P4-Sistema de Vigilancia, P5-Medidas Correctivas, P6-Verificación, P7-Documentación y Registro.
+12 PASOS (Art.16): Equipo HACCP, Descripción producto, Uso previsto, Diagrama de flujo, Confirmación in situ, Análisis peligros, Determinación PCC, Límites críticos, Vigilancia PCC, Medidas correctivas, Verificación, Documentación.
+PLAN HACCP debe incluir (Art.29): Nombre/ubicación establecimiento, Política sanitaria, Diseño planta, Equipo HACCP, Descripción producto, Uso previsto, Diagrama flujo, Análisis peligros, PCC, Límites críticos, Vigilancia, Medidas correctivas, Verificación, Formatos registros.
+VALIDACIÓN DIGESA (Art.30-35): Certificado válido 2 años, inspección semestral mínimo, notificar cambios obligatoriamente.
+INFRACCIONES (Art.36): No tener Plan HACCP, no tener validación vigente, no cumplir requisitos previos documentados.`;
+
+let revCode = '';
+let revName = '';
+
+function openRevision(code, name){
+  const doc = state[code];
+  if(!doc) return;
+  revCode = code;
+  revName = name;
+  document.getElementById('rev-titulo').textContent = `📄 ${code} — ${name}`;
+  document.getElementById('rev-meta').textContent = `${doc.fileName||doc.name} · Subido: ${doc.uploadedAt}`;
+  document.getElementById('rev-ver-btn').href = doc.driveUrl || '#';
+  document.getElementById('rev-dl-btn').href = doc.driveFileId
+    ? `https://drive.google.com/uc?export=download&id=${doc.driveFileId}` : '#';
+  document.getElementById('rev-ia-loading').style.display = 'none';
+  document.getElementById('rev-no-key').style.display = 'none';
+  if(doc.analysis){
+    mostrarResultadoIA(doc.analysis);
+  } else {
+    document.getElementById('rev-ia-resultado').style.display = 'none';
+  }
+  renderComentarios(doc.comentarios || []);
+  document.getElementById('rev-comentario-nuevo').value = '';
+  openModal('modal-revision');
+}
+
+function reemplazarDesdeRevision(){
+  closeModal('modal-revision');
+  openUpload(revCode, revName);
+}
+
+function renderComentarios(lista){
+  const el = document.getElementById('rev-comentarios-lista');
+  if(!lista || lista.length === 0){
+    el.innerHTML = '<div style="font-size:12px;color:#ccc;padding:4px 0;">Sin comentarios aún</div>';
+    return;
+  }
+  el.innerHTML = lista.map((c,i) => `
+    <div style="background:#f9f9f9;border:1px solid #eee;border-radius:8px;padding:10px 12px;margin-bottom:8px;position:relative;">
+      <div style="font-size:13px;color:#333;line-height:1.5;padding-right:20px;">${c.texto}</div>
+      <div style="font-size:10px;color:#aaa;margin-top:4px;">📅 ${c.fecha} · ${c.autor||'Equipo OLPASA'}</div>
+      <button onclick="eliminarComentario(${i})" style="position:absolute;top:8px;right:8px;background:none;border:none;cursor:pointer;color:#ccc;font-size:14px;" title="Eliminar">✕</button>
+    </div>`).join('');
+}
+
+async function agregarComentario(){
+  const texto = document.getElementById('rev-comentario-nuevo').value.trim();
+  if(!texto || !state[revCode]) return;
+  if(!state[revCode].comentarios) state[revCode].comentarios = [];
+  state[revCode].comentarios.push({
+    texto,
+    fecha: new Date().toLocaleString('es-PE',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}),
+    autor: 'Equipo OLPASA'
+  });
+  document.getElementById('rev-comentario-nuevo').value = '';
+  renderComentarios(state[revCode].comentarios);
+  await saveState();
+  renderAll();
+  showToast('💬 Comentario guardado');
+}
+
+async function eliminarComentario(idx){
+  if(!state[revCode]?.comentarios) return;
+  state[revCode].comentarios.splice(idx, 1);
+  renderComentarios(state[revCode].comentarios);
+  await saveState();
+  renderAll();
+}
+
+async function analizarDocumento(){
+  if(!getApiKey()){
+    document.getElementById('rev-no-key').style.display = 'block';
+    return;
+  }
+  document.getElementById('rev-no-key').style.display = 'none';
+  document.getElementById('rev-ia-resultado').style.display = 'none';
+  document.getElementById('rev-ia-loading').style.display = 'block';
+  document.getElementById('rev-analizar-btn').disabled = true;
+
+  const doc = state[revCode];
+  const tipoDoc = revCode.includes('-P-')?'Procedimiento':revCode.includes('-M-')?'Manual':revCode.includes('POES')?'POES':revCode.includes('-F-')?'Formato':revCode.includes('-I-')?'Instructivo':'Documento';
+  const comentariosTexto = doc.comentarios?.length
+    ? `\nObservaciones del equipo:\n${doc.comentarios.map(c=>'• '+c.texto).join('\n')}` : '';
+
+  const prompt = `Eres auditor experto en HACCP para plantas de aceite de palma en Perú. Validas documentos según la RM 449-2006/MINSA.
+
+${RM449}
+
+Documento a analizar de OLEAGINOSAS PADRE ABAD S.A. (OLPASA), planta extractora de aceite crudo de palma, Padre Abad, Ucayali, Perú:
+- Código: ${revCode}
+- Título: ${revName}
+- Tipo: ${tipoDoc}
+- Archivo: ${doc.fileName||doc.name}
+- Subido: ${doc.uploadedAt}
+${comentariosTexto}
+
+Basándote en los requisitos de la RM 449-2006/MINSA para este tipo de documento (${tipoDoc}), analiza su conformidad.
+
+Responde SOLO en JSON exacto sin texto adicional ni markdown:
+{
+  "estado": "CUMPLE|CUMPLE_PARCIALMENTE|NO_CUMPLE",
+  "evidencias": ["evidencia 1","evidencia 2","evidencia 3"],
+  "brechas": ["brecha 1","brecha 2"],
+  "accion": "Acción concreta e inmediata para cumplir con la RM 449-2006/MINSA antes de auditoría DIGESA"
+}`;
+
+  try{
+    const res = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        messages:[{role:'user', content:prompt}]
+      })
+    });
+    const data = await res.json();
+    const text = data.content[0].text.replace(/```json|```/g,'').trim();
+    const result = JSON.parse(text);
+    state[revCode].analysis = result;
+    await saveState();
+    renderAll();
+    document.getElementById('rev-ia-loading').style.display = 'none';
+    mostrarResultadoIA(result);
+  } catch(err){
+    document.getElementById('rev-ia-loading').style.display = 'none';
+    showToast('❌ Error al analizar. Verifica tu API Key.', true);
+  } finally {
+    document.getElementById('rev-analizar-btn').disabled = false;
+  }
+}
+
+function mostrarResultadoIA(result){
+  const estados = {
+    'CUMPLE':'<span style="background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7;padding:5px 16px;border-radius:20px;font-size:12px;font-weight:700;">✅ CUMPLE — RM 449-2006/MINSA</span>',
+    'CUMPLE_PARCIALMENTE':'<span style="background:#fff8e1;color:#f57f17;border:1px solid #ffe082;padding:5px 16px;border-radius:20px;font-size:12px;font-weight:700;">⚠️ CUMPLE PARCIALMENTE — RM 449-2006/MINSA</span>',
+    'NO_CUMPLE':'<span style="background:#ffebee;color:#c62828;border:1px solid #ef9a9a;padding:5px 16px;border-radius:20px;font-size:12px;font-weight:700;">❌ NO CUMPLE — RM 449-2006/MINSA</span>'
+  };
+  document.getElementById('rev-estado').innerHTML = estados[result.estado] || estados['CUMPLE_PARCIALMENTE'];
+  document.getElementById('rev-evidencias').innerHTML = (result.evidencias||[]).map(e=>`• ${e}`).join('<br>');
+  if(result.brechas?.length > 0){
+    document.getElementById('rev-brechas').innerHTML = result.brechas.map(b=>`• ${b}`).join('<br>');
+    document.getElementById('rev-brechas-box').style.display = 'block';
+  } else {
+    document.getElementById('rev-brechas-box').style.display = 'none';
+  }
+  document.getElementById('rev-accion').textContent = result.accion || '';
+  document.getElementById('rev-ia-resultado').style.display = 'block';
 }
 
 function viewDoc(code){
