@@ -160,11 +160,11 @@ tr:hover td{background:#fafffe;}
 
 /* IA CHAT */
 .ia-btn{
-  position:fixed;bottom:24px;right:24px;
+  position:relative;
   width:56px;height:56px;border-radius:50%;
   background:linear-gradient(135deg,var(--dark),var(--verde2));
   color:#fff;border:none;cursor:pointer;font-size:24px;
-  box-shadow:0 4px 20px rgba(27,94,32,0.4);z-index:300;
+  box-shadow:0 4px 20px rgba(27,94,32,0.4);
   display:flex;align-items:center;justify-content:center;
   transition:transform .2s;
 }
@@ -1311,10 +1311,12 @@ tr:hover td{background:#fafffe;}
 </div>
 
 <!-- IA AUDITOR -->
-<button class="ia-btn" onclick="toggleIA()" title="Auditor IA — OLPASA" style="position:relative;">
-  🤖
-  <span class="ia-notif" id="ia-notif" style="display:none;">!</span>
-</button>
+<div style="position:fixed;bottom:24px;right:24px;z-index:400;">
+  <button class="ia-btn" onclick="toggleIA()" title="Auditor IA — OLPASA">
+    🤖
+    <span class="ia-notif" id="ia-notif" style="display:none;">!</span>
+  </button>
+</div>
 
 <div class="ia-panel" id="ia-panel">
   <div class="ia-header">
