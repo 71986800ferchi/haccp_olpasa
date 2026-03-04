@@ -516,6 +516,7 @@ tr:hover td{background:#fafffe;}
   </div>
 
   <div class="nav-label" style="margin-top:8px;">Gestión</div>
+  <div class="nav-item" onclick="nav('ctrl-doc',this)"><span class="nav-icon">📋</span>Control de Documentos</div>
   <div class="nav-item" onclick="nav('documentos',this)"><span class="nav-icon">📁</span>Todos los Documentos</div>
   <div class="nav-item" onclick="nav('auditoria',this)"><span class="nav-icon">🔍</span>Auditorías</div>
 </aside>
@@ -788,8 +789,7 @@ tr:hover td{background:#fafffe;}
 <!-- BPM -->
 <div class="page" id="page-bpm">
   <div class="ph"><h2>📋 BPM — Buenas Prácticas de Manufactura</h2><p>OLPASA-SIG-M-001 · Versión 02 · 2024 — Haz clic en 📤 para subir cada documento</p></div>
-  <div class="block">
-    <div class="tbl-head"><h3>Documentos BPM</h3><button class="btn btn-green btn-sm" onclick="openGenerarDoc('BPM')">✨ Generar documento</button></div>
+  <div class="block"><h3>Documentos BPM</h3>
     <div id="list-bpm"></div>
   </div>
 </div>
@@ -797,8 +797,7 @@ tr:hover td{background:#fafffe;}
 <!-- POES -->
 <div class="page" id="page-poes">
   <div class="ph"><h2>🧼 POES — Procedimientos Operativos de Saneamiento</h2><p>OLPASA-AQ-M-002 — Haz clic en 📤 para subir cada documento</p></div>
-  <div class="block">
-    <div class="tbl-head"><h3>Procedimientos POES</h3><button class="btn btn-green btn-sm" onclick="openGenerarDoc('POES')">✨ Generar documento</button></div>
+  <div class="block"><h3>Procedimientos POES</h3>
     <div id="list-poes"></div>
   </div>
 </div>
@@ -918,6 +917,55 @@ tr:hover td{background:#fafffe;}
 </div>
 
 <!-- DOCUMENTOS -->
+<!-- CONTROL DE INFORMACIÓN DOCUMENTADA -->
+<div class="page" id="page-ctrl-doc">
+  <div class="ph"><h2>📋 Control de Información Documentada</h2><p>OLPASA-SIG-P-001 · Base del sistema documental OLPASA</p></div>
+
+  <div class="haccp-plan-box">
+    <div class="haccp-plan-banner">
+      <h3>📋 OLPASA-SIG-P-001 — Control de la Información Documentada</h3>
+      <p>OLEAGINOSAS PADRE ABAD S.A. · Sistema Integrado de Gestión · Versión 07 · 2026</p>
+      <div class="haccp-plan-badges">
+        <span class="haccp-plan-badge">📁 ISO 9001:2015 Req. 7.5</span>
+        <span class="haccp-plan-badge">⚙️ Codificación OLPASA</span>
+        <span class="haccp-plan-badge">✅ Documento Base del Sistema</span>
+      </div>
+    </div>
+    <div class="haccp-plan-body">
+      <div id="ctrl-doc-upload-area">
+        <div class="haccp-doc-upload" onclick="document.getElementById('ctrl-doc-input').click()">
+          <input type="file" id="ctrl-doc-input" accept=".pdf,.doc,.docx" onchange="handleCtrlDoc(event)">
+          <div class="haccp-doc-upload-icon">📋</div>
+          <p style="font-size:14px;font-weight:600;color:#555;margin-bottom:4px;">Subir OLPASA-SIG-P-001</p>
+          <p style="font-size:12px;color:#aaa;">Haz clic para seleccionar el PDF o Word</p>
+        </div>
+      </div>
+      <div id="ctrl-doc-uploaded" style="display:none;">
+        <div class="haccp-doc-uploaded">
+          <div class="haccp-doc-uploaded-info">
+            <span class="haccp-doc-uploaded-icon">📋</span>
+            <div>
+              <div style="font-size:14px;font-weight:700;color:#166534;" id="ctrl-doc-fname"></div>
+              <div style="font-size:11px;color:#888;margin-top:2px;" id="ctrl-doc-fmeta"></div>
+              <span class="tag-firma ok" style="margin-top:6px;display:inline-flex;">✅ Documento Base Cargado</span>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <a id="ctrl-doc-ver-btn" href="#" target="_blank" class="btn btn-outline btn-sm">👁️ Ver</a>
+            <a id="ctrl-doc-desc-btn" href="#" target="_blank" class="btn btn-green btn-sm">📥 Descargar</a>
+            <button class="btn btn-gray btn-sm" onclick="reemplazarCtrlDoc()">🔄 Reemplazar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert-banner green">
+    <span class="alert-banner-icon">ℹ️</span>
+    <div>Este documento es la base del sistema. La IA lo usará como referencia para revisar y validar todos los documentos que vayas subiendo al sistema.</div>
+  </div>
+</div>
+
 <div class="page" id="page-documentos">
   <div class="ph"><h2>📁 Todos los Documentos</h2><p>Repositorio general — OLPASA-SIG-P-001</p></div>
   <div class="block"><h3>Todos los documentos registrados</h3><div id="list-all"></div></div>
@@ -1321,162 +1369,6 @@ tr:hover td{background:#fafffe;}
   </div>
 </div>
 
-<!-- MODAL GENERAR DOCUMENTO IA -->
-<div class="modal-bg" id="modal-generar-doc">
-  <div class="meq" style="max-width:600px;width:95%;">
-    <h3>✨ Generar Documento con IA</h3>
-    <div class="mreg-sub">La IA generará el documento siguiendo la estructura oficial OLPASA</div>
-
-    <div class="meq-section">Identificación del documento</div>
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Tipo de documento *</label>
-        <select id="gdoc-tipo" class="form-input" onchange="actualizarCodigo()">
-          <option value="P">Procedimiento (P)</option>
-          <option value="M">Manual (M)</option>
-          <option value="POES">POES</option>
-          <option value="I">Instructivo (I)</option>
-          <option value="F">Formato (F)</option>
-          <option value="C">Cartilla (C)</option>
-          <option value="R">Reglamento (R)</option>
-          <option value="L">Plan (L)</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Proceso/Área *</label>
-        <select id="gdoc-area" class="form-input" onchange="actualizarCodigo()">
-          <option value="SIG">SIG — Sistema Integrado de Gestión</option>
-          <option value="AQ">AQ — Calidad e Inocuidad</option>
-          <option value="PR">PR — Producción</option>
-          <option value="MT">MT — Mantenimiento</option>
-          <option value="RH">RH — Recursos Humanos</option>
-          <option value="LO">LO — Logística</option>
-          <option value="GC">GC — Gestión Comercial</option>
-          <option value="SSOMA">SSOMA — Seguridad y Medio Ambiente</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Número correlativo *</label>
-        <input type="text" id="gdoc-num" class="form-input" placeholder="Ej. 001" oninput="actualizarCodigo()">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Código generado</label>
-        <input type="text" id="gdoc-codigo" class="form-input" readonly style="background:#f5f5f5;color:#888;">
-      </div>
-    </div>
-
-    <div class="meq-section">Contenido</div>
-    <div class="form-row solo">
-      <div class="form-group">
-        <label class="form-label">Título del documento *</label>
-        <input type="text" id="gdoc-titulo" class="form-input" placeholder="Ej. Procedimiento de Control de Temperatura en Esterilizado">
-      </div>
-    </div>
-    <div class="form-row solo">
-      <div class="form-group">
-        <label class="form-label">Descripción / Instrucciones para la IA</label>
-        <textarea id="gdoc-desc" class="form-input" rows="3" style="resize:vertical;font-family:inherit;"
-          placeholder="Ej. Describe el proceso de control de temperatura durante la etapa de esterilizado a 50 Psi / 140°C / 60 min, incluyendo acciones correctivas si la temperatura baja de 135°C..."></textarea>
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Elaborado por</label>
-        <input type="text" id="gdoc-elaborado" class="form-input" placeholder="Responsable de Calidad e Inocuidad">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Versión</label>
-        <input type="text" id="gdoc-version" class="form-input" placeholder="01" value="01">
-      </div>
-    </div>
-
-    <!-- Estado generación -->
-    <div id="gdoc-status" style="display:none;padding:10px 14px;border-radius:8px;font-size:12px;font-weight:600;margin:10px 0;"></div>
-
-    <div class="meq-btns">
-      <button class="btn btn-gray" onclick="closeModal('modal-generar-doc')">Cancelar</button>
-      <button class="btn btn-green" id="gdoc-btn" onclick="generarDocumento()">✨ Generar y subir a Drive</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL ANÁLISIS DOCUMENTO IA -->
-<div class="modal-bg" id="modal-doc-analysis">
-  <div class="modal" style="max-width:720px;width:95%;max-height:90vh;overflow-y:auto;">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
-      <div>
-        <h3 id="analysis-doc-title" style="font-size:15px;font-weight:700;color:#1b5e20;"></h3>
-        <p id="analysis-doc-meta" style="font-size:11px;color:#888;margin:2px 0 0;"></p>
-      </div>
-      <button onclick="closeModal('modal-doc-analysis')" style="background:none;border:none;font-size:18px;cursor:pointer;color:#aaa;">✕</button>
-    </div>
-
-    <!-- Botones acción -->
-    <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
-      <a id="analysis-view-btn" href="#" target="_blank" class="btn btn-outline btn-sm">👁️ Ver en Drive</a>
-      <a id="analysis-download-btn" href="#" target="_blank" class="btn btn-sm btn-gray">📥 Descargar</a>
-      <button id="analysis-replace-btn" class="btn btn-sm btn-gray" onclick="replaceFromAnalysis()">🔄 Reemplazar</button>
-      <button id="analysis-ai-btn" class="btn btn-sm btn-green" onclick="analyzeDoc()" style="margin-left:auto;">🤖 Analizar con IA</button>
-    </div>
-
-    <!-- Resultado análisis -->
-    <div id="analysis-result" style="display:none;">
-      <!-- Estado badge -->
-      <div id="analysis-estado" style="margin-bottom:12px;"></div>
-
-      <!-- Evidencias -->
-      <div class="analysis-section" id="analysis-evidencias-box" style="background:#e8f5e9;border:1px solid #a5d6a7;border-radius:10px;padding:14px;margin-bottom:10px;">
-        <div style="font-weight:700;color:#2e7d32;margin-bottom:8px;">✅ EVIDENCIAS QUE CUMPLE</div>
-        <div id="analysis-evidencias" style="font-size:13px;color:#2e7d32;line-height:1.7;"></div>
-      </div>
-
-      <!-- Brechas -->
-      <div class="analysis-section" id="analysis-brechas-box" style="background:#fff8e1;border:1px solid #ffe082;border-radius:10px;padding:14px;margin-bottom:10px;">
-        <div style="font-weight:700;color:#f57f17;margin-bottom:8px;">⚠️ BRECHAS QUE PERSISTEN</div>
-        <div id="analysis-brechas" style="font-size:13px;color:#795548;line-height:1.7;"></div>
-      </div>
-
-      <!-- Acción inmediata -->
-      <div class="analysis-section" id="analysis-accion-box" style="background:#e3f2fd;border:1px solid #90caf9;border-radius:10px;padding:14px;margin-bottom:10px;">
-        <div style="font-weight:700;color:#1565c0;margin-bottom:8px;">💡 ACCIÓN INMEDIATA ANTES DE LA AUDITORÍA</div>
-        <div id="analysis-accion" style="font-size:13px;color:#1565c0;line-height:1.7;"></div>
-      </div>
-
-      <!-- Re-analizar -->
-      <button onclick="analyzeDoc()" class="btn btn-sm btn-green" style="margin-bottom:16px;">🔄 Re-analizar</button>
-    </div>
-
-    <!-- Loading -->
-    <div id="analysis-loading" style="display:none;text-align:center;padding:24px;color:#888;">
-      <div style="font-size:24px;margin-bottom:8px;">🤖</div>
-      <div style="font-size:13px;">Analizando documento con IA...</div>
-      <div style="font-size:11px;color:#bbb;margin-top:4px;">Esto puede tomar unos segundos</div>
-    </div>
-
-    <!-- Sin API Key -->
-    <div id="analysis-no-key" style="display:none;text-align:center;padding:20px;background:#fff8e1;border-radius:10px;border:1px solid #ffe082;">
-      <div style="font-size:20px;margin-bottom:6px;">🔑</div>
-      <div style="font-size:13px;color:#795548;font-weight:600;">Configura tu API Key para analizar</div>
-      <div style="font-size:11px;color:#aaa;margin-top:4px;">Haz clic en el ícono ⚙️ del Auditor IA</div>
-    </div>
-
-    <!-- Notas del equipo -->
-    <div style="margin-top:16px;border-top:1px solid #eee;padding-top:16px;">
-      <div style="font-size:11px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">📝 NOTAS DEL EQUIPO</div>
-      <textarea id="analysis-notes" rows="3" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;font-size:13px;resize:vertical;font-family:inherit;" placeholder="Agrega observaciones, pendientes o comentarios sobre este documento..."></textarea>
-    </div>
-
-    <div class="modal-btns">
-      <button class="btn btn-gray" onclick="closeModal('modal-doc-analysis')">Cerrar</button>
-      <button class="btn btn-green" onclick="saveDocNotes()">💾 Guardar cambios</button>
-    </div>
-  </div>
-</div>
-
 <!-- IA AUDITOR -->
 <div style="position:fixed;bottom:24px;right:24px;z-index:400;">
   <button class="ia-btn" onclick="toggleIA()" title="Auditor IA — OLPASA">
@@ -1604,6 +1496,66 @@ function descargarHaccpPlan(){
 }
 function reemplazarHaccpPlan(){ document.getElementById('haccp-plan-input').click(); }
 
+// ── CONTROL DE INFORMACIÓN DOCUMENTADA ──
+let ctrlDocData = null;
+
+function renderCtrlDoc(){
+  const up   = document.getElementById('ctrl-doc-upload-area');
+  const done = document.getElementById('ctrl-doc-uploaded');
+  if(!up||!done) return;
+  if(ctrlDocData){
+    up.style.display='none'; done.style.display='block';
+    document.getElementById('ctrl-doc-fname').textContent = '📄 ' + ctrlDocData.fileName;
+    document.getElementById('ctrl-doc-fmeta').textContent = `Subido: ${ctrlDocData.uploadedAt}`;
+    document.getElementById('ctrl-doc-ver-btn').href  = ctrlDocData.driveUrl || '#';
+    document.getElementById('ctrl-doc-desc-btn').href = ctrlDocData.driveFileId
+      ? `https://drive.google.com/uc?export=download&id=${ctrlDocData.driveFileId}` : '#';
+  } else { up.style.display='block'; done.style.display='none'; }
+}
+
+function handleCtrlDoc(e){
+  const f = e.target.files[0]; if(!f) return;
+  pendingUploadData = { code:'OLPASA-SIG-P-001', name:'Control de la Información Documentada', file:f };
+  currentDocKey  = 'OLPASA-SIG-P-001';
+  currentDocName = 'Control de la Información Documentada';
+  if(!gAccessToken){
+    if(!gTokenClient) initGoogleAuth();
+    gTokenClient.requestAccessToken({prompt:''});
+    showToast('🔄 Conectando con Google Drive...');
+    return;
+  }
+  subirCtrlDoc(f);
+}
+
+async function subirCtrlDoc(file){
+  try{
+    showToast('⏳ Subiendo a Google Drive...');
+    const ext = file.name.split('.').pop();
+    const driveName = `OLPASA-SIG-P-001 — Control de la Información Documentada.${ext}`;
+    const existing = ctrlDocData;
+    let result;
+    if(existing?.driveFileId){
+      result = await updateDriveFile(existing.driveFileId, driveName, file);
+    } else {
+      result = await createDriveFile(driveName, file);
+    }
+    ctrlDocData = {
+      fileName: file.name,
+      driveFileId: result.id,
+      driveUrl: `https://drive.google.com/file/d/${result.id}/view`,
+      uploadedAt: new Date().toLocaleDateString('es-PE')
+    };
+    LS.set('haccp-ctrl-doc', JSON.stringify(ctrlDocData));
+    await saveAllToDrive();
+    renderCtrlDoc();
+    showToast('✅ OLPASA-SIG-P-001 subido a Google Drive');
+  } catch(err){
+    showToast('❌ Error al subir: ' + err.message, true);
+  }
+}
+
+function reemplazarCtrlDoc(){ document.getElementById('ctrl-doc-input').click(); }
+
 // ── STORAGE ──
 
 // ── DOCUMENTOS CONFIG ──
@@ -1690,58 +1642,22 @@ let currentDocKey = null;
 let calRows = [];
 
 async function loadState(){
-  // 1. Primero carga desde localStorage (inmediato, sin esperar auth)
   try{ const r=LS.get('haccp-docs'); state=r?JSON.parse(r.value):{}; }
   catch(e){ state={}; }
+  try{ const r=LS.get('haccp-ctrl-doc'); ctrlDocData=r?JSON.parse(r.value):null; }
+  catch(e){ ctrlDocData=null; }
+  // Init Google Auth en background
+  setTimeout(()=>{ if(window.google) initGoogleAuth(); else {
+    const t = setInterval(()=>{ if(window.google){ initGoogleAuth(); clearInterval(t); } }, 300);
+  }}, 500);
   try{ const r=LS.get('haccp-cal'); calRows=r?JSON.parse(r.value):[]; }
   catch(e){ calRows=[]; }
   renderAll();
-
-  // 2. Init Google Auth y luego sincroniza desde Drive
-  setTimeout(()=>{
-    const tryInit = () => {
-      if(window.google){ initGoogleAuth(); syncFromDrive(); }
-      else setTimeout(tryInit, 300);
-    };
-    tryInit();
-  }, 500);
-}
-
-async function syncFromDrive(){
-  // Pide token silencioso (sin popup) para leer metadata
-  if(!gTokenClient) return;
-  gTokenClient.requestAccessToken({prompt:''});
-  // El callback de auth llamará a loadDriveMetadata
-}
-
-async function loadDriveMetadata(){
-  const meta = await getDriveMetadata();
-  if(!meta) return;
-  // Merge: Drive tiene prioridad sobre localStorage
-  if(meta.docs && Object.keys(meta.docs).length > 0){
-    state = meta.docs;
-    LS.set('haccp-docs', JSON.stringify(state));
-  }
-  if(meta.cal && meta.cal.length > 0){
-    calRows = meta.cal;
-    LS.set('haccp-cal', JSON.stringify(calRows));
-  }
-  if(meta.equipo && meta.equipo.length > 0){
-    equipoData = meta.equipo;
-    LS.set('haccp-equipo', JSON.stringify(equipoData));
-  }
-  if(meta.registros){
-    Object.keys(meta.registros).forEach(k=>{
-      if(meta.registros[k]) regData[k] = meta.registros[k];
-    });
-  }
-  renderAll();
-  renderEquipo();
-  showToast('☁️ Sincronizado con Google Drive');
+  renderCtrlDoc();
 }
 
 async function saveState(){
-  // Metadata sin base64
+  // Guarda solo metadata (sin base64 — los archivos viven en Drive)
   const meta = {};
   Object.keys(state).forEach(k => {
     const d = state[k];
@@ -1754,11 +1670,54 @@ async function saveState(){
       uploadedAt: d.uploadedAt || ''
     };
   });
-  // Guardar en localStorage (inmediato)
   LS.set('haccp-docs', JSON.stringify(meta));
-  // Guardar en Drive (persistente entre PCs)
-  await saveAllToDrive();
   updateDashboard();
+}
+
+// ── DRIVE METADATA STORE ──
+const METADATA_FILENAME = 'haccp-olpasa-metadata.json';
+let driveMetadataFileId = null;
+
+async function getDriveMetadata(){
+  if(!gAccessToken) return null;
+  try{
+    const q = encodeURIComponent(`name='${METADATA_FILENAME}' and '${DRIVE_FOLDER_ID}' in parents and trashed=false`);
+    const res = await fetch(`https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id,name)`,{
+      headers:{ Authorization:`Bearer ${gAccessToken}` }
+    });
+    const data = await res.json();
+    if(data.files && data.files.length > 0){
+      driveMetadataFileId = data.files[0].id;
+      const r2 = await fetch(`https://www.googleapis.com/drive/v3/files/${driveMetadataFileId}?alt=media`,{
+        headers:{ Authorization:`Bearer ${gAccessToken}` }
+      });
+      return await r2.json();
+    }
+    return {};
+  }catch(e){ console.error('getDriveMetadata',e); return null; }
+}
+
+async function saveDriveMetadata(data){
+  if(!gAccessToken) return;
+  try{
+    const blob = new Blob([JSON.stringify(data)],{type:'application/json'});
+    if(driveMetadataFileId){
+      await fetch(`https://www.googleapis.com/upload/drive/v3/files/${driveMetadataFileId}?uploadType=media`,{
+        method:'PATCH',
+        headers:{ Authorization:`Bearer ${gAccessToken}`, 'Content-Type':'application/json' },
+        body: blob
+      });
+    } else {
+      const form = new FormData();
+      form.append('metadata', new Blob([JSON.stringify({name:METADATA_FILENAME, parents:[DRIVE_FOLDER_ID]})],{type:'application/json'}));
+      form.append('file', blob);
+      const res = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id',{
+        method:'POST', headers:{ Authorization:`Bearer ${gAccessToken}` }, body: form
+      });
+      const r = await res.json();
+      driveMetadataFileId = r.id;
+    }
+  }catch(e){ console.error('saveDriveMetadata',e); }
 }
 
 async function saveAllToDrive(){
@@ -1766,11 +1725,42 @@ async function saveAllToDrive(){
   const allMeta = {
     docs: state,
     cal: calRows,
-    equipo: equipoData || [],
+    equipo: typeof equipoData !== 'undefined' ? equipoData : [],
+    ctrlDoc: ctrlDocData,
     registros: typeof regData !== 'undefined' ? regData : {},
     updatedAt: new Date().toISOString()
   };
   await saveDriveMetadata(allMeta);
+}
+
+async function loadDriveMetadata(){
+  const meta = await getDriveMetadata();
+  if(!meta) return;
+  if(meta.docs && Object.keys(meta.docs).length > 0){
+    state = meta.docs;
+    LS.set('haccp-docs', JSON.stringify(state));
+  }
+  if(meta.cal && meta.cal.length > 0){
+    calRows = meta.cal;
+    LS.set('haccp-cal', JSON.stringify(calRows));
+  }
+  if(meta.equipo && meta.equipo.length > 0){
+    equipoData = meta.equipo;
+    LS.set('haccp-equipo', JSON.stringify(equipoData));
+  }
+  if(meta.ctrlDoc){
+    ctrlDocData = meta.ctrlDoc;
+    LS.set('haccp-ctrl-doc', JSON.stringify(ctrlDocData));
+  }
+  if(meta.registros){
+    Object.keys(meta.registros).forEach(k=>{
+      if(meta.registros[k] && typeof regData !== 'undefined') regData[k] = meta.registros[k];
+    });
+  }
+  renderAll();
+  renderCtrlDoc();
+  if(typeof renderEquipo === 'function') renderEquipo();
+  showToast('☁️ Sincronizado con Google Drive');
 }
 
 async function saveCals(){
@@ -1796,7 +1786,7 @@ function renderDocList(containerId, keys){
       <div class="doc-actions">
         ${saved
           ? `<span class="tag tag-green">✅ En Drive</span>
-             <button class="btn btn-sm btn-green" onclick="openDocAnalysis('${d.code}','${d.name}')">🔍 Revisar</button>
+             <a class="btn btn-sm btn-outline" href="${saved.driveUrl}" target="_blank" rel="noopener">👁️ Ver</a>
              <button class="btn btn-sm btn-gray" onclick="openUpload('${d.code}','${d.name}')">🔄 Reemplazar</button>`
           : `<span class="tag tag-gray">⬜ Pendiente</span>
              <button class="btn btn-sm btn-green" onclick="openUpload('${d.code}','${d.name}')">📤 Subir</button>`
@@ -1841,7 +1831,7 @@ function renderAllDocs(){
       <div class="doc-actions">
         ${saved
           ? `<span class="tag tag-green">✅ En Drive</span>
-             <button class="btn btn-sm btn-green" onclick="openDocAnalysis('${d.code}','${d.name}')">🔍 Revisar</button>
+             <a class="btn btn-sm btn-outline" href="${saved.driveUrl}" target="_blank" rel="noopener">👁️ Ver</a>
              <button class="btn btn-sm btn-gray" onclick="openUpload('${d.code}','${d.name}')">🔄</button>`
           : `<span class="tag tag-gray">⬜ Pendiente</span>
              <button class="btn btn-sm btn-green" onclick="openUpload('${d.code}','${d.name}')">📤 Subir</button>`
@@ -1966,13 +1956,19 @@ function initGoogleAuth(){
         return;
       }
       gAccessToken = resp.access_token;
-      // Token válido 1h
+      // Token válido 1h — limpiar automáticamente
       setTimeout(()=>{ gAccessToken = null; }, 3500 * 1000);
-      // Sincronizar metadata desde Drive
-      loadDriveMetadata();
-      // Si había upload pendiente, continúa
+      // Si había upload pendiente, continúa con contexto seguro
       if(pendingUploadData){
-        setTimeout(uploadToDrive, 200);
+        // Verificar si es el ctrl doc
+        if(pendingUploadData.code === 'OLPASA-SIG-P-001'){
+          setTimeout(()=> subirCtrlDoc(pendingUploadData.file), 200);
+        } else {
+          setTimeout(uploadToDrive, 200);
+        }
+      } else {
+        // Solo sincronizar desde Drive
+        loadDriveMetadata();
       }
     }
   });
@@ -2068,64 +2064,6 @@ const LS = {
   set: (key, val) => { try{ localStorage.setItem(key, val); return true; }catch(e){return false;} },
 };
 
-// ── DRIVE METADATA STORE ──
-// Archivo central en Drive: haccp-metadata.json
-// Guarda toda la metadata (docs, equipo, cal, registros) en un solo JSON en Drive
-const METADATA_FILENAME = 'haccp-olpasa-metadata.json';
-let driveMetadataFileId = null;
-let driveMetadataCache = null;
-
-async function getDriveMetadata(){
-  if(!gAccessToken) return null;
-  try{
-    // Buscar el archivo de metadata en Drive
-    const q = encodeURIComponent(`name='${METADATA_FILENAME}' and '${DRIVE_FOLDER_ID}' in parents and trashed=false`);
-    const res = await fetch(`https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id,name)`,{
-      headers:{ Authorization:`Bearer ${gAccessToken}` }
-    });
-    const data = await res.json();
-    if(data.files && data.files.length > 0){
-      driveMetadataFileId = data.files[0].id;
-      // Leer contenido
-      const r2 = await fetch(`https://www.googleapis.com/drive/v3/files/${driveMetadataFileId}?alt=media`,{
-        headers:{ Authorization:`Bearer ${gAccessToken}` }
-      });
-      const meta = await r2.json();
-      driveMetadataCache = meta;
-      return meta;
-    }
-    return {};
-  }catch(e){ console.error('getDriveMetadata error',e); return null; }
-}
-
-async function saveDriveMetadata(data){
-  if(!gAccessToken) return;
-  try{
-    const blob = new Blob([JSON.stringify(data)], {type:'application/json'});
-    if(driveMetadataFileId){
-      // Actualizar existente
-      await fetch(`https://www.googleapis.com/upload/drive/v3/files/${driveMetadataFileId}?uploadType=media`,{
-        method:'PATCH',
-        headers:{ Authorization:`Bearer ${gAccessToken}`, 'Content-Type':'application/json' },
-        body: blob
-      });
-    } else {
-      // Crear nuevo
-      const form = new FormData();
-      form.append('metadata', new Blob([JSON.stringify({name:METADATA_FILENAME, parents:[DRIVE_FOLDER_ID]})],{type:'application/json'}));
-      form.append('file', blob);
-      const res = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id',{
-        method:'POST',
-        headers:{ Authorization:`Bearer ${gAccessToken}` },
-        body: form
-      });
-      const r = await res.json();
-      driveMetadataFileId = r.id;
-    }
-    driveMetadataCache = data;
-  }catch(e){ console.error('saveDriveMetadata error',e); }
-}
-
 // ── EQUIPO HACCP ──
 let equipoData = [];
 let currentMiembroIdx = null;
@@ -2140,7 +2078,6 @@ async function loadEquipo(){
 
 async function saveEquipo(){
   LS.set('haccp-equipo', JSON.stringify(equipoData));
-  await saveAllToDrive();
   renderEquipo();
   updateDashboard();
 }
@@ -2335,7 +2272,7 @@ async function loadRegData(){
   renderReg('agua'); renderReg('higiene'); renderReg('limpieza'); renderReg('plagas');
 }
 
-async function saveRegData(key){ LS.set('haccp-reg-'+key, JSON.stringify(regData[key])); await saveAllToDrive(); }
+async function saveRegData(key){ LS.set('haccp-reg-'+key, JSON.stringify(regData[key])); }
 
 function estadoColor(val){
   if(!val) return 'gris';
@@ -2625,300 +2562,6 @@ function downloadDoc(code){
   const doc = state[code];
   if(!doc || !doc.driveFileId) return;
   window.open(`https://drive.google.com/uc?export=download&id=${doc.driveFileId}`, '_blank');
-}
-
-// ── GENERADOR DE DOCUMENTOS IA ──
-let gdocSection = '';
-
-function openGenerarDoc(seccion){
-  gdocSection = seccion;
-  actualizarCodigo();
-  document.getElementById('gdoc-titulo').value = '';
-  document.getElementById('gdoc-desc').value = '';
-  document.getElementById('gdoc-num').value = '';
-  document.getElementById('gdoc-status').style.display = 'none';
-  openModal('modal-generar-doc');
-}
-
-function actualizarCodigo(){
-  const tipo = document.getElementById('gdoc-tipo').value;
-  const area = document.getElementById('gdoc-area').value;
-  const num  = document.getElementById('gdoc-num').value || 'XXX';
-  document.getElementById('gdoc-codigo').value = `OLPASA-${area}-${tipo}-${num}`;
-}
-
-async function generarDocumento(){
-  const apiKey = getApiKey();
-  if(!apiKey){
-    mostrarGdocStatus('error','🔑 Configura tu API Key primero (⚙️ en el Auditor IA)');
-    return;
-  }
-
-  const tipo    = document.getElementById('gdoc-tipo').value;
-  const area    = document.getElementById('gdoc-area').value;
-  const num     = document.getElementById('gdoc-num').value.trim();
-  const codigo  = document.getElementById('gdoc-codigo').value;
-  const titulo  = document.getElementById('gdoc-titulo').value.trim();
-  const desc    = document.getElementById('gdoc-desc').value.trim();
-  const elab    = document.getElementById('gdoc-elaborado').value.trim() || 'Responsable de Calidad e Inocuidad Alimentaria';
-  const version = document.getElementById('gdoc-version').value.trim() || '01';
-
-  if(!num || !titulo){ alert('Completa el número correlativo y el título'); return; }
-
-  const btn = document.getElementById('gdoc-btn');
-  btn.disabled = true; btn.textContent = '⏳ Generando...';
-  mostrarGdocStatus('loading','🤖 Generando documento con IA...');
-
-  const fecha = new Date().toLocaleDateString('es-PE',{day:'2-digit',month:'2-digit',year:'numeric'});
-
-  const tiposMap = {P:'Procedimiento',M:'Manual',POES:'Procedimiento Operativo Estándar de Saneamiento',
-    I:'Instructivo',F:'Formato',C:'Cartilla',R:'Reglamento',L:'Plan'};
-
-  const prompt = `Eres un experto en documentación para sistemas HACCP e ISO 9001 de OLEAGINOSAS PADRE ABAD S.A. (OLPASA), planta extractora de aceite crudo de palma en Padre Abad, Ucayali, Perú.
-
-Genera el documento completo siguiendo EXACTAMENTE la estructura oficial de OLPASA según el tipo "${tiposMap[tipo]}":
-
-DATOS DEL DOCUMENTO:
-- Código: ${codigo}
-- Título: ${titulo}
-- Tipo: ${tiposMap[tipo]}
-- Versión: ${version}
-- Fecha: ${fecha}
-- Elaborado por: ${elab}
-- Revisado por: Responsable de Sostenibilidad y SIG
-- Aprobado por: Gerente General
-${desc ? `\nINSTRUCCIONES ADICIONALES:\n${desc}` : ''}
-
-ESTRUCTURA OBLIGATORIA según OLPASA-SIG-P-001:
-1. ENCABEZADO (código, título, versión, fecha, elaborado/revisado/aprobado)
-2. OBJETIVO
-3. ALCANCE
-4. DEFINICIONES (si aplica)
-5. ABREVIATURAS (si aplica)
-6. RESPONSABILIDADES
-7. DOCUMENTOS DE REFERENCIA
-8. POLÍTICAS (si aplica)
-9. DESCRIPCIÓN DEL PROCESO (detallado, con etapas claras)
-10. DOCUMENTOS ASOCIADOS
-11. HISTORIAL DE DOCUMENTOS
-
-Normas aplicables: RM 449-2006/MINSA, ISO 9001:2015, ISO 14001:2015.
-Usa formato profesional, Arial 12, lenguaje técnico preciso. Genera el contenido completo y detallado.`;
-
-  try{
-    const res = await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:4000,
-        messages:[{role:'user', content: prompt}]
-      })
-    });
-    const data = await res.json();
-    const contenido = data.content[0].text;
-
-    mostrarGdocStatus('loading','📤 Subiendo a Google Drive...');
-
-    // Crear archivo de texto en Drive
-    if(!gAccessToken){
-      gTokenClient.requestAccessToken({prompt:''});
-      // Guardar datos para después del auth
-      pendingUploadData = {
-        code: codigo,
-        name: titulo,
-        file: new File([contenido], `${codigo} — ${titulo}.txt`, {type:'text/plain'})
-      };
-      mostrarGdocStatus('loading','🔄 Autenticando con Google...');
-      return;
-    }
-
-    await subirDocGenerado(codigo, titulo, contenido, version);
-
-  } catch(err){
-    console.error(err);
-    mostrarGdocStatus('error','❌ Error al generar. Verifica tu API Key.');
-  } finally {
-    btn.disabled = false; btn.textContent = '✨ Generar y subir a Drive';
-  }
-}
-
-async function subirDocGenerado(codigo, titulo, contenido, version){
-  try{
-    const fecha = new Date().toLocaleDateString('es-PE');
-    const nombreArchivo = `${codigo} — ${titulo} v${version}.txt`;
-    const file = new File([contenido], nombreArchivo, {type:'text/plain;charset=utf-8'});
-
-    const result = await createDriveFile(nombreArchivo, file);
-    const fileId = result.id;
-    const driveUrl = `https://drive.google.com/file/d/${fileId}/view`;
-
-    // Registrar en state
-    state[codigo] = {
-      code: codigo,
-      name: titulo,
-      fileName: nombreArchivo,
-      driveFileId: fileId,
-      driveUrl,
-      uploadedAt: new Date().toLocaleDateString('es-PE'),
-      generado: true
-    };
-
-    await saveState();
-    renderAll();
-    mostrarGdocStatus('ok',`✅ Documento generado y guardado en Drive`);
-    showToast(`✨ ${codigo} generado y subido a Drive`);
-    setTimeout(()=>{ closeModal('modal-generar-doc'); }, 1800);
-
-  } catch(err){
-    mostrarGdocStatus('error',`❌ Error al subir: ${err.message}`);
-  }
-}
-
-function mostrarGdocStatus(tipo, msg){
-  const el = document.getElementById('gdoc-status');
-  const estilos = {
-    ok:      'background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7;',
-    error:   'background:#ffebee;color:#c62828;border:1px solid #ef9a9a;',
-    loading: 'background:#e3f2fd;color:#1565c0;border:1px solid #90caf9;'
-  };
-  el.style.cssText = estilos[tipo] || estilos.loading;
-  el.textContent = msg;
-  el.style.display = 'block';
-}
-
-// ── ANÁLISIS IA DE DOCUMENTOS ──
-let currentAnalysisCode = '';
-let currentAnalysisName = '';
-
-function openDocAnalysis(code, name){
-  const doc = state[code];
-  if(!doc) return;
-  currentAnalysisCode = code;
-  currentAnalysisName = name;
-
-  document.getElementById('analysis-doc-title').textContent = `📄 ${code} — ${name}`;
-  document.getElementById('analysis-doc-meta').textContent = `${doc.fileName||doc.name} · Subido: ${doc.uploadedAt}`;
-  document.getElementById('analysis-view-btn').href = doc.driveUrl || '#';
-  document.getElementById('analysis-download-btn').href = doc.driveFileId ? `https://drive.google.com/uc?export=download&id=${doc.driveFileId}` : '#';
-
-  // Mostrar notas guardadas
-  const notes = (doc.notes) || '';
-  document.getElementById('analysis-notes').value = notes;
-
-  // Mostrar análisis previo si existe
-  document.getElementById('analysis-loading').style.display = 'none';
-  document.getElementById('analysis-no-key').style.display = 'none';
-
-  if(doc.analysis){
-    showAnalysisResult(doc.analysis);
-  } else {
-    document.getElementById('analysis-result').style.display = 'none';
-  }
-
-  openModal('modal-doc-analysis');
-}
-
-function replaceFromAnalysis(){
-  closeModal('modal-doc-analysis');
-  openUpload(currentAnalysisCode, currentAnalysisName);
-}
-
-async function analyzeDoc(){
-  const apiKey = getApiKey();
-  if(!apiKey){
-    document.getElementById('analysis-no-key').style.display = 'block';
-    document.getElementById('analysis-result').style.display = 'none';
-    return;
-  }
-
-  document.getElementById('analysis-no-key').style.display = 'none';
-  document.getElementById('analysis-result').style.display = 'none';
-  document.getElementById('analysis-loading').style.display = 'block';
-
-  const doc = state[currentAnalysisCode];
-  const prompt = `Eres un auditor experto en sistemas HACCP, BPM, POES e ISO 9001 para plantas de aceite de palma en Perú (RM 449-2006/MINSA).
-
-Analiza el documento: "${currentAnalysisCode} — ${currentAnalysisName}" de OLEAGINOSAS PADRE ABAD S.A. (OLPASA).
-
-Archivo subido: ${doc.fileName||doc.name} (${doc.uploadedAt})
-URL Drive: ${doc.driveUrl}
-
-Responde SOLO en este formato JSON exacto, sin texto adicional:
-{
-  "estado": "CUMPLE|CUMPLE_PARCIALMENTE|NO_CUMPLE",
-  "evidencias": ["evidencia 1", "evidencia 2", "evidencia 3"],
-  "brechas": ["brecha 1", "brecha 2"],
-  "accion": "Acción inmediata concreta antes de la auditoría"
-}
-
-Basa tu análisis en los requisitos típicos de este tipo de documento para HACCP/ISO 9001 en plantas de aceite de palma en Perú. Si no puedes acceder al contenido del archivo, analiza basándote en el nombre del documento y los estándares aplicables.`;
-
-  try{
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        messages: [{ role: 'user', content: prompt }]
-      })
-    });
-    const data = await res.json();
-    const text = data.content[0].text;
-    const clean = text.replace(/```json|```/g,'').trim();
-    const result = JSON.parse(clean);
-
-    // Guardar análisis en state
-    state[currentAnalysisCode].analysis = result;
-    await saveState();
-
-    document.getElementById('analysis-loading').style.display = 'none';
-    showAnalysisResult(result);
-
-  } catch(err){
-    document.getElementById('analysis-loading').style.display = 'none';
-    document.getElementById('analysis-result').style.display = 'none';
-    showToast('❌ Error al analizar. Verifica tu API Key.', true);
-  }
-}
-
-function showAnalysisResult(result){
-  // Estado badge
-  const estadoEl = document.getElementById('analysis-estado');
-  const estados = {
-    'CUMPLE': '<span style="background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7;padding:6px 16px;border-radius:20px;font-size:12px;font-weight:700;">✅ CUMPLE</span>',
-    'CUMPLE_PARCIALMENTE': '<span style="background:#fff8e1;color:#f57f17;border:1px solid #ffe082;padding:6px 16px;border-radius:20px;font-size:12px;font-weight:700;">⚠️ CUMPLE PARCIALMENTE</span>',
-    'NO_CUMPLE': '<span style="background:#ffebee;color:#c62828;border:1px solid #ef9a9a;padding:6px 16px;border-radius:20px;font-size:12px;font-weight:700;">❌ NO CUMPLE</span>'
-  };
-  estadoEl.innerHTML = estados[result.estado] || estados['CUMPLE_PARCIALMENTE'];
-
-  // Evidencias
-  document.getElementById('analysis-evidencias').innerHTML =
-    (result.evidencias||[]).map(e=>`• ${e}`).join('<br>');
-
-  // Brechas
-  const brechasEl = document.getElementById('analysis-brechas');
-  if(result.brechas && result.brechas.length > 0){
-    brechasEl.innerHTML = result.brechas.map(b=>`• ${b}`).join('<br>');
-    document.getElementById('analysis-brechas-box').style.display = 'block';
-  } else {
-    document.getElementById('analysis-brechas-box').style.display = 'none';
-  }
-
-  // Acción
-  document.getElementById('analysis-accion').textContent = result.accion || '';
-
-  document.getElementById('analysis-result').style.display = 'block';
-}
-
-async function saveDocNotes(){
-  const notes = document.getElementById('analysis-notes').value;
-  if(state[currentAnalysisCode]){
-    state[currentAnalysisCode].notes = notes;
-    await saveState();
-    showToast('💾 Notas guardadas');
-  }
 }
 
 // ── CALIBRACIONES ──
