@@ -1322,7 +1322,23 @@ tr:hover td{background:#fafffe;}
       <div class="ia-header-title">🤖 Auditor IA — OLPASA</div>
       <div class="ia-header-sub">Asistente activo · Sistema HACCP + ISO 9001</div>
     </div>
-    <span onclick="toggleIA()" style="cursor:pointer;opacity:.7;font-size:16px;">✕</span>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span onclick="toggleApiKey()" style="cursor:pointer;opacity:.7;font-size:13px;" title="Configurar API Key">⚙️</span>
+      <span onclick="toggleIA()" style="cursor:pointer;opacity:.7;font-size:16px;">✕</span>
+    </div>
+  </div>
+
+  <!-- API KEY CONFIG -->
+  <div id="ia-apikey-panel" style="display:none;padding:10px;background:#fffbeb;border-bottom:1px solid #fcd34d;">
+    <div style="font-size:10px;font-weight:700;color:#92400e;margin-bottom:6px;">🔑 API Key de Anthropic</div>
+    <div style="display:flex;gap:6px;">
+      <input type="password" id="ia-apikey-input" placeholder="sk-ant-..." 
+        style="flex:1;padding:6px 9px;border:1px solid #fcd34d;border-radius:7px;font-size:11px;outline:none;"
+        value="">
+      <button onclick="saveApiKey()" 
+        style="background:#1b5e20;color:#fff;border:none;border-radius:7px;padding:6px 10px;font-size:11px;cursor:pointer;font-weight:600;">Guardar</button>
+    </div>
+    <div style="font-size:9px;color:#aaa;margin-top:4px;">Obtén tu key en console.anthropic.com · Se guarda solo en tu navegador</div>
   </div>
 
   <div class="ia-quick-btns">
@@ -2232,7 +2248,36 @@ function toggleIA(){
   panel.classList.toggle('open');
   if(panel.classList.contains('open')){
     document.getElementById('ia-notif').style.display='none';
+    // Cargar API key guardada
+    const saved = localStorage.getItem('haccp-apikey');
+    if(saved) document.getElementById('ia-apikey-input').value = saved;
   }
+}
+
+function toggleApiKey(){
+  const p = document.getElementById('ia-apikey-panel');
+  p.style.display = p.style.display==='none' ? 'block' : 'none';
+}
+
+function saveApiKey(){
+  const key = document.getElementById('ia-apikey-input').value.trim();
+  if(!key){ showToast('⚠️ Ingresa una API Key válida', true); return; }
+  localStorage.setItem('haccp-apikey', key);
+  document.getElementById('ia-apikey-panel').style.display='none';
+  showToast('🔑 API Key guardada correctamente');
+}
+
+function getApiKey(){
+  return localStorage.getItem('haccp-apikey') || '';
+}
+
+function getHeaders(){
+  return {
+    'Content-Type':'application/json',
+    'x-api-key': getApiKey(),
+    'anthropic-version':'2023-06-01',
+    'anthropic-dangerous-direct-browser-access':'true'
+  };
 }
 
 function getSystemContext(){
@@ -2318,12 +2363,19 @@ async function iaAccion(tipo){
   addMsg(tipo==='estado'?'📋 ¿Cómo estoy hoy?':tipo==='tareas'?'⚡ Tareas de Hoy':'🔍 Prepararme para Auditoría', 'user');
   addTyping();
 
+  if(!getApiKey()){
+    removeTyping();
+    addMsg('⚙️ Para activar el Auditor IA necesitas configurar tu API Key. Haz clic en el ícono ⚙️ arriba para ingresarla.','bot');
+    document.getElementById('ia-apikey-panel').style.display='block';
+    return;
+  }
+
   const context = getSystemContext();
 
   try{
     const res = await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      headers: getHeaders(),
       body:JSON.stringify({
         model:'claude-sonnet-4-20250514',
         max_tokens:1000,
@@ -2361,12 +2413,19 @@ async function sendIA(){
   addMsg(q,'user');
   addTyping();
 
+  if(!getApiKey()){
+    removeTyping();
+    addMsg('⚙️ Configura tu API Key primero — haz clic en el ícono ⚙️ arriba.','bot');
+    document.getElementById('ia-apikey-panel').style.display='block';
+    return;
+  }
+
   const context = getSystemContext();
 
   try{
     const res = await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      headers: getHeaders(),
       body:JSON.stringify({
         model:'claude-sonnet-4-20250514',
         max_tokens:1000,
