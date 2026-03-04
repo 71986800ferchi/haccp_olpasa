@@ -1532,20 +1532,58 @@ let currentDocKey = null;
 let calRows = [];
 
 async function loadState(){
+  // 1. Primero carga desde localStorage (inmediato, sin esperar auth)
   try{ const r=LS.get('haccp-docs'); state=r?JSON.parse(r.value):{}; }
   catch(e){ state={}; }
-  // Init Google Auth en background
-  setTimeout(()=>{ if(window.google) initGoogleAuth(); else {
-    // Esperar a que cargue el script de Google
-    const t = setInterval(()=>{ if(window.google){ initGoogleAuth(); clearInterval(t); } }, 300);
-  }}, 500);
   try{ const r=LS.get('haccp-cal'); calRows=r?JSON.parse(r.value):[]; }
   catch(e){ calRows=[]; }
   renderAll();
+
+  // 2. Init Google Auth y luego sincroniza desde Drive
+  setTimeout(()=>{
+    const tryInit = () => {
+      if(window.google){ initGoogleAuth(); syncFromDrive(); }
+      else setTimeout(tryInit, 300);
+    };
+    tryInit();
+  }, 500);
+}
+
+async function syncFromDrive(){
+  // Pide token silencioso (sin popup) para leer metadata
+  if(!gTokenClient) return;
+  gTokenClient.requestAccessToken({prompt:''});
+  // El callback de auth llamará a loadDriveMetadata
+}
+
+async function loadDriveMetadata(){
+  const meta = await getDriveMetadata();
+  if(!meta) return;
+  // Merge: Drive tiene prioridad sobre localStorage
+  if(meta.docs && Object.keys(meta.docs).length > 0){
+    state = meta.docs;
+    LS.set('haccp-docs', JSON.stringify(state));
+  }
+  if(meta.cal && meta.cal.length > 0){
+    calRows = meta.cal;
+    LS.set('haccp-cal', JSON.stringify(calRows));
+  }
+  if(meta.equipo && meta.equipo.length > 0){
+    equipoData = meta.equipo;
+    LS.set('haccp-equipo', JSON.stringify(equipoData));
+  }
+  if(meta.registros){
+    Object.keys(meta.registros).forEach(k=>{
+      if(meta.registros[k]) regData[k] = meta.registros[k];
+    });
+  }
+  renderAll();
+  renderEquipo();
+  showToast('☁️ Sincronizado con Google Drive');
 }
 
 async function saveState(){
-  // Guarda solo metadata (sin base64 — los archivos viven en Drive)
+  // Metadata sin base64
   const meta = {};
   Object.keys(state).forEach(k => {
     const d = state[k];
@@ -1558,12 +1596,28 @@ async function saveState(){
       uploadedAt: d.uploadedAt || ''
     };
   });
+  // Guardar en localStorage (inmediato)
   LS.set('haccp-docs', JSON.stringify(meta));
+  // Guardar en Drive (persistente entre PCs)
+  await saveAllToDrive();
   updateDashboard();
+}
+
+async function saveAllToDrive(){
+  if(!gAccessToken) return;
+  const allMeta = {
+    docs: state,
+    cal: calRows,
+    equipo: equipoData || [],
+    registros: typeof regData !== 'undefined' ? regData : {},
+    updatedAt: new Date().toISOString()
+  };
+  await saveDriveMetadata(allMeta);
 }
 
 async function saveCals(){
   LS.set('haccp-cal', JSON.stringify(calRows));
+  await saveAllToDrive();
 }
 
 // ── RENDER DOCS ──
@@ -1754,9 +1808,11 @@ function initGoogleAuth(){
         return;
       }
       gAccessToken = resp.access_token;
-      // Token válido 1h — limpiar automáticamente
+      // Token válido 1h
       setTimeout(()=>{ gAccessToken = null; }, 3500 * 1000);
-      // Si había upload pendiente, continúa con contexto seguro
+      // Sincronizar metadata desde Drive
+      loadDriveMetadata();
+      // Si había upload pendiente, continúa
       if(pendingUploadData){
         setTimeout(uploadToDrive, 200);
       }
@@ -1854,6 +1910,64 @@ const LS = {
   set: (key, val) => { try{ localStorage.setItem(key, val); return true; }catch(e){return false;} },
 };
 
+// ── DRIVE METADATA STORE ──
+// Archivo central en Drive: haccp-metadata.json
+// Guarda toda la metadata (docs, equipo, cal, registros) en un solo JSON en Drive
+const METADATA_FILENAME = 'haccp-olpasa-metadata.json';
+let driveMetadataFileId = null;
+let driveMetadataCache = null;
+
+async function getDriveMetadata(){
+  if(!gAccessToken) return null;
+  try{
+    // Buscar el archivo de metadata en Drive
+    const q = encodeURIComponent(`name='${METADATA_FILENAME}' and '${DRIVE_FOLDER_ID}' in parents and trashed=false`);
+    const res = await fetch(`https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id,name)`,{
+      headers:{ Authorization:`Bearer ${gAccessToken}` }
+    });
+    const data = await res.json();
+    if(data.files && data.files.length > 0){
+      driveMetadataFileId = data.files[0].id;
+      // Leer contenido
+      const r2 = await fetch(`https://www.googleapis.com/drive/v3/files/${driveMetadataFileId}?alt=media`,{
+        headers:{ Authorization:`Bearer ${gAccessToken}` }
+      });
+      const meta = await r2.json();
+      driveMetadataCache = meta;
+      return meta;
+    }
+    return {};
+  }catch(e){ console.error('getDriveMetadata error',e); return null; }
+}
+
+async function saveDriveMetadata(data){
+  if(!gAccessToken) return;
+  try{
+    const blob = new Blob([JSON.stringify(data)], {type:'application/json'});
+    if(driveMetadataFileId){
+      // Actualizar existente
+      await fetch(`https://www.googleapis.com/upload/drive/v3/files/${driveMetadataFileId}?uploadType=media`,{
+        method:'PATCH',
+        headers:{ Authorization:`Bearer ${gAccessToken}`, 'Content-Type':'application/json' },
+        body: blob
+      });
+    } else {
+      // Crear nuevo
+      const form = new FormData();
+      form.append('metadata', new Blob([JSON.stringify({name:METADATA_FILENAME, parents:[DRIVE_FOLDER_ID]})],{type:'application/json'}));
+      form.append('file', blob);
+      const res = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id',{
+        method:'POST',
+        headers:{ Authorization:`Bearer ${gAccessToken}` },
+        body: form
+      });
+      const r = await res.json();
+      driveMetadataFileId = r.id;
+    }
+    driveMetadataCache = data;
+  }catch(e){ console.error('saveDriveMetadata error',e); }
+}
+
 // ── EQUIPO HACCP ──
 let equipoData = [];
 let currentMiembroIdx = null;
@@ -1868,6 +1982,7 @@ async function loadEquipo(){
 
 async function saveEquipo(){
   LS.set('haccp-equipo', JSON.stringify(equipoData));
+  await saveAllToDrive();
   renderEquipo();
   updateDashboard();
 }
@@ -2062,7 +2177,7 @@ async function loadRegData(){
   renderReg('agua'); renderReg('higiene'); renderReg('limpieza'); renderReg('plagas');
 }
 
-async function saveRegData(key){ LS.set('haccp-reg-'+key, JSON.stringify(regData[key])); }
+async function saveRegData(key){ LS.set('haccp-reg-'+key, JSON.stringify(regData[key])); await saveAllToDrive(); }
 
 function estadoColor(val){
   if(!val) return 'gris';
