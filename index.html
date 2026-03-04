@@ -466,6 +466,7 @@ tr:hover td{background:#fafffe;}
     <div class="nav-group-items" id="grp-haccp">
       <div class="nav-sub" onclick="nav('haccp-plan',this)"><span class="nav-sub-icon">📄</span>Plan HACCP v08</div>
       <div class="nav-sub" onclick="nav('equipo',this)"><span class="nav-sub-icon">👥</span>Equipo HACCP</div>
+      <div class="nav-sub" onclick="nav('diagrama-flujo',this)"><span class="nav-sub-icon">🔀</span>Diagrama de Flujo</div>
       <div class="nav-sub" onclick="nav('pcc',this)"><span class="nav-sub-icon">⭐</span>PPRO Activo</div>
       <div class="nav-sub" onclick="nav('vigilancia',this)"><span class="nav-sub-icon">📊</span>Vigilancia PPRO</div>
     </div>
@@ -688,6 +689,56 @@ tr:hover td{background:#fafffe;}
 </div>
 
 <!-- PRODUCTO -->
+<!-- DIAGRAMA DE FLUJO -->
+<div class="page" id="page-diagrama-flujo">
+  <div class="ph">
+    <h2>🔀 Diagrama de Flujo</h2>
+    <p>Paso 4 · RM 449-2006/MINSA Art. 20° — Elaborado por el Equipo HACCP · Confirmado in situ (Paso 5)</p>
+  </div>
+
+  <div class="alert-banner green" style="margin-bottom:18px;">
+    <span class="alert-banner-icon">📋</span>
+    <div><b>Art. 20° RM 449-2006/MINSA</b> — El diagrama debe incluir todas las etapas desde recepción de materia prima hasta comercialización. Debe ser confirmado in situ por el Equipo HACCP (Paso 5).</div>
+  </div>
+
+  <div class="block">
+    <div class="tbl-head">
+      <h3>Documentos Diagrama de Flujo</h3>
+      <button class="btn btn-green btn-sm" onclick="openAddDoc('diagrama')">+ Agregar documento</button>
+    </div>
+    <div id="list-diagrama"></div>
+  </div>
+
+  <div class="block" style="margin-top:18px;">
+    <h3 style="font-size:14px;font-weight:700;color:#1b5e20;margin-bottom:14px;">📌 Etapas del Proceso — Aceite Crudo de Palma</h3>
+    <div style="display:flex;flex-direction:column;gap:6px;max-width:500px;">
+      ${[
+        ['1','Recepción de RFF','Recepción y pesaje de Racimos de Fruta Fresca'],
+        ['2','Esterilización','Vapor saturado — 3 kg/cm² · 90 min'],
+        ['3','Desfrutado / Desgrane','Separación del fruto del raquis'],
+        ['4','Digestión','Ruptura de células — 90-95°C'],
+        ['5','Prensado','Extracción mecánica del aceite'],
+        ['6','Clarificación','Separación aceite-agua-lodos'],
+        ['7','Centrifugación','Purificación del aceite crudo'],
+        ['8','Secado','Reducción de humedad <0.1%'],
+        ['9','Almacenamiento','Tanques a 50-55°C'],
+        ['10','Despacho','Cisternas isotérmicas mínimo 60°C'],
+      ].map(([n,etapa,desc])=>`
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:32px;height:32px;border-radius:50%;background:#1b5e20;color:white;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${n}</div>
+          <div style="flex:1;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:8px;padding:8px 12px;">
+            <div style="font-size:13px;font-weight:700;color:#222;">${etapa}</div>
+            <div style="font-size:11px;color:#888;">${desc}</div>
+          </div>
+          ${n<'10'?'<div style="width:32px;text-align:center;color:#ccc;font-size:18px;">↓</div>':''}
+        </div>
+        ${n<'10'?'<div style="margin-left:16px;width:2px;height:10px;background:#e0e0e0;margin-bottom:-4px;"></div>':''}`
+      ).join('')}
+    </div>
+  </div>
+</div>
+
+
 <div class="page" id="page-producto">
   <div class="ph"><h2>🫙 Descripción del Producto</h2><p>Paso 2 — RM 449-2006/MINSA</p></div>
   <div class="block"><h3>Aceite Crudo de Palma (ACP)</h3>
@@ -1696,7 +1747,7 @@ function reemplazarCtrlDoc(){ document.getElementById('ctrl-doc-input').click();
 
 // ── DOCUMENTOS CONFIG ──
 const DOCS = {
-  bpm:[], poes:[], plagas:[], agua:[], cap:[], mant:[], esp:[], cal:[], lab:[]
+  bpm:[], poes:[], plagas:[], agua:[], cap:[], mant:[], esp:[], cal:[], lab:[], diagrama:[]
 };
 
 // ── STATE ──
@@ -1725,7 +1776,7 @@ async function loadState(){
 function saveDOCS(){
   LS.set('haccp-docs-list', JSON.stringify({
     bpm:DOCS.bpm, poes:DOCS.poes, plagas:DOCS.plagas, agua:DOCS.agua,
-    cap:DOCS.cap, mant:DOCS.mant, esp:DOCS.esp, cal:DOCS.cal, lab:DOCS.lab
+    cap:DOCS.cap, mant:DOCS.mant, esp:DOCS.esp, cal:DOCS.cal, lab:DOCS.lab, diagrama:DOCS.diagrama
   }));
 }
 
@@ -2005,6 +2056,7 @@ function renderAll(){
   renderDocList('list-esp', DOCS.esp);
   renderDocList('list-cal', DOCS.cal);
   renderDocList('list-lab', DOCS.lab);
+  renderDocList('list-diagrama', DOCS.diagrama);
   renderAllDocs();
   renderCalTable();
   updateDashboard();
