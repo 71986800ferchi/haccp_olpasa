@@ -161,34 +161,58 @@ tr:hover td{background:#fafffe;}
 /* IA CHAT */
 .ia-btn{
   position:fixed;bottom:24px;right:24px;
-  width:52px;height:52px;border-radius:50%;
+  width:56px;height:56px;border-radius:50%;
   background:linear-gradient(135deg,var(--dark),var(--verde2));
-  color:#fff;border:none;cursor:pointer;font-size:22px;
-  box-shadow:0 4px 16px rgba(0,0,0,0.25);z-index:300;
+  color:#fff;border:none;cursor:pointer;font-size:24px;
+  box-shadow:0 4px 20px rgba(27,94,32,0.4);z-index:300;
   display:flex;align-items:center;justify-content:center;
   transition:transform .2s;
 }
-.ia-btn:hover{transform:scale(1.08);}
+.ia-btn:hover{transform:scale(1.1);}
+.ia-notif{position:absolute;top:-3px;right:-3px;width:16px;height:16px;
+  background:#f44336;border-radius:50%;font-size:9px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;border:2px solid #fff;}
 .ia-panel{
-  position:fixed;bottom:86px;right:24px;width:320px;
-  background:#fff;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.18);
+  position:fixed;bottom:92px;right:24px;width:380px;
+  background:#fff;border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,0.2);
   z-index:300;display:none;flex-direction:column;overflow:hidden;
-  max-height:420px;
+  max-height:560px;
 }
 .ia-panel.open{display:flex;}
-.ia-header{background:linear-gradient(135deg,var(--dark),var(--verde2));
-  color:#fff;padding:12px 16px;font-size:13px;font-weight:700;
+.ia-header{background:linear-gradient(135deg,#0d3b11,#2e7d32);
+  color:#fff;padding:14px 16px;font-size:13px;font-weight:700;
   display:flex;justify-content:space-between;align-items:center;}
-.ia-msgs{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;}
-.ia-msg{padding:8px 12px;border-radius:10px;font-size:12px;max-width:85%;}
-.ia-msg.bot{background:var(--verde3);color:#1b5e20;align-self:flex-start;}
-.ia-msg.user{background:var(--verde);color:#fff;align-self:flex-end;}
+.ia-header-info{display:flex;flex-direction:column;gap:2px;}
+.ia-header-title{font-size:13px;font-weight:700;}
+.ia-header-sub{font-size:10px;opacity:.7;font-weight:400;}
+.ia-quick-btns{display:flex;gap:6px;padding:10px 10px 6px;border-bottom:1px solid #f0f0f0;flex-wrap:wrap;}
+.ia-qbtn{flex:1;min-width:100px;padding:7px 6px;border-radius:8px;border:1.5px solid #e0e0e0;
+  background:#fafafa;cursor:pointer;font-size:10.5px;font-weight:600;color:#555;
+  transition:all .18s;text-align:center;line-height:1.3;}
+.ia-qbtn:hover{border-color:var(--verde);background:var(--verde3);color:var(--verde);}
+.ia-qbtn.active{border-color:var(--verde);background:var(--verde);color:#fff;}
+.ia-msgs{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;
+  scrollbar-width:thin;scrollbar-color:#c8e6c9 transparent;}
+.ia-msg{padding:10px 13px;border-radius:12px;font-size:12px;max-width:90%;line-height:1.5;}
+.ia-msg.bot{background:var(--verde3);color:#1b5e20;align-self:flex-start;border-radius:12px 12px 12px 3px;}
+.ia-msg.user{background:var(--verde);color:#fff;align-self:flex-end;border-radius:12px 12px 3px 12px;}
+.ia-msg.alerta{background:#fff8e1;color:#92400e;border-left:3px solid #ffc107;align-self:flex-start;max-width:95%;}
+.ia-msg.critico{background:#fef2f2;color:#991b1b;border-left:3px solid #f44336;align-self:flex-start;max-width:95%;}
+.ia-msg.ok{background:#f0fdf4;color:#166534;border-left:3px solid #4caf50;align-self:flex-start;max-width:95%;}
+.ia-typing{display:flex;align-items:center;gap:4px;padding:10px 13px;background:var(--verde3);
+  border-radius:12px;align-self:flex-start;}
+.ia-typing span{width:6px;height:6px;border-radius:50%;background:#2e7d32;
+  animation:typing .9s infinite;}
+.ia-typing span:nth-child(2){animation-delay:.2s;}
+.ia-typing span:nth-child(3){animation-delay:.4s;}
+@keyframes typing{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-6px);}}
 .ia-input{display:flex;padding:10px;border-top:1px solid #eee;gap:8px;}
-.ia-input input{flex:1;border:1px solid #ddd;border-radius:8px;
-  padding:8px 10px;font-size:12px;outline:none;}
+.ia-input input{flex:1;border:1.5px solid #ddd;border-radius:9px;
+  padding:8px 11px;font-size:12px;outline:none;font-family:inherit;}
 .ia-input input:focus{border-color:var(--verde);}
-.ia-send{background:var(--verde);color:#fff;border:none;border-radius:8px;
-  width:34px;cursor:pointer;font-size:16px;}
+.ia-send{background:var(--verde);color:#fff;border:none;border-radius:9px;
+  width:36px;cursor:pointer;font-size:16px;transition:background .15s;}
+.ia-send:hover{background:var(--dark);}
 
 /* SEMAFORO */
 .dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:6px;}
@@ -1286,18 +1310,33 @@ tr:hover td{background:#fafffe;}
   </div>
 </div>
 
-<!-- IA CHAT -->
-<button class="ia-btn" onclick="toggleIA()" title="Asistente IA HACCP">🤖</button>
+<!-- IA AUDITOR -->
+<button class="ia-btn" onclick="toggleIA()" title="Auditor IA — OLPASA" style="position:relative;">
+  🤖
+  <span class="ia-notif" id="ia-notif" style="display:none;">!</span>
+</button>
+
 <div class="ia-panel" id="ia-panel">
   <div class="ia-header">
-    🤖 Asistente HACCP — OLPASA
-    <span onclick="toggleIA()" style="cursor:pointer;opacity:.7;">✕</span>
+    <div class="ia-header-info">
+      <div class="ia-header-title">🤖 Auditor IA — OLPASA</div>
+      <div class="ia-header-sub">Asistente activo · Sistema HACCP + ISO 9001</div>
+    </div>
+    <span onclick="toggleIA()" style="cursor:pointer;opacity:.7;font-size:16px;">✕</span>
   </div>
+
+  <div class="ia-quick-btns">
+    <button class="ia-qbtn" onclick="iaAccion('estado')">📋 ¿Cómo estoy hoy?</button>
+    <button class="ia-qbtn" onclick="iaAccion('tareas')">⚡ Tareas de Hoy</button>
+    <button class="ia-qbtn" onclick="iaAccion('auditoria')">🔍 Prepararme para Auditoría</button>
+  </div>
+
   <div class="ia-msgs" id="ia-msgs">
-    <div class="ia-msg bot">¡Hola! Soy tu asistente HACCP. Puedo ayudarte con dudas sobre el Plan HACCP, BPM, POES, normativa RM 449-2006/MINSA y documentación de OLPASA. ¿En qué te ayudo?</div>
+    <div class="ia-msg bot">¡Hola! Soy tu <b>Auditor IA</b>. Conozco tu sistema por dentro — registros, calibraciones, documentos y fechas.<br><br>Usa los botones de arriba o pregúntame lo que necesites. Estoy aquí para avisarte <b>antes</b> de que el auditor lo encuentre. 🌴</div>
   </div>
+
   <div class="ia-input">
-    <input id="ia-q" placeholder="Escribe tu consulta..." onkeydown="if(event.key==='Enter')sendIA()">
+    <input id="ia-q" placeholder="Pregúntame algo del sistema..." onkeydown="if(event.key==='Enter')sendIA()">
     <button class="ia-send" onclick="sendIA()">➤</button>
   </div>
 </div>
@@ -2189,16 +2228,97 @@ document.querySelectorAll('.modal-bg').forEach(m=>{
 
 // ── IA ──
 function toggleIA(){
-  document.getElementById('ia-panel').classList.toggle('open');
+  const panel = document.getElementById('ia-panel');
+  panel.classList.toggle('open');
+  if(panel.classList.contains('open')){
+    document.getElementById('ia-notif').style.display='none';
+  }
 }
 
-async function sendIA(){
-  const input = document.getElementById('ia-q');
-  const q = input.value.trim();
-  if(!q) return;
-  input.value='';
-  addMsg(q,'user');
-  addMsg('⏳ Consultando...','bot');
+function getSystemContext(){
+  const hoy = new Date();
+  const todayStr = hoy.toISOString().split('T')[0];
+  const hoySemana = hoy.toLocaleDateString('es-PE',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+
+  // Documentos
+  const allDocs = [...(window.DOCS?.bpm||[]),...(window.DOCS?.poes||[]),...(window.DOCS?.cal||[]),...(window.DOCS?.lab||[])];
+  const docsSubidos = Object.keys(state||{}).length;
+  const docsPendientes = allDocs.filter(d=>!(state||{})[d.code]).map(d=>d.code+' — '+d.name);
+
+  // Calibraciones
+  const calVencidas = (calRows||[]).filter(r=>{
+    if(!r.proxima) return false;
+    return Math.ceil((new Date(r.proxima)-hoy)/(1000*60*60*24)) < 0;
+  });
+  const calProximas = (calRows||[]).filter(r=>{
+    if(!r.proxima) return false;
+    const diff = Math.ceil((new Date(r.proxima)-hoy)/(1000*60*60*24));
+    return diff>=0 && diff<=30;
+  });
+
+  // Registros diarios
+  const regHoy = {
+    agua: (regData?.agua||[]).filter(r=>r.fecha===todayStr),
+    higiene: (regData?.higiene||[]).filter(r=>r.fecha===todayStr),
+    limpieza: (regData?.limpieza||[]).filter(r=>r.fecha===todayStr),
+  };
+
+  // PPRO vigilancia
+  const semanaMs = 7*24*60*60*1000;
+  const vigilancia = JSON.parse(localStorage.getItem('haccp-vig')||'[]');
+  const ultimaVig = vigilancia.length ? new Date(vigilancia[vigilancia.length-1].fecha) : null;
+  const diasSinVig = ultimaVig ? Math.floor((hoy-ultimaVig)/semanaMs*7) : 999;
+
+  // Equipo
+  const miembrosSinActa = (equipoData||[]).filter(m=>!m.acta).map(m=>m.nombre);
+
+  return `
+Fecha y hora actual: ${hoySemana}
+
+=== ESTADO DEL SISTEMA HACCP — OLPASA ===
+
+DOCUMENTOS:
+- Subidos: ${docsSubidos} documentos
+- Pendientes (${docsPendientes.length}): ${docsPendientes.slice(0,8).join(' | ')  || 'Ninguno'}
+
+CALIBRACIONES:
+- Total registradas: ${(calRows||[]).length}
+- VENCIDAS: ${calVencidas.map(r=>r.equipo+' (venció '+r.proxima+')').join(', ')||'Ninguna'}
+- Próximas a vencer (≤30 días): ${calProximas.map(r=>r.equipo+' ('+Math.ceil((new Date(r.proxima)-hoy)/(1000*60*60*24))+'d — '+r.proxima+')').join(', ')||'Ninguna'}
+
+REGISTROS DE HOY (${todayStr}):
+- Control de Agua: ${regHoy.agua.length} registro(s) — ${regHoy.agua.length===0?'⚠️ SIN REGISTRO HOY':regHoy.agua.map(r=>'Turno '+r.turno+': Cloro '+r.cloro+' pH '+r.ph).join(' | ')}
+- Higiene Personal: ${regHoy.higiene.length} persona(s) registrada(s) hoy
+- Limpieza: ${regHoy.limpieza.length} área(s) registrada(s) hoy
+
+PPRO — ENGRASE DE VAGONES (Monitoreo semanal):
+- Último registro: ${ultimaVig ? ultimaVig.toLocaleDateString('es-PE') : 'NUNCA REGISTRADO'}
+- Días desde último monitoreo: ${diasSinVig === 999 ? 'Sin registro' : diasSinVig + ' días'}
+- Estado: ${diasSinVig > 7 ? '🔴 VENCIDO — requiere inspección urgente' : diasSinVig > 5 ? '🟡 Próximo a vencer' : '🟢 Al día'}
+
+EQUIPO HACCP:
+- Total miembros: ${(equipoData||[]).length}
+- Sin diploma de nombramiento: ${miembrosSinActa.length > 0 ? miembrosSinActa.join(', ') : 'Todos tienen diploma'}
+
+PLAN HACCP: ${haccpPlanDoc ? '✅ Plan v08 subido — '+haccpPlanDoc.name : '⚠️ Plan HACCP NO subido aún'}
+`;
+}
+
+async function iaAccion(tipo){
+  document.querySelectorAll('.ia-qbtn').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+  setTimeout(()=>event.target.classList.remove('active'), 2000);
+
+  const prompts = {
+    estado: `Analiza el estado actual del sistema y dame un resumen ejecutivo claro. Usa emojis 🟢🟡🔴 para indicar estado de cada área. Sé directo y específico con los datos reales que te doy.`,
+    tareas: `Dame la lista priorizada de tareas concretas que se deben hacer HOY para mantener el sistema en regla. Para cada tarea di: qué hacer exactamente, quién es el responsable, y cómo registrarlo en el sistema. Máximo 5 tareas, las más urgentes primero.`,
+    auditoria: `Actúa como auditor externo DIGESA/ISO 9001 que llega hoy a OLPASA. Basándote en los datos reales del sistema, dime qué observaciones y no conformidades me levantarías. Para cada una di: la observación exacta, qué norma incumple, y cómo subsanarla antes de que vuelvas. Sé duro — mejor que me lo digas tú ahora que el auditor real después.`
+  };
+
+  addMsg(tipo==='estado'?'📋 ¿Cómo estoy hoy?':tipo==='tareas'?'⚡ Tareas de Hoy':'🔍 Prepararme para Auditoría', 'user');
+  addTyping();
+
+  const context = getSystemContext();
 
   try{
     const res = await fetch('https://api.anthropic.com/v1/messages',{
@@ -2207,32 +2327,122 @@ async function sendIA(){
       body:JSON.stringify({
         model:'claude-sonnet-4-20250514',
         max_tokens:1000,
-        system:`Eres el asistente HACCP de OLEAGINOSAS PADRE ABAD S.A. (OLPASA), planta extractora de aceite crudo de palma ubicada en Padre Abad, Ucayali, Perú. 
-        Conoces el Plan HACCP v08 (2023), el Manual BPM v02 (2024), el Manual POES, y la normativa RM 449-2006/MINSA.
-        El proceso produce ACP (aceite crudo de palma), PKO (aceite crudo de palmiste) y PKM (harina de palmiste).
-        No hay PCC identificados. Hay 1 PPRO: engrase de vagones en esterilizado con grasa de grado alimentario.
-        Responde siempre en español, de forma concisa y práctica. Si te preguntan sobre documentos, menciona los códigos OLPASA correspondientes.`,
+        system:`Eres el Auditor IA interno de OLEAGINOSAS PADRE ABAD S.A. (OLPASA), planta extractora de aceite crudo de palma en Padre Abad, Ucayali, Perú.
+
+Tu rol NO es responder preguntas teóricas sobre normas. Tu rol es:
+1. Leer los datos REALES del sistema que te paso
+2. Identificar problemas concretos y riesgos reales
+3. Decir exactamente qué hacer para subsanarlos HOY
+4. Actuar como auditor interno exigente que conoce cada detalle del sistema
+
+Contexto del sistema en este momento:
+${context}
+
+Normas aplicables: RM 449-2006/MINSA (HACCP), ISO 9001:2015, Codex Alimentarius.
+Responde siempre en español. Sé directo, específico y accionable. Usa los datos reales — no respondas en abstracto.`,
+        messages:[{role:'user', content: prompts[tipo]}]
+      })
+    });
+    const data = await res.json();
+    removeTyping();
+    const texto = data.content[0].text;
+    addMsgFormatted(texto, tipo==='auditoria'?'critico':tipo==='tareas'?'alerta':'bot');
+  }catch(e){
+    removeTyping();
+    addMsg('Error al conectar con el servidor. Verifica tu conexión.','bot');
+  }
+}
+
+async function sendIA(){
+  const input = document.getElementById('ia-q');
+  const q = input.value.trim();
+  if(!q) return;
+  input.value='';
+  addMsg(q,'user');
+  addTyping();
+
+  const context = getSystemContext();
+
+  try{
+    const res = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        system:`Eres el Auditor IA interno de OLEAGINOSAS PADRE ABAD S.A. (OLPASA), planta extractora de aceite crudo de palma en Padre Abad, Ucayali, Perú.
+
+Conoces el sistema por dentro. Aquí está el estado actual real:
+${context}
+
+Tu trabajo: responder con datos reales, ser directo, práctico y accionable. 
+Normas: RM 449-2006/MINSA, ISO 9001:2015. Responde en español.`,
         messages:[{role:'user',content:q}]
       })
     });
     const data = await res.json();
-    const msgs = document.getElementById('ia-msgs');
-    msgs.lastChild.remove();
-    addMsg(data.content[0].text,'bot');
+    removeTyping();
+    addMsgFormatted(data.content[0].text, 'bot');
   }catch(e){
-    const msgs = document.getElementById('ia-msgs');
-    msgs.lastChild.remove();
+    removeTyping();
     addMsg('Error al conectar. Intenta nuevamente.','bot');
   }
 }
 
-function addMsg(text,type){
+function addMsg(text, type){
   const msgs=document.getElementById('ia-msgs');
   const div=document.createElement('div');
   div.className=`ia-msg ${type}`;
-  div.textContent=text;
+  div.innerHTML=text;
   msgs.appendChild(div);
   msgs.scrollTop=msgs.scrollHeight;
+}
+
+function addMsgFormatted(text, type){
+  const msgs=document.getElementById('ia-msgs');
+  const div=document.createElement('div');
+  div.className=`ia-msg ${type}`;
+  // Formato básico: saltos de línea y negritas
+  div.innerHTML=text
+    .replace(/\*\*(.*?)\*\*/g,'<b>$1</b>')
+    .replace(/\n/g,'<br>');
+  msgs.appendChild(div);
+  msgs.scrollTop=msgs.scrollHeight;
+}
+
+function addTyping(){
+  const msgs=document.getElementById('ia-msgs');
+  const div=document.createElement('div');
+  div.className='ia-typing'; div.id='ia-typing';
+  div.innerHTML='<span></span><span></span><span></span>';
+  msgs.appendChild(div);
+  msgs.scrollTop=msgs.scrollHeight;
+}
+
+function removeTyping(){
+  const t=document.getElementById('ia-typing');
+  if(t) t.remove();
+}
+
+// Chequeo automático de alertas al cargar
+function checkAlertas(){
+  const hoy = new Date();
+  let alertas = 0;
+  // Calibraciones vencidas o próximas
+  (calRows||[]).forEach(r=>{
+    if(!r.proxima) return;
+    const diff=Math.ceil((new Date(r.proxima)-hoy)/(1000*60*60*24));
+    if(diff<=30) alertas++;
+  });
+  // Sin registro de agua hoy
+  const todayStr=hoy.toISOString().split('T')[0];
+  if(!(regData?.agua||[]).some(r=>r.fecha===todayStr)) alertas++;
+  // Mostrar badge
+  const notif=document.getElementById('ia-notif');
+  if(notif){
+    if(alertas>0){ notif.style.display='flex'; notif.textContent=alertas; }
+    else notif.style.display='none';
+  }
 }
 
 // ── INIT ──
@@ -2240,7 +2450,7 @@ loadState();
 loadRegData();
 loadEquipo();
 loadHaccpPlan();
-// Abrir grupo HACCP por defecto
 toggleNav('grp-haccp');
+setTimeout(checkAlertas, 1500);
 </script>
 </body>
