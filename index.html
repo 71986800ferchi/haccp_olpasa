@@ -816,7 +816,8 @@ tr:hover td{background:#fafffe;}
 
 <!-- BPM -->
 <div class="page" id="page-bpm">
-  <div class="ph"><h2>📋 BPM — Buenas Prácticas de Manufactura</h2><p>OLPASA-SIG-M-001 · Versión 02 · 2024</p></div>
+  <div class="ph"><h2>📋 BPM — Buenas Prácticas de Manufactura</h2><p>Requisito Previo · RM 449-2006/MINSA Art. 8°</p></div>
+  <div class="block"><div class="tbl-head"><h3>Manual BPM</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('bpm-manual')">+ Agregar</button></div><div id="list-bpm-manual"></div></div>
   <div class="block"><div class="tbl-head"><h3>Procedimientos</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('bpm-p')">+ Agregar</button></div><div id="list-bpm-p"></div></div>
   <div class="block"><div class="tbl-head"><h3>Instructivos</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('bpm-i')">+ Agregar</button></div><div id="list-bpm-i"></div></div>
   <div class="block"><div class="tbl-head"><h3>Formatos</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('bpm-f')">+ Agregar</button></div><div id="list-bpm-f"></div></div>
@@ -845,7 +846,8 @@ tr:hover td{background:#fafffe;}
 
 <!-- POES -->
 <div class="page" id="page-poes">
-  <div class="ph"><h2>🧼 POES — Procedimientos Operativos de Saneamiento</h2><p>OLPASA-AQ-M-002</p></div>
+  <div class="ph"><h2>🧼 POES — Procedimientos Operativos de Saneamiento</h2><p>Requisito Previo · RM 449-2006/MINSA Art. 11°</p></div>
+  <div class="block"><div class="tbl-head"><h3>Manual POES</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('poes-manual')">+ Agregar</button></div><div id="list-poes-manual"></div></div>
   <div class="block"><div class="tbl-head"><h3>Procedimientos</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('poes-p')">+ Agregar</button></div><div id="list-poes-p"></div></div>
   <div class="block"><div class="tbl-head"><h3>Instructivos</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('poes-i')">+ Agregar</button></div><div id="list-poes-i"></div></div>
   <div class="block"><div class="tbl-head"><h3>Formatos</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('poes-f')">+ Agregar</button></div><div id="list-poes-f"></div></div>
@@ -1797,8 +1799,8 @@ function reemplazarCtrlDoc(){ document.getElementById('ctrl-doc-input').click();
 
 // ── DOCUMENTOS CONFIG ──
 const DOCS = {
-  bpm:[], 'bpm-p':[], 'bpm-i':[], 'bpm-f':[], 'bpm-c':[],
-  poes:[], 'poes-p':[], 'poes-i':[], 'poes-f':[], 'poes-c':[],
+  'bpm-manual':[], 'bpm-p':[], 'bpm-i':[], 'bpm-f':[], 'bpm-c':[],
+  'poes-manual':[], 'poes-p':[], 'poes-i':[], 'poes-f':[], 'poes-c':[],
   plagas:[], agua:[], cap:[], mant:[], esp:[], cal:[], lab:[], diagrama:[]
 };
 
@@ -1827,8 +1829,8 @@ async function loadState(){
 
 function saveDOCS(){
   const docsData = {
-    'bpm-p':DOCS['bpm-p'], 'bpm-i':DOCS['bpm-i'], 'bpm-f':DOCS['bpm-f'], 'bpm-c':DOCS['bpm-c'],
-    'poes-p':DOCS['poes-p'], 'poes-i':DOCS['poes-i'], 'poes-f':DOCS['poes-f'], 'poes-c':DOCS['poes-c'],
+    'bpm-manual':DOCS['bpm-manual'], 'bpm-p':DOCS['bpm-p'], 'bpm-i':DOCS['bpm-i'], 'bpm-f':DOCS['bpm-f'], 'bpm-c':DOCS['bpm-c'],
+    'poes-manual':DOCS['poes-manual'], 'poes-p':DOCS['poes-p'], 'poes-i':DOCS['poes-i'], 'poes-f':DOCS['poes-f'], 'poes-c':DOCS['poes-c'],
     plagas:DOCS.plagas, agua:DOCS.agua, cap:DOCS.cap, mant:DOCS.mant,
     esp:DOCS.esp, cal:DOCS.cal, lab:DOCS.lab, diagrama:DOCS.diagrama
   };
@@ -2000,8 +2002,8 @@ async function saveAllToDrive(){
     ctrlDoc: ctrlDocData,
     registros: typeof regData !== 'undefined' ? regData : {},
     docsList: {
-      'bpm-p':DOCS['bpm-p'], 'bpm-i':DOCS['bpm-i'], 'bpm-f':DOCS['bpm-f'], 'bpm-c':DOCS['bpm-c'],
-      'poes-p':DOCS['poes-p'], 'poes-i':DOCS['poes-i'], 'poes-f':DOCS['poes-f'], 'poes-c':DOCS['poes-c'],
+      'bpm-manual':DOCS['bpm-manual'], 'bpm-p':DOCS['bpm-p'], 'bpm-i':DOCS['bpm-i'], 'bpm-f':DOCS['bpm-f'], 'bpm-c':DOCS['bpm-c'],
+      'poes-manual':DOCS['poes-manual'], 'poes-p':DOCS['poes-p'], 'poes-i':DOCS['poes-i'], 'poes-f':DOCS['poes-f'], 'poes-c':DOCS['poes-c'],
       plagas:DOCS.plagas, agua:DOCS.agua, cap:DOCS.cap, mant:DOCS.mant,
       esp:DOCS.esp, cal:DOCS.cal, lab:DOCS.lab, diagrama:DOCS.diagrama
     },
@@ -2182,10 +2184,12 @@ function buildDocRow(code, name, saved){
 }
 
 function renderAll(){
+  renderDocList('list-bpm-manual', DOCS['bpm-manual']);
   renderDocList('list-bpm-p', DOCS['bpm-p']); renderDocList('list-bpm-p2', DOCS['bpm-p']);
   renderDocList('list-bpm-i', DOCS['bpm-i']); renderDocList('list-bpm-i2', DOCS['bpm-i']);
   renderDocList('list-bpm-f', DOCS['bpm-f']); renderDocList('list-bpm-f2', DOCS['bpm-f']);
   renderDocList('list-bpm-c', DOCS['bpm-c']); renderDocList('list-bpm-c2', DOCS['bpm-c']);
+  renderDocList('list-poes-manual', DOCS['poes-manual']);
   renderDocList('list-poes-p', DOCS['poes-p']); renderDocList('list-poes-p2', DOCS['poes-p']);
   renderDocList('list-poes-i', DOCS['poes-i']); renderDocList('list-poes-i2', DOCS['poes-i']);
   renderDocList('list-poes-f', DOCS['poes-f']); renderDocList('list-poes-f2', DOCS['poes-f']);
