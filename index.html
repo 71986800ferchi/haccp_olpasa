@@ -2273,19 +2273,21 @@ function updateDashboard(){
   if(calEl) calEl.textContent = calRows.length;
 
   // Barras progreso
+  const allBpm  = [...(DOCS['bpm-manual']||[]),...(DOCS['bpm-p']||[]),...(DOCS['bpm-i']||[]),...(DOCS['bpm-f']||[]),...(DOCS['bpm-c']||[])];
+  const allPoes = [...(DOCS['poes-manual']||[]),...(DOCS['poes-p']||[]),...(DOCS['poes-i']||[]),...(DOCS['poes-f']||[]),...(DOCS['poes-c']||[])];
   function setPct(barId, pctId, docs){
-    const count = docs.filter(d=>state[d.code]).length;
+    const count = (docs||[]).filter(d=>state[d.code]).length;
     const pct = docs.length>0 ? Math.round(count/docs.length*100) : 0;
     const b=document.getElementById(barId); if(b) b.style.width=pct+'%';
     const p=document.getElementById(pctId); if(p) p.textContent=pct+'%';
     return pct;
   }
-  const p_bpm   = setPct('bar-bpm',  'pct-bpm',  DOCS.bpm);
-  const p_poes  = setPct('bar-poes', 'pct-poes', DOCS.poes);
-  const p_plagas= setPct('bar-plagas','pct-plagas',DOCS.plagas);
-  const p_cal   = setPct('bar-cal',  'pct-cal',  DOCS.cal);
-  const p_lab   = setPct('bar-lab',  'pct-lab',  DOCS.lab);
-  const all=[...DOCS.bpm,...DOCS.poes,...DOCS.plagas,...DOCS.cal,...DOCS.lab];
+  const p_bpm   = setPct('bar-bpm',  'pct-bpm',  allBpm);
+  const p_poes  = setPct('bar-poes', 'pct-poes', allPoes);
+  const p_plagas= setPct('bar-plagas','pct-plagas',DOCS.plagas||[]);
+  const p_cal   = setPct('bar-cal',  'pct-cal',  DOCS.cal||[]);
+  const p_lab   = setPct('bar-lab',  'pct-lab',  DOCS.lab||[]);
+  const all=[...allBpm,...allPoes,...(DOCS.plagas||[]),...(DOCS.cal||[]),...(DOCS.lab||[])];
   const pt=document.getElementById('pct-total');
   if(pt) pt.textContent=all.filter(d=>state[d.code]).length+' / '+all.length+' docs';
 
