@@ -2377,6 +2377,7 @@ function showDriveStatus(type, msg){
 }
 
 async function createDriveFile(name, file){
+  if(!gAccessToken){ gTokenClient?.requestAccessToken({prompt:''}); throw new Error('Token expirado — reintenta'); }
   const metadata = { name, parents: [DRIVE_FOLDER_ID] };
   const form = new FormData();
   form.append('metadata', new Blob([JSON.stringify(metadata)], {type:'application/json'}));
@@ -2644,49 +2645,43 @@ function handleActaFile(e){
 async function saveActa(){
   if(!pendingActaFile){ showToast('⚠️ Selecciona un archivo primero', true); return; }
   const m = equipoData[actaMiembroIdx];
-
-  // Guardar referencia básica inmediatamente
-  equipoData[actaMiembroIdx].acta = {
-    name: pendingActaFile.name,
-    type: pendingActaFile.type,
-    size: pendingActaFile.size,
-    uploadedAt: pendingActaFile.uploadedAt,
-    data: pendingActaFile.data // base64 temporal
-  };
-  closeModal('modal-acta-eq');
-  showToast('📤 Subiendo diploma al Drive...');
   const actaRef = pendingActaFile;
   pendingActaFile = null;
 
-  // Subir al Drive como archivo físico
-  if(gAccessToken){
-    try{
-      const base64 = actaRef.data.split(',')[1];
-      const byteChars = atob(base64);
-      const byteArr = new Uint8Array(byteChars.length);
-      for(let i=0;i<byteChars.length;i++) byteArr[i]=byteChars.charCodeAt(i);
-      const blob = new Blob([byteArr], {type: actaRef.type});
-      // Crear File object para usar createDriveFile
-      const file = new File([blob], actaRef.name, {type: actaRef.type});
-      const driveName = `Diploma_${m.nombre.replace(/\s+/g,'_')} — ${actaRef.name}`;
-      const result = await createDriveFile(driveName, file);
-      const fileId = result.id;
-      // Actualizar con driveFileId, quitar base64
-      equipoData[actaMiembroIdx].acta = {
-        name: actaRef.name,
-        type: actaRef.type,
-        size: actaRef.size,
-        uploadedAt: actaRef.uploadedAt,
-        driveFileId: fileId,
-        driveUrl: `https://drive.google.com/file/d/${fileId}/view`
-      };
-      showToast('✅ Diploma guardado en Drive');
-    } catch(err){
-      console.error('Error subiendo diploma:', err);
-      showToast('⚠️ Guardado local — Drive no disponible', true);
-    }
-  } else {
-    showToast('⚠️ Conecta Drive para sincronizar', true);
+  // Guardar referencia básica y cerrar modal inmediatamente
+  equipoData[actaMiembroIdx].acta = {
+    name: actaRef.name,
+    type: actaRef.type,
+    size: actaRef.size,
+    uploadedAt: actaRef.uploadedAt,
+    data: actaRef.data
+  };
+  closeModal('modal-acta-eq');
+  showToast('📤 Subiendo diploma al Drive...');
+
+  // Subir al Drive
+  try{
+    const base64 = actaRef.data.split(',')[1];
+    const byteChars = atob(base64);
+    const byteArr = new Uint8Array(byteChars.length);
+    for(let i=0;i<byteChars.length;i++) byteArr[i]=byteChars.charCodeAt(i);
+    const blob = new Blob([byteArr], {type: actaRef.type});
+    const file = new File([blob], actaRef.name, {type: actaRef.type});
+    const driveName = `Diploma_${m.nombre.replace(/\s+/g,'_')} — ${actaRef.name}`;
+    const result = await createDriveFile(driveName, file);
+    const fileId = result.id;
+    equipoData[actaMiembroIdx].acta = {
+      name: actaRef.name,
+      type: actaRef.type,
+      size: actaRef.size,
+      uploadedAt: actaRef.uploadedAt,
+      driveFileId: fileId,
+      driveUrl: `https://drive.google.com/file/d/${fileId}/view`
+    };
+    showToast('✅ Diploma guardado en Drive');
+  } catch(err){
+    console.error('Error subiendo diploma:', err);
+    showToast('⚠️ Guardado local — reintenta más tarde', true);
   }
   await saveEquipo();
 }
