@@ -349,6 +349,9 @@ tr:hover td{background:#fafffe;}
 .nav-sub:hover{background:var(--verde3);color:var(--verde);}
 .nav-sub.active{background:#e8f5e9;color:var(--verde);border-left-color:var(--verde);font-weight:600;}
 .nav-sub-icon{font-size:13px;width:18px;text-align:center;}
+.nav-sub2{padding-left:36px;font-size:11px;color:#888;}
+.nav-sub2:hover{background:var(--verde3);color:var(--verde);}
+.nav-sub2.active{background:#e8f5e9;color:var(--verde);border-left-color:var(--verde);font-weight:600;}
 
 /* ── PÁGINA HACCP PLAN ── */
 .haccp-plan-box{background:#fff;border-radius:14px;box-shadow:0 2px 12px rgba(0,0,0,0.07);overflow:hidden;margin-bottom:16px;}
@@ -480,7 +483,15 @@ tr:hover td{background:#fafffe;}
     </div>
     <div class="nav-group-items" id="grp-req">
       <div class="nav-sub" onclick="nav('bpm',this)"><span class="nav-sub-icon">📋</span>BPM</div>
+      <div class="nav-sub nav-sub2" onclick="nav('bpm-procedimientos',this)"><span class="nav-sub-icon">📝</span>Procedimientos</div>
+      <div class="nav-sub nav-sub2" onclick="nav('bpm-instructivos',this)"><span class="nav-sub-icon">📖</span>Instructivos</div>
+      <div class="nav-sub nav-sub2" onclick="nav('bpm-formatos',this)"><span class="nav-sub-icon">📄</span>Formatos</div>
+      <div class="nav-sub nav-sub2" onclick="nav('bpm-cartillas',this)"><span class="nav-sub-icon">📌</span>Cartillas</div>
       <div class="nav-sub" onclick="nav('poes',this)"><span class="nav-sub-icon">🧼</span>POES</div>
+      <div class="nav-sub nav-sub2" onclick="nav('poes-procedimientos',this)"><span class="nav-sub-icon">📝</span>Procedimientos</div>
+      <div class="nav-sub nav-sub2" onclick="nav('poes-instructivos',this)"><span class="nav-sub-icon">📖</span>Instructivos</div>
+      <div class="nav-sub nav-sub2" onclick="nav('poes-formatos',this)"><span class="nav-sub-icon">📄</span>Formatos</div>
+      <div class="nav-sub nav-sub2" onclick="nav('poes-cartillas',this)"><span class="nav-sub-icon">📌</span>Cartillas</div>
       <div class="nav-sub" onclick="nav('plagas',this)"><span class="nav-sub-icon">🐀</span>Control de Plagas</div>
       <div class="nav-sub" onclick="nav('agua',this)"><span class="nav-sub-icon">💧</span>Control de Agua</div>
       <div class="nav-sub" onclick="nav('capacitacion',this)"><span class="nav-sub-icon">🎓</span>Capacitaciones</div>
@@ -805,19 +816,62 @@ tr:hover td{background:#fafffe;}
 
 <!-- BPM -->
 <div class="page" id="page-bpm">
-  <div class="ph"><h2>📋 BPM — Buenas Prácticas de Manufactura</h2><p>OLPASA-SIG-M-001 · Versión 02 · 2024 — Haz clic en 📤 para subir cada documento</p></div>
-  <div class="block"><div class="tbl-head"><h3>Documentos BPM</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('bpm')">+ Agregar documento</button></div>
-    <div id="list-bpm"></div>
-  </div>
+  <div class="ph"><h2>📋 BPM — Buenas Prácticas de Manufactura</h2><p>OLPASA-SIG-M-001 · Versión 02 · 2024</p></div>
+  <div class="block"><div class="tbl-head"><h3>Procedimientos</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('bpm-p')">+ Agregar</button></div><div id="list-bpm-p"></div></div>
+  <div class="block"><div class="tbl-head"><h3>Instructivos</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('bpm-i')">+ Agregar</button></div><div id="list-bpm-i"></div></div>
+  <div class="block"><div class="tbl-head"><h3>Formatos</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('bpm-f')">+ Agregar</button></div><div id="list-bpm-f"></div></div>
+  <div class="block"><div class="tbl-head"><h3>Cartillas</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('bpm-c')">+ Agregar</button></div><div id="list-bpm-c"></div></div>
+</div>
+
+<div class="page" id="page-bpm-procedimientos">
+  <div class="ph"><h2>📝 BPM — Procedimientos</h2><p>Procedimientos del sistema de Buenas Prácticas de Manufactura</p></div>
+  <div class="block"><div class="tbl-head"><h3>Procedimientos</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('bpm-p')">+ Agregar</button></div><div id="list-bpm-p2"></div></div>
+</div>
+
+<div class="page" id="page-bpm-instructivos">
+  <div class="ph"><h2>📖 BPM — Instructivos</h2><p>Instructivos del sistema BPM</p></div>
+  <div class="block"><div class="tbl-head"><h3>Instructivos</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('bpm-i')">+ Agregar</button></div><div id="list-bpm-i2"></div></div>
+</div>
+
+<div class="page" id="page-bpm-formatos">
+  <div class="ph"><h2>📄 BPM — Formatos</h2><p>Formatos del sistema BPM</p></div>
+  <div class="block"><div class="tbl-head"><h3>Formatos</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('bpm-f')">+ Agregar</button></div><div id="list-bpm-f2"></div></div>
+</div>
+
+<div class="page" id="page-bpm-cartillas">
+  <div class="ph"><h2>📌 BPM — Cartillas</h2><p>Cartillas del sistema BPM</p></div>
+  <div class="block"><div class="tbl-head"><h3>Cartillas</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('bpm-c')">+ Agregar</button></div><div id="list-bpm-c2"></div></div>
 </div>
 
 <!-- POES -->
 <div class="page" id="page-poes">
-  <div class="ph"><h2>🧼 POES — Procedimientos Operativos de Saneamiento</h2><p>OLPASA-AQ-M-002 — Haz clic en 📤 para subir cada documento</p></div>
-  <div class="block"><div class="tbl-head"><h3>Procedimientos POES</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('poes')">+ Agregar documento</button></div>
-    <div id="list-poes"></div>
-  </div>
+  <div class="ph"><h2>🧼 POES — Procedimientos Operativos de Saneamiento</h2><p>OLPASA-AQ-M-002</p></div>
+  <div class="block"><div class="tbl-head"><h3>Procedimientos</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('poes-p')">+ Agregar</button></div><div id="list-poes-p"></div></div>
+  <div class="block"><div class="tbl-head"><h3>Instructivos</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('poes-i')">+ Agregar</button></div><div id="list-poes-i"></div></div>
+  <div class="block"><div class="tbl-head"><h3>Formatos</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('poes-f')">+ Agregar</button></div><div id="list-poes-f"></div></div>
+  <div class="block"><div class="tbl-head"><h3>Cartillas</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('poes-c')">+ Agregar</button></div><div id="list-poes-c"></div></div>
 </div>
+
+<div class="page" id="page-poes-procedimientos">
+  <div class="ph"><h2>📝 POES — Procedimientos</h2><p>Procedimientos Operativos de Saneamiento</p></div>
+  <div class="block"><div class="tbl-head"><h3>Procedimientos</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('poes-p')">+ Agregar</button></div><div id="list-poes-p2"></div></div>
+</div>
+
+<div class="page" id="page-poes-instructivos">
+  <div class="ph"><h2>📖 POES — Instructivos</h2><p>Instructivos de Saneamiento</p></div>
+  <div class="block"><div class="tbl-head"><h3>Instructivos</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('poes-i')">+ Agregar</button></div><div id="list-poes-i2"></div></div>
+</div>
+
+<div class="page" id="page-poes-formatos">
+  <div class="ph"><h2>📄 POES — Formatos</h2><p>Formatos de Saneamiento</p></div>
+  <div class="block"><div class="tbl-head"><h3>Formatos</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('poes-f')">+ Agregar</button></div><div id="list-poes-f2"></div></div>
+</div>
+
+<div class="page" id="page-poes-cartillas">
+  <div class="ph"><h2>📌 POES — Cartillas</h2><p>Cartillas de Saneamiento</p></div>
+  <div class="block"><div class="tbl-head"><h3>Cartillas</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('poes-c')">+ Agregar</button></div><div id="list-poes-c2"></div></div>
+</div>
+
 
 <!-- PLAGAS -->
 <div class="page" id="page-plagas">
@@ -1743,7 +1797,9 @@ function reemplazarCtrlDoc(){ document.getElementById('ctrl-doc-input').click();
 
 // ── DOCUMENTOS CONFIG ──
 const DOCS = {
-  bpm:[], poes:[], plagas:[], agua:[], cap:[], mant:[], esp:[], cal:[], lab:[], diagrama:[]
+  bpm:[], 'bpm-p':[], 'bpm-i':[], 'bpm-f':[], 'bpm-c':[],
+  poes:[], 'poes-p':[], 'poes-i':[], 'poes-f':[], 'poes-c':[],
+  plagas:[], agua:[], cap:[], mant:[], esp:[], cal:[], lab:[], diagrama:[]
 };
 
 // ── STATE ──
@@ -1771,8 +1827,10 @@ async function loadState(){
 
 function saveDOCS(){
   const docsData = {
-    bpm:DOCS.bpm, poes:DOCS.poes, plagas:DOCS.plagas, agua:DOCS.agua,
-    cap:DOCS.cap, mant:DOCS.mant, esp:DOCS.esp, cal:DOCS.cal, lab:DOCS.lab, diagrama:DOCS.diagrama
+    'bpm-p':DOCS['bpm-p'], 'bpm-i':DOCS['bpm-i'], 'bpm-f':DOCS['bpm-f'], 'bpm-c':DOCS['bpm-c'],
+    'poes-p':DOCS['poes-p'], 'poes-i':DOCS['poes-i'], 'poes-f':DOCS['poes-f'], 'poes-c':DOCS['poes-c'],
+    plagas:DOCS.plagas, agua:DOCS.agua, cap:DOCS.cap, mant:DOCS.mant,
+    esp:DOCS.esp, cal:DOCS.cal, lab:DOCS.lab, diagrama:DOCS.diagrama
   };
   LS.set('haccp-docs-list', JSON.stringify(docsData));
   saveAllToDrive();
@@ -1941,8 +1999,12 @@ async function saveAllToDrive(){
     equipo: typeof equipoData !== 'undefined' ? equipoData : [],
     ctrlDoc: ctrlDocData,
     registros: typeof regData !== 'undefined' ? regData : {},
-    docsList: { bpm:DOCS.bpm, poes:DOCS.poes, plagas:DOCS.plagas, agua:DOCS.agua,
-      cap:DOCS.cap, mant:DOCS.mant, esp:DOCS.esp, cal:DOCS.cal, lab:DOCS.lab, diagrama:DOCS.diagrama },
+    docsList: {
+      'bpm-p':DOCS['bpm-p'], 'bpm-i':DOCS['bpm-i'], 'bpm-f':DOCS['bpm-f'], 'bpm-c':DOCS['bpm-c'],
+      'poes-p':DOCS['poes-p'], 'poes-i':DOCS['poes-i'], 'poes-f':DOCS['poes-f'], 'poes-c':DOCS['poes-c'],
+      plagas:DOCS.plagas, agua:DOCS.agua, cap:DOCS.cap, mant:DOCS.mant,
+      esp:DOCS.esp, cal:DOCS.cal, lab:DOCS.lab, diagrama:DOCS.diagrama
+    },
     updatedAt: new Date().toISOString()
   };
   await saveDriveMetadata(allMeta);
@@ -2120,8 +2182,14 @@ function buildDocRow(code, name, saved){
 }
 
 function renderAll(){
-  renderDocList('list-bpm', DOCS.bpm);
-  renderDocList('list-poes', DOCS.poes);
+  renderDocList('list-bpm-p', DOCS['bpm-p']); renderDocList('list-bpm-p2', DOCS['bpm-p']);
+  renderDocList('list-bpm-i', DOCS['bpm-i']); renderDocList('list-bpm-i2', DOCS['bpm-i']);
+  renderDocList('list-bpm-f', DOCS['bpm-f']); renderDocList('list-bpm-f2', DOCS['bpm-f']);
+  renderDocList('list-bpm-c', DOCS['bpm-c']); renderDocList('list-bpm-c2', DOCS['bpm-c']);
+  renderDocList('list-poes-p', DOCS['poes-p']); renderDocList('list-poes-p2', DOCS['poes-p']);
+  renderDocList('list-poes-i', DOCS['poes-i']); renderDocList('list-poes-i2', DOCS['poes-i']);
+  renderDocList('list-poes-f', DOCS['poes-f']); renderDocList('list-poes-f2', DOCS['poes-f']);
+  renderDocList('list-poes-c', DOCS['poes-c']); renderDocList('list-poes-c2', DOCS['poes-c']);
   renderDocList('list-plagas', DOCS.plagas);
   renderDocList('list-agua', DOCS.agua);
   renderDocList('list-cap', DOCS.cap);
