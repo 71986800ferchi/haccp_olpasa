@@ -1388,6 +1388,36 @@ tr:hover td{background:#fafffe;}
 
 <!-- MODAL GENERAR DOCUMENTO -->
 <!-- MODAL GENERAR DOCUMENTO -->
+<!-- MODAL EDITAR DOCUMENTO -->
+<div class="modal-bg" id="modal-edit-doc">
+  <div class="meq" style="max-width:520px;width:95%;">
+    <h3>✏️ Editar Documento</h3>
+    <div class="mreg-sub">Modifica el código o nombre del documento</div>
+    <div class="meq-section">Identificación</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Código OLPASA *</label>
+        <input type="text" id="edoc-codigo" class="form-input">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Versión</label>
+        <input type="text" id="edoc-version" class="form-input">
+      </div>
+    </div>
+    <div class="form-row solo">
+      <div class="form-group">
+        <label class="form-label">Nombre del documento *</label>
+        <input type="text" id="edoc-nombre" class="form-input">
+      </div>
+    </div>
+    <input type="hidden" id="edoc-codigo-original">
+    <div class="meq-btns">
+      <button class="btn btn-gray" onclick="closeModal('modal-edit-doc')">Cancelar</button>
+      <button class="btn btn-green" onclick="confirmarEditDoc()">💾 Guardar cambios</button>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL AGREGAR DOCUMENTO -->
 <div class="modal-bg" id="modal-add-doc">
   <div class="meq" style="max-width:520px;width:95%;">
@@ -1740,13 +1770,75 @@ async function loadState(){
 }
 
 function saveDOCS(){
-  LS.set('haccp-docs-list', JSON.stringify({
+  const docsData = {
     bpm:DOCS.bpm, poes:DOCS.poes, plagas:DOCS.plagas, agua:DOCS.agua,
     cap:DOCS.cap, mant:DOCS.mant, esp:DOCS.esp, cal:DOCS.cal, lab:DOCS.lab, diagrama:DOCS.diagrama
-  }));
+  };
+  LS.set('haccp-docs-list', JSON.stringify(docsData));
+  saveAllToDrive();
 }
 
 // ── AGREGAR DOCUMENTO A SECCIÓN ──
+function editarDoc(code, name){
+  // Separar nombre de versión si viene al final "Nombre vXX"
+  const vMatch = name.match(/^(.+)\s+v(\d+)$/);
+  document.getElementById('edoc-codigo-original').value = code;
+  document.getElementById('edoc-codigo').value = code;
+  document.getElementById('edoc-nombre').value = vMatch ? vMatch[1] : name;
+  document.getElementById('edoc-version').value = vMatch ? vMatch[2] : '01';
+  openModal('modal-edit-doc');
+}
+
+function confirmarEditDoc(){
+  const codigoOrig = document.getElementById('edoc-codigo-original').value;
+  const codigoNuevo = document.getElementById('edoc-codigo').value.trim();
+  const nombre = document.getElementById('edoc-nombre').value.trim();
+  const version = document.getElementById('edoc-version').value.trim() || '01';
+  if(!codigoNuevo || !nombre){ alert('Completa el código y el nombre'); return; }
+
+  // Actualizar en DOCS
+  let encontrado = false;
+  Object.keys(DOCS).forEach(sec => {
+    const idx = DOCS[sec].findIndex(d => d.code === codigoOrig);
+    if(idx !== -1){
+      DOCS[sec][idx] = { code: codigoNuevo, name: `${nombre} v${version}` };
+      encontrado = true;
+    }
+  });
+  if(!encontrado){ alert('Documento no encontrado'); return; }
+
+  // Si cambió el código, migrar el state
+  if(codigoNuevo !== codigoOrig && state[codigoOrig]){
+    state[codigoNuevo] = { ...state[codigoOrig], code: codigoNuevo, name: `${nombre} v${version}` };
+    delete state[codigoOrig];
+  } else if(state[codigoNuevo]){
+    state[codigoNuevo].name = `${nombre} v${version}`;
+  }
+
+  saveDOCS();
+  saveState();
+  renderAll();
+  closeModal('modal-edit-doc');
+  showToast('✅ Documento actualizado');
+}
+
+async function eliminarDoc(code, name){
+  if(!confirm(`¿Eliminar "${name}" de la lista?\n\nEsto no elimina el archivo de Google Drive.`)) return;
+
+  // Quitar de DOCS
+  Object.keys(DOCS).forEach(sec => {
+    DOCS[sec] = DOCS[sec].filter(d => d.code !== code);
+  });
+
+  // Quitar del state
+  delete state[code];
+
+  saveDOCS();
+  await saveState();
+  renderAll();
+  showToast('🗑️ Documento eliminado de la lista');
+}
+
 function openAddDoc(seccion){
   document.getElementById('adoc-codigo').value = '';
   document.getElementById('adoc-nombre').value = '';
@@ -1785,10 +1877,13 @@ async function saveState(){
       fileName: d.fileName || d.name || '',
       driveFileId: d.driveFileId || null,
       driveUrl: d.driveUrl || null,
-      uploadedAt: d.uploadedAt || ''
+      uploadedAt: d.uploadedAt || '',
+      comentarios: d.comentarios || [],
+      analysis: d.analysis || null
     };
   });
   LS.set('haccp-docs', JSON.stringify(meta));
+  await saveAllToDrive();
   updateDashboard();
 }
 
@@ -1846,6 +1941,8 @@ async function saveAllToDrive(){
     equipo: typeof equipoData !== 'undefined' ? equipoData : [],
     ctrlDoc: ctrlDocData,
     registros: typeof regData !== 'undefined' ? regData : {},
+    docsList: { bpm:DOCS.bpm, poes:DOCS.poes, plagas:DOCS.plagas, agua:DOCS.agua,
+      cap:DOCS.cap, mant:DOCS.mant, esp:DOCS.esp, cal:DOCS.cal, lab:DOCS.lab, diagrama:DOCS.diagrama },
     updatedAt: new Date().toISOString()
   };
   await saveDriveMetadata(allMeta);
@@ -1874,6 +1971,10 @@ async function loadDriveMetadata(){
     Object.keys(meta.registros).forEach(k=>{
       if(meta.registros[k] && typeof regData !== 'undefined') regData[k] = meta.registros[k];
     });
+  }
+  if(meta.docsList){
+    Object.keys(meta.docsList).forEach(k=>{ if(DOCS[k]) DOCS[k]=meta.docsList[k]; });
+    LS.set('haccp-docs-list', JSON.stringify(meta.docsList));
   }
   renderAll();
   renderCtrlDoc();
@@ -1915,7 +2016,11 @@ function buildDocRow(code, name, saved){
         <span style="font-size:11px;font-weight:700;color:#1b5e20;background:#e8f5e9;padding:2px 8px;border-radius:6px;margin-right:8px;">${code}</span>
         <span style="font-size:13px;color:#555;">${name}</span>
       </div>
-      <button class="btn btn-green btn-sm" onclick="openUpload('${code}','${name}')">📤 Subir</button>
+      <div style="display:flex;gap:6px;">
+        <button class="btn btn-sm btn-outline" onclick="editarDoc('${code}','${name}')">✏️ Editar</button>
+        <button class="btn btn-sm btn-gray" onclick="eliminarDoc('${code}','${name}')">🗑️</button>
+        <button class="btn btn-sm btn-green" onclick="openUpload('${code}','${name}')">📤 Subir</button>
+      </div>
     </div>`;
   }
 
@@ -1986,6 +2091,8 @@ function buildDocRow(code, name, saved){
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
         <a href="${saved.driveUrl||'#'}" target="_blank" class="btn btn-sm btn-outline">📥 Descargar</a>
         <button onclick="openUpload('${code}','${name}')" class="btn btn-sm btn-gray">🔄 Reemplazar</button>
+        <button onclick="editarDoc('${code}','${name}')" class="btn btn-sm btn-outline">✏️ Editar</button>
+        <button onclick="eliminarDoc('${code}','${name}')" class="btn btn-sm btn-gray">🗑️</button>
       </div>
     </div>
 
@@ -2302,6 +2409,7 @@ async function loadEquipo(){
 
 async function saveEquipo(){
   LS.set('haccp-equipo', JSON.stringify(equipoData));
+  await saveAllToDrive();
   renderEquipo();
   updateDashboard();
 }
