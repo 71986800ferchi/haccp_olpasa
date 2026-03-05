@@ -1835,7 +1835,7 @@ function saveDOCS(){
     esp:DOCS.esp, cal:DOCS.cal, lab:DOCS.lab, diagrama:DOCS.diagrama
   };
   LS.set('haccp-docs-list', JSON.stringify(docsData));
-  saveAllToDrive();
+  try{ saveAllToDrive(); } catch(e){ console.warn('Drive sync:', e); }
 }
 
 // ── AGREGAR DOCUMENTO A SECCIÓN ──
@@ -1927,7 +1927,6 @@ function confirmarAddDoc(){
 }
 
 async function saveState(){
-  // Guarda solo metadata (sin base64 — los archivos viven en Drive)
   const meta = {};
   Object.keys(state).forEach(k => {
     const d = state[k];
@@ -1943,8 +1942,8 @@ async function saveState(){
     };
   });
   LS.set('haccp-docs', JSON.stringify(meta));
-  await saveAllToDrive();
   updateDashboard();
+  try{ await saveAllToDrive(); } catch(e){ console.warn('Drive sync:', e); }
 }
 
 // ── DRIVE METADATA STORE ──
@@ -2481,9 +2480,9 @@ async function loadEquipo(){
 
 async function saveEquipo(){
   LS.set('haccp-equipo', JSON.stringify(equipoData));
-  await saveAllToDrive();
   renderEquipo();
   updateDashboard();
+  try{ await saveAllToDrive(); } catch(e){ console.warn('Drive sync:', e); }
 }
 
 function renderEquipo(){
