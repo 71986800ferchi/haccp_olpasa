@@ -2209,8 +2209,11 @@ function renderAll(){
 function renderAllDocs(){
   const el = document.getElementById('list-all');
   if(!el) return;
-  const all = [...DOCS.bpm,...DOCS.poes,...DOCS.plagas,...DOCS.agua,
-    ...DOCS.cap,...DOCS.mant,...DOCS.esp,...DOCS.cal,...DOCS.lab];
+  const all = [
+    ...(DOCS['bpm-manual']||[]),...(DOCS['bpm-p']||[]),...(DOCS['bpm-i']||[]),...(DOCS['bpm-f']||[]),...(DOCS['bpm-c']||[]),
+    ...(DOCS['poes-manual']||[]),...(DOCS['poes-p']||[]),...(DOCS['poes-i']||[]),...(DOCS['poes-f']||[]),...(DOCS['poes-c']||[]),
+    ...(DOCS.plagas||[]),...(DOCS.agua||[]),...(DOCS.cap||[]),...(DOCS.mant||[]),...(DOCS.esp||[]),...(DOCS.cal||[]),...(DOCS.lab||[]),...(DOCS.diagrama||[])
+  ];
   const unique = [...new Map(all.map(d=>[d.code,d])).values()];
   el.innerHTML='';
   unique.forEach(d=>{
