@@ -2643,37 +2643,13 @@ function handleActaFile(e){
 
 async function saveActa(){
   if(!pendingActaFile){ showToast('⚠️ Selecciona un archivo primero', true); return; }
-  const m = equipoData[actaMiembroIdx];
-  if(gAccessToken){
-    showToast('📤 Subiendo diploma al Drive...');
-    try{
-      const base64 = pendingActaFile.data.split(',')[1];
-      const byteChars = atob(base64);
-      const byteArr = new Uint8Array(byteChars.length);
-      for(let i=0;i<byteChars.length;i++) byteArr[i]=byteChars.charCodeAt(i);
-      const blob = new Blob([byteArr], {type: pendingActaFile.type});
-      const fileName = 'Diploma_' + m.nombre.replace(/\s+/g,'_') + '_' + pendingActaFile.name;
-      const fileId = await uploadFileToDrive(blob, fileName, pendingActaFile.type);
-      const driveUrl = 'https://drive.google.com/file/d/' + fileId + '/view';
-      equipoData[actaMiembroIdx].acta = {
-        name: pendingActaFile.name,
-        type: pendingActaFile.type,
-        size: pendingActaFile.size,
-        uploadedAt: pendingActaFile.uploadedAt,
-        driveFileId: fileId,
-        driveUrl: driveUrl
-      };
-    } catch(err){
-      console.error('Error subiendo diploma:', err);
-      equipoData[actaMiembroIdx].acta = pendingActaFile;
-    }
-  } else {
-    equipoData[actaMiembroIdx].acta = pendingActaFile;
-  }
-  await saveEquipo();
+  // Guardar inmediatamente en local
+  equipoData[actaMiembroIdx].acta = pendingActaFile;
   closeModal('modal-acta-eq');
   pendingActaFile = null;
-  showToast('✅ Diploma guardado en Drive');
+  showToast('✅ Diploma guardado');
+  // Sincronizar a Drive en background
+  try{ await saveEquipo(); } catch(e){ console.warn('Drive sync:', e); }
 }
 
 function verActa(i){
