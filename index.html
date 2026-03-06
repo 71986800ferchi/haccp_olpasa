@@ -1033,7 +1033,13 @@ tr:hover td{background:#fafffe;}
 
 <div class="page" id="page-documentos">
   <div class="ph"><h2>📁 Todos los Documentos</h2><p>Repositorio general — OLPASA-SIG-P-001</p></div>
-  <div class="block"><h3>Todos los documentos registrados</h3><div id="list-all"></div></div>
+  <div class="block">
+    <div class="tbl-head"><h3>Todos los documentos registrados</h3></div>
+    <div style="padding:10px 0 14px;">
+      <input type="text" id="search-all-docs" oninput="filterAllDocs()" placeholder="🔍 Buscar por código o nombre..." style="width:100%;padding:10px 14px;border:1px solid #ddd;border-radius:10px;font-size:13px;box-sizing:border-box;outline:none;">
+    </div>
+    <div id="list-all"></div>
+  </div>
 </div>
 
 <!-- AUDITORÍA -->
@@ -1891,6 +1897,16 @@ async function eliminarDoc(code, name){
   showToast('🗑️ Documento eliminado de la lista');
 }
 
+function filterAllDocs(){
+  const q = (document.getElementById('search-all-docs')?.value||'').toLowerCase();
+  const el = document.getElementById('list-all');
+  if(!el) return;
+  const rows = el.querySelectorAll('[data-search]');
+  rows.forEach(r => {
+    r.style.display = r.dataset.search.includes(q) ? '' : 'none';
+  });
+}
+
 function toggleDocPanel(safeId, event){
   const panel = document.getElementById('panel-'+safeId);
   const arrow = document.getElementById('arrow-'+safeId);
@@ -2223,6 +2239,7 @@ function renderAllDocs(){
     const saved = state[d.code];
     const row = document.createElement('div');
     row.className='doc-row';
+    row.dataset.search = (d.code+' '+d.name).toLowerCase();
     row.innerHTML=`
       <div class="doc-info">
         <div class="doc-code">${d.code}</div>
