@@ -1891,6 +1891,15 @@ async function eliminarDoc(code, name){
   showToast('🗑️ Documento eliminado de la lista');
 }
 
+function toggleDocPanel(safeId, event){
+  const panel = document.getElementById('panel-'+safeId);
+  const arrow = document.getElementById('arrow-'+safeId);
+  if(!panel) return;
+  const open = panel.style.display !== 'none';
+  panel.style.display = open ? 'none' : 'block';
+  if(arrow) arrow.textContent = open ? '▶' : '▼';
+}
+
 function openAddDoc(seccion){
   document.getElementById('adoc-codigo').value = '';
   document.getElementById('adoc-nombre').value = '';
@@ -2134,16 +2143,17 @@ function buildDocRow(code, name, saved){
       }).join('');
 
   return `<div style="border:1px solid #e0e0e0;border-radius:12px;overflow:hidden;background:white;">
-    <!-- Cabecera -->
-    <div style="background:#f1f8e9;border-left:4px solid #2e7d32;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+    <!-- Cabecera clickeable para acordeón -->
+    <div style="background:#f1f8e9;border-left:4px solid #2e7d32;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;cursor:pointer;" onclick="toggleDocPanel('${safeId}', event)">
       <div style="display:flex;align-items:center;gap:10px;">
+        <div style="font-size:13px;color:#2e7d32;transition:transform .2s;" id="arrow-${safeId}">▶</div>
         <div style="background:#2e7d32;color:white;border-radius:6px;padding:5px 8px;font-size:10px;font-weight:700;">${ext||'DOC'}</div>
         <div>
           <div style="font-size:13px;font-weight:700;color:#1b5e20;">${code} ${name.match(/v(\d+)$/i)?'<span style="background:#e8f5e9;color:#1b5e20;border:1px solid #a5d6a7;padding:1px 8px;border-radius:10px;font-size:11px;margin-left:6px;">'+name.match(/v(\d+)$/i)[0]+'</span>':''}</div>
           <div style="font-size:12px;color:#555;">${saved.fileName||name} · ${saved.uploadedAt}${size?' · '+size:''}</div>
         </div>
       </div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;" onclick="event.stopPropagation()">
         <a href="${saved.driveUrl||'#'}" target="_blank" class="btn btn-sm btn-outline">👁 Ver</a>
         <a href="${saved.driveFileId?'https://drive.google.com/uc?export=download&id='+saved.driveFileId:(saved.driveUrl||'#')}" target="_blank" class="btn btn-sm btn-outline">📥 Descargar</a>
         <button onclick="openUpload('${code}','${name}')" class="btn btn-sm btn-gray">🔄 Reemplazar</button>
@@ -2152,7 +2162,7 @@ function buildDocRow(code, name, saved){
       </div>
     </div>
 
-    <div style="padding:14px 16px 16px;">
+    <div id="panel-${safeId}" style="display:none;padding:14px 16px 16px;">
       ${analysisSection}
 
       <!-- Historial de cambios -->
