@@ -2139,12 +2139,13 @@ function buildDocRow(code, name, saved){
       <div style="display:flex;align-items:center;gap:10px;">
         <div style="background:#2e7d32;color:white;border-radius:6px;padding:5px 8px;font-size:10px;font-weight:700;">${ext||'DOC'}</div>
         <div>
-          <div style="font-size:13px;font-weight:700;color:#1b5e20;">${code}</div>
+          <div style="font-size:13px;font-weight:700;color:#1b5e20;">${code} ${name.match(/v(\d+)$/i)?'<span style="background:#e8f5e9;color:#1b5e20;border:1px solid #a5d6a7;padding:1px 8px;border-radius:10px;font-size:11px;margin-left:6px;">'+name.match(/v(\d+)$/i)[0]+'</span>':''}</div>
           <div style="font-size:12px;color:#555;">${saved.fileName||name} · ${saved.uploadedAt}${size?' · '+size:''}</div>
         </div>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <a href="${saved.driveUrl||'#'}" target="_blank" class="btn btn-sm btn-outline">📥 Descargar</a>
+        <a href="${saved.driveUrl||'#'}" target="_blank" class="btn btn-sm btn-outline">👁 Ver</a>
+        <a href="${saved.driveFileId?'https://drive.google.com/uc?export=download&id='+saved.driveFileId:(saved.driveUrl||'#')}" target="_blank" class="btn btn-sm btn-outline">📥 Descargar</a>
         <button onclick="openUpload('${code}','${name}')" class="btn btn-sm btn-gray">🔄 Reemplazar</button>
         <button onclick="editarDoc('${code}','${name}')" class="btn btn-sm btn-outline">✏️ Editar</button>
         <button onclick="eliminarDoc('${code}','${name}')" class="btn btn-sm btn-gray">🗑️</button>
