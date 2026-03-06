@@ -487,11 +487,15 @@ tr:hover td{background:#fafffe;}
       <div class="nav-sub nav-sub2" onclick="nav('bpm-instructivos',this)"><span class="nav-sub-icon">📖</span>Instructivos</div>
       <div class="nav-sub nav-sub2" onclick="nav('bpm-formatos',this)"><span class="nav-sub-icon">📄</span>Formatos</div>
       <div class="nav-sub nav-sub2" onclick="nav('bpm-cartillas',this)"><span class="nav-sub-icon">📌</span>Cartillas</div>
+      <div class="nav-sub nav-sub2" onclick="nav('bpm-plan',this)"><span class="nav-sub-icon">📅</span>Plan</div>
+      <div class="nav-sub nav-sub2" onclick="nav('bpm-metodo',this)"><span class="nav-sub-icon">🔬</span>Método</div>
       <div class="nav-sub" onclick="nav('poes',this)"><span class="nav-sub-icon">🧼</span>POES</div>
       <div class="nav-sub nav-sub2" onclick="nav('poes-procedimientos',this)"><span class="nav-sub-icon">📝</span>Procedimientos</div>
       <div class="nav-sub nav-sub2" onclick="nav('poes-instructivos',this)"><span class="nav-sub-icon">📖</span>Instructivos</div>
       <div class="nav-sub nav-sub2" onclick="nav('poes-formatos',this)"><span class="nav-sub-icon">📄</span>Formatos</div>
       <div class="nav-sub nav-sub2" onclick="nav('poes-cartillas',this)"><span class="nav-sub-icon">📌</span>Cartillas</div>
+      <div class="nav-sub nav-sub2" onclick="nav('poes-plan',this)"><span class="nav-sub-icon">📅</span>Plan</div>
+      <div class="nav-sub nav-sub2" onclick="nav('poes-metodo',this)"><span class="nav-sub-icon">🔬</span>Método</div>
       <div class="nav-sub" onclick="nav('plagas',this)"><span class="nav-sub-icon">🐀</span>Control de Plagas</div>
       <div class="nav-sub" onclick="nav('agua',this)"><span class="nav-sub-icon">💧</span>Control de Agua</div>
       <div class="nav-sub" onclick="nav('capacitacion',this)"><span class="nav-sub-icon">🎓</span>Capacitaciones</div>
@@ -840,6 +844,16 @@ tr:hover td{background:#fafffe;}
   <div class="block"><div class="tbl-head"><h3>Cartillas</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('bpm-c')">+ Agregar</button></div><div id="list-bpm-c2"></div></div>
 </div>
 
+<div class="page" id="page-bpm-plan">
+  <div class="ph"><h2>📅 BPM — Plan</h2><p>Planes del sistema BPM</p></div>
+  <div class="block"><div class="tbl-head"><h3>Plan</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('bpm-plan')">+ Agregar</button></div><div id="list-bpm-plan"></div></div>
+</div>
+
+<div class="page" id="page-bpm-metodo">
+  <div class="ph"><h2>🔬 BPM — Método</h2><p>Métodos del sistema BPM</p></div>
+  <div class="block"><div class="tbl-head"><h3>Método</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('bpm-metodo')">+ Agregar</button></div><div id="list-bpm-metodo"></div></div>
+</div>
+
 <!-- POES -->
 <div class="page" id="page-poes">
   <div class="ph"><h2>🧼 POES — Procedimientos Operativos de Saneamiento</h2><p>Requisito Previo · RM 449-2006/MINSA Art. 11°</p></div>
@@ -864,6 +878,16 @@ tr:hover td{background:#fafffe;}
 <div class="page" id="page-poes-cartillas">
   <div class="ph"><h2>📌 POES — Cartillas</h2><p>Cartillas de Saneamiento</p></div>
   <div class="block"><div class="tbl-head"><h3>Cartillas</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('poes-c')">+ Agregar</button></div><div id="list-poes-c2"></div></div>
+</div>
+
+<div class="page" id="page-poes-plan">
+  <div class="ph"><h2>📅 POES — Plan</h2><p>Planes de Saneamiento</p></div>
+  <div class="block"><div class="tbl-head"><h3>Plan</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('poes-plan')">+ Agregar</button></div><div id="list-poes-plan"></div></div>
+</div>
+
+<div class="page" id="page-poes-metodo">
+  <div class="ph"><h2>🔬 POES — Método</h2><p>Métodos de Saneamiento</p></div>
+  <div class="block"><div class="tbl-head"><h3>Método</h3><button class="btn btn-green btn-sm" onclick="openAddDoc('poes-metodo')">+ Agregar</button></div><div id="list-poes-metodo"></div></div>
 </div>
 
 
@@ -1797,8 +1821,8 @@ function reemplazarCtrlDoc(){ document.getElementById('ctrl-doc-input').click();
 
 // ── DOCUMENTOS CONFIG ──
 const DOCS = {
-  'bpm-manual':[], 'bpm-p':[], 'bpm-i':[], 'bpm-f':[], 'bpm-c':[],
-  'poes-manual':[], 'poes-p':[], 'poes-i':[], 'poes-f':[], 'poes-c':[],
+  'bpm-manual':[], 'bpm-p':[], 'bpm-i':[], 'bpm-f':[], 'bpm-c':[], 'bpm-plan':[], 'bpm-metodo':[],
+  'poes-manual':[], 'poes-p':[], 'poes-i':[], 'poes-f':[], 'poes-c':[], 'poes-plan':[], 'poes-metodo':[],
   plagas:[], agua:[], cap:[], mant:[], esp:[], cal:[], lab:[], diagrama:[]
 };
 
@@ -1827,8 +1851,8 @@ async function loadState(){
 
 function saveDOCS(){
   const docsData = {
-    'bpm-manual':DOCS['bpm-manual'], 'bpm-p':DOCS['bpm-p'], 'bpm-i':DOCS['bpm-i'], 'bpm-f':DOCS['bpm-f'], 'bpm-c':DOCS['bpm-c'],
-    'poes-manual':DOCS['poes-manual'], 'poes-p':DOCS['poes-p'], 'poes-i':DOCS['poes-i'], 'poes-f':DOCS['poes-f'], 'poes-c':DOCS['poes-c'],
+    'bpm-manual':DOCS['bpm-manual'], 'bpm-p':DOCS['bpm-p'], 'bpm-i':DOCS['bpm-i'], 'bpm-f':DOCS['bpm-f'], 'bpm-c':DOCS['bpm-c'], 'bpm-plan':DOCS['bpm-plan'], 'bpm-metodo':DOCS['bpm-metodo'],
+    'poes-manual':DOCS['poes-manual'], 'poes-p':DOCS['poes-p'], 'poes-i':DOCS['poes-i'], 'poes-f':DOCS['poes-f'], 'poes-c':DOCS['poes-c'], 'poes-plan':DOCS['poes-plan'], 'poes-metodo':DOCS['poes-metodo'],
     plagas:DOCS.plagas, agua:DOCS.agua, cap:DOCS.cap, mant:DOCS.mant,
     esp:DOCS.esp, cal:DOCS.cal, lab:DOCS.lab, diagrama:DOCS.diagrama
   };
@@ -2207,11 +2231,15 @@ function renderAll(){
   renderDocList('list-bpm-i', DOCS['bpm-i']); renderDocList('list-bpm-i2', DOCS['bpm-i']);
   renderDocList('list-bpm-f', DOCS['bpm-f']); renderDocList('list-bpm-f2', DOCS['bpm-f']);
   renderDocList('list-bpm-c', DOCS['bpm-c']); renderDocList('list-bpm-c2', DOCS['bpm-c']);
+  renderDocList('list-bpm-plan', DOCS['bpm-plan']);
+  renderDocList('list-bpm-metodo', DOCS['bpm-metodo']);
   renderDocList('list-poes-manual', DOCS['poes-manual']);
   renderDocList('list-poes-p', DOCS['poes-p']); renderDocList('list-poes-p2', DOCS['poes-p']);
   renderDocList('list-poes-i', DOCS['poes-i']); renderDocList('list-poes-i2', DOCS['poes-i']);
   renderDocList('list-poes-f', DOCS['poes-f']); renderDocList('list-poes-f2', DOCS['poes-f']);
   renderDocList('list-poes-c', DOCS['poes-c']); renderDocList('list-poes-c2', DOCS['poes-c']);
+  renderDocList('list-poes-plan', DOCS['poes-plan']);
+  renderDocList('list-poes-metodo', DOCS['poes-metodo']);
   renderDocList('list-plagas', DOCS.plagas);
   renderDocList('list-agua', DOCS.agua);
   renderDocList('list-cap', DOCS.cap);
@@ -2296,8 +2324,8 @@ function updateDashboard(){
   if(calEl) calEl.textContent = calRows.length;
 
   // Barras progreso
-  const allBpm  = [...(DOCS['bpm-manual']||[]),...(DOCS['bpm-p']||[]),...(DOCS['bpm-i']||[]),...(DOCS['bpm-f']||[]),...(DOCS['bpm-c']||[])];
-  const allPoes = [...(DOCS['poes-manual']||[]),...(DOCS['poes-p']||[]),...(DOCS['poes-i']||[]),...(DOCS['poes-f']||[]),...(DOCS['poes-c']||[])];
+  const allBpm  = [...(DOCS['bpm-manual']||[]),...(DOCS['bpm-p']||[]),...(DOCS['bpm-i']||[]),...(DOCS['bpm-f']||[]),...(DOCS['bpm-c']||[]),...(DOCS['bpm-plan']||[]),...(DOCS['bpm-metodo']||[])];
+  const allPoes = [...(DOCS['poes-manual']||[]),...(DOCS['poes-p']||[]),...(DOCS['poes-i']||[]),...(DOCS['poes-f']||[]),...(DOCS['poes-c']||[]),...(DOCS['poes-plan']||[]),...(DOCS['poes-metodo']||[])];
   function setPct(barId, pctId, docs){
     const count = (docs||[]).filter(d=>state[d.code]).length;
     const pct = docs.length>0 ? Math.round(count/docs.length*100) : 0;
