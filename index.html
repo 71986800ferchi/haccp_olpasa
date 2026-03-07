@@ -1904,8 +1904,22 @@ function confirmarEditDoc(){
   showToast('✅ Documento actualizado');
 }
 
+async function deleteDriveFile(fileId){
+  if(!fileId || !gAccessToken) return;
+  try{
+    await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}`,{
+      method:'DELETE',
+      headers:{ Authorization:`Bearer ${gAccessToken}` }
+    });
+  } catch(e){ console.warn('No se pudo eliminar del Drive:', e); }
+}
+
 async function eliminarDoc(code, name){
-  if(!confirm(`¿Eliminar "${name}" de la lista?\n\nEsto no elimina el archivo de Google Drive.`)) return;
+  if(!confirm(`¿Eliminar "${name}" de la lista?\n\nTambién se eliminará el archivo de Google Drive.`)) return;
+
+  // Eliminar archivo del Drive
+  const fileId = state[code]?.driveFileId;
+  if(fileId) await deleteDriveFile(fileId);
 
   // Quitar de DOCS
   Object.keys(DOCS).forEach(sec => {
@@ -1918,7 +1932,7 @@ async function eliminarDoc(code, name){
   saveDOCS();
   await saveState();
   renderAll();
-  showToast('🗑️ Documento eliminado de la lista');
+  showToast('🗑️ Documento eliminado de la lista y del Drive');
 }
 
 function filterAllDocs(){
@@ -2476,7 +2490,10 @@ async function uploadToDrive(){
     let result;
 
     if(fileId){
-      result = await updateDriveFile(fileId, driveName, ctx.file);
+      // Eliminar archivo anterior y subir nuevo limpio
+      await deleteDriveFile(fileId);
+      result = await createDriveFile(driveName, ctx.file);
+      fileId = result.id;
     } else {
       result = await createDriveFile(driveName, ctx.file);
       fileId = result.id;
